@@ -11,6 +11,12 @@ void setup() {
   if (DHT_ACTIVE) {
     SetupDHT(DHTPIN1, DHTPIN2, DHTPIN3, DHTPIN4);
   }
+  if (DS18_ACTIVE) {
+    SetupDS18();
+  }
+  if (YL_ACTIVE) {
+    SetupYL();
+  }
   delay(1000);
   SetupUbidots();
 }
@@ -70,6 +76,9 @@ void UpToUbidtos() {
     }
     if (YL_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
       YLUpToUbi();
+    }
+    if (DS18_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
+      DS18UpToUbi();
     }
     timer_up_data = millis();
     lcd.setCursor(17, 3);

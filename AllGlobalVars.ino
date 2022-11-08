@@ -6,7 +6,10 @@ unsigned long timer_icons;
 //////////////--------------Intervalos-------------//////////////
 const int interval_local_check = 2000;
 int interval_save_local = 300000;
-//////////////--------------DHT11-----------------//////////////
+//////////////-----Estado alto - bajo (Relays)-----//////////////
+int VHIGH = 1;
+int VLOW = 0;
+//////////////--------------DHT11------------------//////////////
 bool DHT_ACTIVE = false;
 uint8_t DHTPIN1, DHTPIN2, DHTPIN3, DHTPIN4 = 0;
 int N_DHT, TEMPMIN, HUMMIN, TEMPMAX, HUMMAX, TEMPIDEAL, HUMIDEAL, TEMPMINCONTROL, TEMPMAXCONTROL, HUMMINCONTROL, HUMMAXCONTROL = 0;
