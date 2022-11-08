@@ -79,7 +79,16 @@ byte wifi5[] = {//NO_Wifi
   B00000,
   B00000
 };
-
+byte arrUp[] = {
+  B00100,
+  B01110,
+  B11111,
+  B00100,
+  B00100,
+  B00100,
+  B00000,
+  B00100
+};
 void conexionwifi() {
   if (WiFi.RSSI() == 0) {
     lcd.setCursor(18, 3);
@@ -106,4 +115,9 @@ void desconexionwifi() {
   lcd.createChar(6, wifi5);
   lcd.setCursor(19, 3);
   lcd.write(6);
+}
+void arrowUp() {
+  lcd.createChar(7, arrUp);
+  lcd.setCursor(17, 3);
+  lcd.write(7);
 }

@@ -30,6 +30,8 @@ static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azC
   if (String(argv[1]) == "DHT11") {
     DHT_ACTIVE = (String(argv[9]) == "true") ? true : false;
     activeSesors = (String(argv[9]) == "true") ? activeSesors + 1 : activeSesors;
+    N_DHT = activeSesors;
+    Serial.println(N_DHT);
     String pines = argv[2];
     int cp = pines.indexOf(',');
     int cp2 = pines.indexOf(',', cp + 1);
@@ -77,68 +79,32 @@ static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azC
   if (String(argv[1]) == "Ds18") {
     DS18_ACTIVE = (String(argv[9]) == "true") ? true : false;
     activeSesors = DS18_ACTIVE ? activeSesors + 1 : activeSesors;
-    String pines = argv[2];
-    int cp = pines.indexOf(',');
-    int cp2 = pines.indexOf(',', cp + 1);
-    int cp3 = pines.indexOf(',', cp2 + 1);
-    int cp4 = pines.indexOf(',', cp3 + 1);
-    int cp5 = pines.indexOf(',', cp4 + 1);
-    DS18PIN1 = pines.substring(0, cp).toInt();
-    DS18PIN2 = pines.substring(cp + 1, cp2).toInt();
-    DS18PIN3 = pines.substring(cp2 + 1, cp3).toInt();
-    DS18PIN4 = pines.substring(cp3 + 1, cp4).toInt();
-    DS18PIN5 = pines.substring(cp4 + 1, cp5).toInt();
-    DS18PIN6 = pines.substring(cp5).toInt();
+    NS_T = activeSesors;
+    DS18PIN = String(argv[2]).toInt();
     S_TEMPMIN = String(argv[6]).toInt();
     S_TEMPMAX = String(argv[7]).toInt();
     S_TEMPIDEAL = String(argv[8]).toInt();
-    String minsc = argv[4];
-    S_TEMPMIN_C1 = minsc.substring(0, cp).toInt();
-    S_TEMPMIN_C2 = minsc.substring(cp + 1, cp2).toInt();
-    S_TEMPMIN_C3 = minsc.substring(cp2 + 1, cp3).toInt();
-    S_TEMPMIN_C4 = minsc.substring(cp3 + 1, cp4).toInt();
-    S_TEMPMIN_C5 = minsc.substring(cp4 + 1, cp5).toInt();
-    S_TEMPMIN_C6 = minsc.substring(cp5).toInt();
-    String maxsc = argv[4];
-    S_TEMPMAX_C1 = maxsc.substring(0, cp).toInt();
-    S_TEMPMAX_C2 = maxsc.substring(cp + 1, cp2).toInt();
-    S_TEMPMAX_C3 = maxsc.substring(cp2 + 1, cp3).toInt();
-    S_TEMPMAX_C4 = maxsc.substring(cp3 + 1, cp4).toInt();
-    S_TEMPMAX_C5 = maxsc.substring(cp4 + 1, cp5).toInt();
-    S_TEMPMAX_C6 = maxsc.substring(cp5).toInt();
   }
   if (String(argv[1]) == "YL") {
     YL_ACTIVE = (String(argv[9]) == "true") ? true : false;
     activeSesors = YL_ACTIVE ? activeSesors + 1 : activeSesors;
+    NS_H = activeSesors;
+    //Serial.println(NS_H);
     String pines = argv[2];
     int cp = pines.indexOf(',');
     int cp2 = pines.indexOf(',', cp + 1);
     int cp3 = pines.indexOf(',', cp2 + 1);
     int cp4 = pines.indexOf(',', cp3 + 1);
-    int cp5 = pines.indexOf(',', cp4 + 1);
     YLPIN1 = pines.substring(0, cp).toInt();
     YLPIN2 = pines.substring(cp + 1, cp2).toInt();
     YLPIN3 = pines.substring(cp2 + 1, cp3).toInt();
     YLPIN4 = pines.substring(cp3 + 1, cp4).toInt();
-    YLPIN5 = pines.substring(cp4 + 1, cp5).toInt();
-    YLPIN6 = pines.substring(cp5).toInt();
+    YLPIN5 = pines.substring(cp4 + 1).toInt();
     S_HUMMIN = String(argv[6]).toInt();
     S_HUMMAX = String(argv[7]).toInt();
     S_HUMIDEAL = String(argv[8]).toInt();
-    String minsc = argv[4];
-    S_HUMMIN_C1 = minsc.substring(0, cp).toInt();
-    S_HUMMIN_C2 = minsc.substring(cp + 1, cp2).toInt();
-    S_HUMMIN_C3 = minsc.substring(cp2 + 1, cp3).toInt();
-    S_HUMMIN_C4 = minsc.substring(cp3 + 1, cp4).toInt();
-    S_HUMMIN_C5 = minsc.substring(cp4 + 1, cp5).toInt();
-    S_HUMMIN_C6 = minsc.substring(cp5).toInt();
-    String maxsc = argv[4];
-    S_HUMMAX_C1 = maxsc.substring(0, cp).toInt();
-    S_HUMMAX_C2 = maxsc.substring(cp + 1, cp2).toInt();
-    S_HUMMAX_C3 = maxsc.substring(cp2 + 1, cp3).toInt();
-    S_HUMMAX_C4 = maxsc.substring(cp3 + 1, cp4).toInt();
-    S_HUMMAX_C5 = maxsc.substring(cp4 + 1, cp5).toInt();
-    S_HUMMAX_C6 = maxsc.substring(cp5).toInt();
+    S_HUMMIN_Ctrl = String(argv[3]).toInt();
+    S_HUMMAX_Ctrl = String(argv[4]).toInt();
   }
   return 0;
 }

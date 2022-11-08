@@ -2,26 +2,26 @@
 unsigned long timer_up_data;
 unsigned long timer_local_check;
 unsigned long timer_save_local;
+unsigned long timer_icons;
 //////////////--------------Intervalos-------------//////////////
-const int interval_up_data = 600000;
 const int interval_local_check = 2000;
 int interval_save_local = 300000;
 //////////////--------------DHT11-----------------//////////////
 bool DHT_ACTIVE = false;
 uint8_t DHTPIN1, DHTPIN2, DHTPIN3, DHTPIN4 = 0;
-int TEMPMIN, HUMMIN, TEMPMAX, HUMMAX, TEMPIDEAL, HUMIDEAL, TEMPMINCONTROL, TEMPMAXCONTROL, HUMMINCONTROL, HUMMAXCONTROL = 0;
+int N_DHT, TEMPMIN, HUMMIN, TEMPMAX, HUMMAX, TEMPIDEAL, HUMIDEAL, TEMPMINCONTROL, TEMPMAXCONTROL, HUMMINCONTROL, HUMMAXCONTROL = 0;
 float TEMP, HUM = 0;
 //////////////--------------MQ135-----------------//////////////
 bool MQ135_ACTIVE = false;
 //////////////--------------YL-69-----------------//////////////
 bool YL_ACTIVE = false;
-uint8_t YLPIN1, YLPIN2, YLPIN3, YLPIN4, YLPIN5, YLPIN6 = 0;
-int S_HUMMIN, S_HUMMAX, S_HUMIDEAL, S_HUMMIN_C1, S_HUMMIN_C2, S_HUMMIN_C3, S_HUMMIN_C4, S_HUMMIN_C5, S_HUMMIN_C6, S_HUMMAX_C1, S_HUMMAX_C2, S_HUMMAX_C3, S_HUMMAX_C4, S_HUMMAX_C5, S_HUMMAX_C6 = 0;
+uint8_t YLPIN1, YLPIN2, YLPIN3, YLPIN4, YLPIN5 = 0;
+int NS_H, S_HUMMIN, S_HUMMAX, S_HUMIDEAL, S_HUMMIN_Ctrl, S_HUMMAX_Ctrl = 0;
 float S_HUM = 0;
 //////////////--------------DS18------------------//////////////
 bool DS18_ACTIVE = false;
-uint8_t DS18PIN1, DS18PIN2, DS18PIN3, DS18PIN4, DS18PIN5, DS18PIN6 = 0;
-int S_TEMPMIN, S_TEMPMAX, S_TEMPIDEAL, S_TEMPMIN_C1, S_TEMPMIN_C2, S_TEMPMIN_C3, S_TEMPMIN_C4, S_TEMPMIN_C5, S_TEMPMIN_C6, S_TEMPMAX_C1, S_TEMPMAX_C2, S_TEMPMAX_C3, S_TEMPMAX_C4, S_TEMPMAX_C5, S_TEMPMAX_C6 = 0;
+uint8_t DS18PIN = 0;
+int NS_T, S_TEMPMIN, S_TEMPMAX, S_TEMPIDEAL, S_TEMPMIN_C, S_TEMPMAX_C = 0;
 float S_TEMP = 0;
 //////////////--------------OXYGEN----------------//////////////
 bool OXYGEN_ACTIVE = false;

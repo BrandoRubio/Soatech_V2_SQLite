@@ -30,6 +30,16 @@ void SetupServer() {
       json["HUMRANGES"] = String(HUMMIN) + " - " + String(HUMMAX);
       json["HUMCOLOR"] = (HUM > HUMMAX || HUM < HUMMIN) ? "danger" : "success";
     }
+    if (YL_ACTIVE) {
+      json["PSHUM"] = S_HUM;
+      json["SHUMRANGES"] = String(S_HUMMIN) + " - " + String(S_HUMMAX);
+      json["SHUMCOLOR"] = (S_HUM > S_HUMMAX || S_HUM < S_HUMMIN) ? "danger" : "success";
+    }
+    if (DS18_ACTIVE) {
+      json["PSTEMP"] = S_TEMP;
+      json["STEMPRANGES"] = String(S_TEMPMIN) + " - " + String(S_TEMPMAX);
+      json["STEMPCOLOR"] = (S_TEMP > S_TEMPMAX || S_TEMP < S_TEMPMIN) ? "danger" : "success";
+    }
     serializeJson(json, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);
@@ -110,11 +120,30 @@ void SetupServer() {
       GetValuesFromDB("temperatura");
       first_time_values = false;
       GetValuesFromDB("humedad");
-      first_time_values = false;
       values["TEMPRANGES"] = String(TEMPMIN) + " - " + String(TEMPMAX);
-      values["TEMPCOLOR"] = (TEMP >= TEMPMAX && TEMP <= TEMPMIN) ? "danger" : "success";
+      values["TEMPCOLOR"] = (TEMP >= TEMPMIN && TEMP <= TEMPMAX) ? "success" : "danger";
       values["HUMRANGES"] = String(HUMMIN) + " - " + String(HUMMAX);
-      values["HUMCOLOR"] = (HUM >= HUMMAX && HUM <= HUMMIN) ? "danger" : "success";
+      values["HUMCOLOR"] = (HUM >= HUMMIN && HUM <= HUMMAX) ? "success" : "danger";
+    }
+    if (YL_ACTIVE) {
+      GetValuesFromDB("s_h1");
+      first_time_values = false;
+      GetValuesFromDB("s_h2");
+      GetValuesFromDB("s_h3");
+      GetValuesFromDB("s_h4");
+      values["SHUMRANGES"] = String(S_HUMMIN) + " - " + String(S_HUMMAX);
+      values["PSHUM"] = S_HUM;
+      values["SHUMCOLOR"] = (S_HUM > S_HUMMAX || S_HUM < S_HUMMIN) ? "success" : "danger";
+    }
+    if (DS18_ACTIVE) {
+      GetValuesFromDB("s_t1");
+      first_time_values = false;
+      GetValuesFromDB("s_t2");
+      GetValuesFromDB("s_t3");
+      GetValuesFromDB("s_t4");
+      values["STEMPRANGES"] = String(S_TEMPMIN) + " - " + String(S_TEMPMAX);
+      values["PSTEMP"] = S_TEMP;
+      values["STEMPCOLOR"] = (S_TEMP > S_TEMPMAX || S_TEMP < S_TEMPMIN) ? "success" : "danger";
     }
     values["REGISTERS"] = NUM_REGISTERS;
     serializeJson(values, *response);
@@ -143,7 +172,7 @@ void SetupServer() {
 
   server.on("/updateDevice", HTTP_GET, [](AsyncWebServerRequest *request) {
     AsyncResponseStream *response = request->beginResponseStream("application/json; charset=utf-8");
-    DynamicJsonDocument json(5000);
+    DynamicJsonDocument json(512);
     String newName = NAME, newType = TYPE, newSSID = WIFISSID, newPassword = PASSWORD, newCompany = COMPANY, newTime = String(interval_save_local), newNR = NUM_REGISTERS;
     int paramsNr = request->params();
     for (int i = 0; i < paramsNr; i++) {
@@ -159,9 +188,11 @@ void SetupServer() {
       }
       if (p->name() == "newSSID") {
         newSSID = p->value();
+        newSSID.replace(",", " ");
       }
       if (p->name() == "newPassword") {
         newPassword = p->value();
+        newPassword.replace(",", " ");
       }
       if (p->name() == "newNR") {
         newNR = p->value();
@@ -169,11 +200,12 @@ void SetupServer() {
     }
     String query = "UPDATE device SET name = '" + newName + "', type = '" + newType + "', network = '" + newSSID + "', password = '" + newPassword + "', save_time = " + newTime + ", registers = '" + newNR + "' where id = 1";
     json["response"] = db_exec(query.c_str());
+    json["status"] = "OK";
     serializeJson(json, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);
-    WiFi.disconnect();
     delay(2000);
+    WiFi.disconnect();
     ESP.restart();
   });
 
@@ -189,6 +221,7 @@ void SetupServer() {
       }
       if (p->name() == "newReadPin") {
         newReadPin = p->value();
+        Serial.println(newReadPin);
       }
       if (p->name() == "newControlPinMin") {
         newPinMin = p->value();
@@ -207,14 +240,14 @@ void SetupServer() {
       }
       if (p->name() == "active") {
         active = p->value();
-        Serial.print(active);
+        Serial.println(active);
       }
       if (p->name() == "id") {
         id = p->value();
       }
     }
     String query = "UPDATE sensors SET read_pin = '" + newReadPin + "', pin_min = '" + newPinMin + "', pin_max = '" + newPinMax + "', ubi_var = '" + newUbiVar + "', min = '" + newMin + "', max = '" + newMax + "', ideal = '" + newIdeal + "', active = '" + active + "' where id = " + id + "";
-    json["status"] = db_exec(query.c_str());
+    Serial.println(db_exec(query.c_str()));
     serializeJson(json, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);

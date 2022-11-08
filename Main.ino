@@ -1,48 +1,44 @@
 void setup() {
   Serial.begin(115200);
-  SetupLCD();
-  SetupDB();
-  SetupRTC();
   //SetupBT();
-
+  SetupLCD();
+  SetupRTC();
+  SetupDB();
   if (activeSesors == 0) {
     lcd.setCursor(0, 2);
     lcd.print(" Sensores inactivos ");
   }
-  DateTime now = rtc.now();
-  String date = now.timestamp(DateTime::TIMESTAMP_FULL);
-  String m = date + ",\r\n";
-  File f = SD.open("/log.csv");
-  if (f) {
-    appendFile(SD, "/log.csv", m.c_str());
-  } else {
-    writeFile(SD, "/log.csv", m.c_str());
-  }
   if (DHT_ACTIVE) {
     SetupDHT(DHTPIN1, DHTPIN2, DHTPIN3, DHTPIN4);
   }
-  Connect();
-  /*Serial.println(NAME);
-  Serial.println(TYPE);
-  Serial.println(WIFISSID);
-  Serial.println(PASSWORD);
-  Serial.println(COMPANY);
-  Serial.println(interval_save_local);*/
+  delay(1000);
+  SetupUbidots();
 }
 
 void loop() {
-  //loopBT();
+  loopUbidots();
   LocalCheck();
   SaveLocal();
+  UpToUbidtos();
 }
 
 /**Función que invoca los procesos loop de cada sensor**/
 /**Asimismo hace su respectivo control dentro de su función**/
 void LocalCheck() {
   if (abs(millis() - timer_local_check) > interval_local_check) {
-    conexionwifi();
     if (DHT_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
       DHT11Check();
+    }
+    if (YL_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
+      YLCheck();
+    }
+    if (DS18_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
+      DS18Check();
+    }
+    if (alternadorLCD < activeSesors) {
+      alternadorLCD++;
+    } else {
+      alternadorLCD = 1;
     }
     timer_local_check = millis();
   }
@@ -55,6 +51,28 @@ void SaveLocal() {
     if (DHT_ACTIVE) {  //Si el sensor de temperatura está activo entonces guarda su valor
       DHT11LocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
+    if (YL_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
+      YLLocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
+    }
+    if (DS18_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
+      DS18LocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
+    }
     timer_save_local = millis();
+  }
+}
+
+/**Función que verifica el tiempo y hace la subida de datos a ubidots en caso de que los sensores estén activos**/
+void UpToUbidtos() {
+  if (abs(millis() - timer_up_data) > 30000) {
+    arrowUp();
+    if (DHT_ACTIVE) {  //Si el sensor de temperatura está activo entonces guarda su valor
+      DHT11UpToUbi();
+    }
+    if (YL_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
+      YLUpToUbi();
+    }
+    timer_up_data = millis();
+    lcd.setCursor(17, 3);
+    lcd.print(" ");
   }
 }
