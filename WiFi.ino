@@ -1,5 +1,6 @@
 #include "WiFi.h"
 void Connect() {
+  desconexionwifi();
   WiFi.begin(WIFISSID.c_str(), PASSWORD.c_str());
   /*lcd.clear();
   lcd.setCursor(0, 1);
@@ -53,5 +54,5 @@ void Connect() {
   lcd.setCursor(0, 3);
   lcd.print("                  ");
   conexionwifi();
-  desconexionwifi();
+  ubiOK();
 }

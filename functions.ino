@@ -89,6 +89,16 @@ byte arrUp[] = {
   B00000,
   B00100
 };
+byte ubiOKc[] = {
+  B01110,
+  B01010,
+  B01110,
+  B00000,
+  B01010,
+  B01100,
+  B01100,
+  B01010
+};
 void conexionwifi() {
   if (WiFi.RSSI() == 0) {
     lcd.setCursor(18, 3);
@@ -120,4 +130,9 @@ void arrowUp() {
   lcd.createChar(7, arrUp);
   lcd.setCursor(17, 3);
   lcd.write(7);
+}
+void ubiOK() {
+  lcd.createChar(6, ubiOKc);
+  lcd.setCursor(19, 3);
+  lcd.write(6);
 }

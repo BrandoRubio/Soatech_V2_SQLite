@@ -46,6 +46,9 @@ void LocalCheck() {
     } else {
       alternadorLCD = 1;
     }
+    if (ubidots.connected()) {
+      ubiOK();
+    }
     timer_local_check = millis();
   }
 }

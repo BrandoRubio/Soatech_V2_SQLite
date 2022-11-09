@@ -5,10 +5,10 @@ void SetupYL() {
   digitalWrite(S_HUMMAX_Ctrl, VLOW);
 }
 void YLCheck() {
-  float sh1 = analogRead(YLPIN1);
-  float sh2 = analogRead(YLPIN2);
-  float sh3 = analogRead(YLPIN3);
-  float sh4 = analogRead(YLPIN4);
+  float sh1 = map(analogRead(YLPIN1), 0, 4095, 100, 0);
+  float sh2 = map(analogRead(YLPIN2), 0, 4095, 100, 0);
+  float sh3 = map(analogRead(YLPIN3), 0, 4095, 100, 0);
+  float sh4 = map(analogRead(YLPIN4), 0, 4095, 100, 0);
   float sum = 0;
   int counter = 0;
   if (sh1 != 100) {
@@ -27,7 +27,7 @@ void YLCheck() {
     sum += sh4;
     counter++;
   }
-  S_HUM = sum / counter;
+  S_HUM = (sum / counter) ? sum / counter : 0;
   if (S_HUM > S_HUMMAX) {  //controlar humedad mínima
     digitalWrite(S_HUMMIN_Ctrl, VHIGH);
   }
@@ -48,28 +48,28 @@ void YLCheck() {
     lcd.setCursor(9, 1);
     lcd.print(" H4:" + String(sh4));
     lcd.setCursor(0, 2);
-    lcd.print("Promedio: " + String(S_HUM));
+    lcd.print("Promedio: " + String(S_HUM) + "   ");
   }
 }
 void YLLocalSave(String date) {
-  if (SaveSensorValue("s_h1", date, String(analogRead(YLPIN1)))) {
+  if (SaveSensorValue("s_h1", date, String(map(analogRead(YLPIN1), 0, 4095, 100, 0)))) {
     NoSD();
   }
-  if (SaveSensorValue("s_h2", date, String(analogRead(YLPIN2)))) {
+  if (SaveSensorValue("s_h2", date, String(map(analogRead(YLPIN2), 0, 4095, 100, 0)))) {
     NoSD();
   }
-  if (SaveSensorValue("s_h3", date, String(analogRead(YLPIN3)))) {
+  if (SaveSensorValue("s_h3", date, String(map(analogRead(YLPIN3), 0, 4095, 100, 0)))) {
     NoSD();
   }
-  if (SaveSensorValue("s_h4", date, String(analogRead(YLPIN4)))) {
+  if (SaveSensorValue("s_h4", date, String(map(analogRead(YLPIN4), 0, 4095, 100, 0)))) {
     NoSD();
   }
 }
 void YLUpToUbi() {
-  float sh1 = analogRead(YLPIN1);
-  float sh2 = analogRead(YLPIN2);
-  float sh3 = analogRead(YLPIN3);
-  float sh4 = analogRead(YLPIN4);
+  float sh1 = map(analogRead(YLPIN1), 0, 4095, 100, 0);
+  float sh2 = map(analogRead(YLPIN2), 0, 4095, 100, 0);
+  float sh3 = map(analogRead(YLPIN3), 0, 4095, 100, 0);
+  float sh4 = map(analogRead(YLPIN4), 0, 4095, 100, 0);
   float sum = 0;
   int counter = 0;
   if (sh1 != 100) { 
@@ -92,7 +92,7 @@ void YLUpToUbi() {
     sum += sh4;
     counter++;
   }
-  S_HUM = sum / counter;
+  S_HUM = (sum / counter) ? sum / counter : 0;
   ubidots.add("P_H_S", S_HUM);
   ubidots.publish(DEVICE_LABEL);
 }

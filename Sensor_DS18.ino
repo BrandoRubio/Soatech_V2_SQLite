@@ -32,17 +32,7 @@ void DS18Check() {
     sum += temp4;
     counter++;
   }
-  S_TEMP = sum / counter;
-  ///Control
-  /*if(S_TEMP > S_TEMPMAX){
-
-    }
-    if(S_TEMP < S_TEMPMIN){
-
-    }
-    if(S_TEMP >= (S_TEMPIDEAL - 1) && S_TEMP <= (S_TEMPIDEAL + 1)){
-
-    }*/
+  S_TEMP = (sum / counter) ? sum / counter : 0;
   if (alternadorLCD == NS_T) {
     lcd.setCursor(0, 0);
     lcd.print("T1:" + String(temp1) + " ");
@@ -53,7 +43,7 @@ void DS18Check() {
     lcd.setCursor(9, 1);
     lcd.print(" T4:" + String(temp4));
     lcd.setCursor(0, 2);
-    lcd.print("Promedio: " + String(S_TEMP));
+    lcd.print("Promedio: " + String(S_TEMP) + "   ");
   }
 }
 
@@ -106,7 +96,7 @@ void DS18UpToUbi() {
     sum += temp4;
     counter++;
   }
-  S_TEMP = sum / counter;
+  S_TEMP = (sum / counter) ? sum / counter : 0;
   ubidots.add("P_T_S", S_TEMP);
   ubidots.publish(DEVICE_LABEL);
 }
