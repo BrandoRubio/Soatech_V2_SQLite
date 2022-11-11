@@ -26,7 +26,7 @@ int loadTheData(const char *sql) {
   return rc;
 }
 ///Carga de variables de todos los sensores///
-static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azColName) {
+static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azColName) {  
   if (String(argv[1]) == "DHT11") {
     DHT_ACTIVE = (String(argv[9]) == "true") ? true : false;
     activeSesors = (String(argv[9]) == "true") ? activeSesors + 1 : activeSesors;
@@ -174,13 +174,12 @@ int GetValuesFromDB(String s) {
 int c = 0;
 static int callbackNewFile(void *data, int argc, char **argv, char **azColName) {
   String m = String(c++) + "," + String(argv[0]) + "," + String(argv[1]) + "\n";
-  appendFile(SD, "/data.csv", m.c_str());
+  //appendFile(SD, "/data.csv", m.c_str());
   return 0;
 }
 int GetValuesToFile(String s) {
-  writeFile(SD, "/data.csv", "");
   c = 0;
-  String sql = "SELECT date, value FROM registers WHERE sensor_name = '" + s + "' ORDER BY id DESC LIMIT 300";
+  String sql = "SELECT date, value FROM registers WHERE sensor_name = '" + s + "' ORDER BY id DESC LIMIT 150";
   if (db == NULL) {
     Serial.println("No database open");
     return 0;

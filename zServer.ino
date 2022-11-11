@@ -62,7 +62,7 @@ void SetupServer() {
   server.on("/getAllItems", HTTP_GET, [](AsyncWebServerRequest *request) {
     AsyncResponseStream *response = request->beginResponseStream("application/json; charset=utf-8");
     DynamicJsonDocument json(500);
-    uint8_t cardType = SD.cardType();
+    /*uint8_t cardType = SD.cardType();
     if (cardType == CARD_NONE) {
       json["msjsd"] = "No SD.  ";
     } else {
@@ -72,11 +72,23 @@ void SetupServer() {
       json["msjnet"] = "Con Internet";
     } else {
       json["msjnet"] = "Sin internet";
-    }
+    }*/
 
     if (DHT_ACTIVE) {
       json["files"].add("temperatura");
       json["files"].add("humedad");
+    }
+    if (DS18_ACTIVE) {
+      json["files"].add("s_t1");
+      json["files"].add("s_t2");
+      json["files"].add("s_t3");
+      json["files"].add("s_t4");
+    }
+    if (DHT_ACTIVE) {
+      json["files"].add("s_h1");
+      json["files"].add("s_h2");
+      json["files"].add("s_h3");
+      json["files"].add("s_h4");
     }
     serializeJson(json, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
@@ -84,6 +96,7 @@ void SetupServer() {
   });
 
   server.on("/createFileFrom", HTTP_GET, [](AsyncWebServerRequest *request) {
+    AsyncResponseStream *response = request->beginResponseStream("application/json; charset=utf-8");
     int paramsNr = request->params();
     String fileName = "";
     for (int i = 0; i < paramsNr; i++) {
@@ -92,23 +105,15 @@ void SetupServer() {
         fileName = p->value();
       }
     }
-    GetValuesToFile(fileName);
-    delay(100);
-    File file = SD.open("/data.csv");
-
-    if (file) {
-      AsyncWebServerResponse *response = request->beginResponse(file, fileName, "text/xhr", true);
-      request->send(response);
-    } else {
-      AsyncResponseStream *response = request->beginResponseStream("application/json");
-      response->addHeader("Access-Control-Allow-Origin", "*");
-      DynamicJsonDocument json(1024);
-      json["error"] = "error al crear el archivo";
-      serializeJson(json, *response);
-      response->addHeader("Access-Control-Allow-Origin", "*");
-      request->send(response);
-    }
-    file.close();
+    GetValuesFromDB(fileName);
+    if (values.isNull()) {
+      NoSD();
+    }/* else {
+      Serial.println("hay datos en sensores");
+    }*/
+    serializeJson(values, *response);
+    response->addHeader("Access-Control-Allow-Origin", "*");
+    request->send(response);
   });
 
   server.on("/getLastNValues", HTTP_GET, [](AsyncWebServerRequest *request) {
@@ -118,8 +123,10 @@ void SetupServer() {
     values.clear();
     if (DHT_ACTIVE) {
       GetValuesFromDB("temperatura");
+      delay(20);
       first_time_values = false;
       GetValuesFromDB("humedad");
+      delay(20);
       values["TEMPRANGES"] = String(TEMPMIN) + " - " + String(TEMPMAX);
       values["TEMPCOLOR"] = (TEMP >= TEMPMIN && TEMP <= TEMPMAX) ? "success" : "danger";
       values["HUMRANGES"] = String(HUMMIN) + " - " + String(HUMMAX);
@@ -127,23 +134,31 @@ void SetupServer() {
     }
     if (YL_ACTIVE) {
       GetValuesFromDB("s_h1");
+      delay(20);
       first_time_values = false;
       GetValuesFromDB("s_h2");
+      delay(20);
       GetValuesFromDB("s_h3");
+      delay(20);
       GetValuesFromDB("s_h4");
+      delay(20);
       values["SHUMRANGES"] = String(S_HUMMIN) + " - " + String(S_HUMMAX);
       values["PSHUM"] = S_HUM;
-      values["SHUMCOLOR"] = (S_HUM > S_HUMMAX || S_HUM < S_HUMMIN) ? "success" : "danger";
+      values["SHUMCOLOR"] = (S_HUM > S_HUMMAX || S_HUM < S_HUMMIN) ? "danger" : "success";
     }
     if (DS18_ACTIVE) {
       GetValuesFromDB("s_t1");
+      delay(20);
       first_time_values = false;
       GetValuesFromDB("s_t2");
+      delay(20);
       GetValuesFromDB("s_t3");
+      delay(20);
       GetValuesFromDB("s_t4");
+      delay(20);
       values["STEMPRANGES"] = String(S_TEMPMIN) + " - " + String(S_TEMPMAX);
       values["PSTEMP"] = S_TEMP;
-      values["STEMPCOLOR"] = (S_TEMP > S_TEMPMAX || S_TEMP < S_TEMPMIN) ? "success" : "danger";
+      values["STEMPCOLOR"] = (S_TEMP > S_TEMPMAX || S_TEMP < S_TEMPMIN) ? "danger" : "success";
     }
     values["REGISTERS"] = NUM_REGISTERS;
     serializeJson(values, *response);

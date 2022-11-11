@@ -1,9 +1,9 @@
 void setup() {
   Serial.begin(115200);
   //SetupBT();
+  SetupDB();
   SetupLCD();
   SetupRTC();
-  SetupDB();
   if (activeSesors == 0) {
     lcd.setCursor(0, 2);
     lcd.print(" Sensores inactivos ");

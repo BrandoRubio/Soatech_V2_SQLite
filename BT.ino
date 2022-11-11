@@ -1,4 +1,4 @@
-/*#include "BluetoothSerial.h"
+#include "BluetoothSerial.h"
 BluetoothSerial SerialBT;
 void SetupBT()
 {
@@ -9,4 +9,4 @@ void loopBT()
   if (SerialBT.available())
      Serial.write(SerialBT.read());
   delay(20);
-}*/
+}

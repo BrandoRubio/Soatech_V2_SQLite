@@ -12,9 +12,12 @@ void SetupUbidots() {
 void loopUbidots() {
   if (abs(millis() - timer_icons) > 2000) {
     if (!ubidots.connected()) {
-      Connect();
+      ubidots.reconnect();
     } else {
       conexionwifi();
+    }
+    if (WiFi.status() != WL_CONNECTED) {
+      Connect();
     }
   }
   ubidots.loop();

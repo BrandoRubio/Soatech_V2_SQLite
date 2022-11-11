@@ -7,8 +7,8 @@ unsigned long timer_icons;
 const int interval_local_check = 2000;
 int interval_save_local = 300000;
 //////////////-----Estado alto - bajo (Relays)-----//////////////
-int VHIGH = 1;
-int VLOW = 0;
+bool VHIGH = 1;
+bool VLOW = 0;
 //////////////--------------DHT11------------------//////////////
 bool DHT_ACTIVE = false;
 uint8_t DHTPIN1, DHTPIN2, DHTPIN3, DHTPIN4 = 0;
