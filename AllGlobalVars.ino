@@ -27,11 +27,10 @@ uint8_t DS18PIN = 0;
 int NS_T, S_TEMPMIN, S_TEMPMAX, S_TEMPIDEAL, S_TEMPMIN_C, S_TEMPMAX_C = 0;
 float S_TEMP = 0;
 //////////////--------------OXYGEN----------------//////////////
-bool OXYGEN_ACTIVE = false;
+bool OXY_ACTIVE = false;
 uint8_t OXYPIN = 0;
-int OXYMIN, OXYMAX, OXYMINCONTROL;
+int OXYMIN, OXYMAX, OXYMINCONTROL, OXYMAXCONTROL, N_OXY;
 float OXY = 0;
-String UBIVAR_OXY;
 //////////////--------------CONDUCTIVITY----------//////////////
 bool CONDUCTIVITY_ACTIVE = false;
 //////////////--------------PH--------------------//////////////

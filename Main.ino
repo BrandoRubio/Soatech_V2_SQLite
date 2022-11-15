@@ -1,9 +1,9 @@
 void setup() {
   Serial.begin(115200);
-  //SetupBT();
-  SetupDB();
   SetupLCD();
   SetupRTC();
+  //SetupBT();
+  SetupDB();
   if (activeSesors == 0) {
     lcd.setCursor(0, 2);
     lcd.print(" Sensores inactivos ");
@@ -16,6 +16,9 @@ void setup() {
   }
   if (YL_ACTIVE) {
     SetupYL();
+  }
+  if (OXY_ACTIVE) {
+    SetupOxy();
   }
   delay(1000);
   SetupUbidots();
@@ -41,6 +44,9 @@ void LocalCheck() {
     if (DS18_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
       DS18Check();
     }
+    if (OXY_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
+      OxyCheck();
+    }
     if (alternadorLCD < activeSesors) {
       alternadorLCD++;
     } else {
@@ -57,14 +63,17 @@ void LocalCheck() {
 void SaveLocal() {
   if (abs(millis() - timer_save_local) > interval_save_local) {
     DateTime now = rtc.now();
-    if (DHT_ACTIVE) {  //Si el sensor de temperatura está activo entonces guarda su valor
+    if (DHT_ACTIVE) {  //Si el sensor DHT11 está activo entonces guarda su valor
       DHT11LocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
-    if (YL_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
+    if (YL_ACTIVE) {  //Si el sensor de temperatura en sustrato está activo entonces lee el sensor
       YLLocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
-    if (DS18_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
+    if (DS18_ACTIVE) {  //Si el sensor de Humedad en sustrato está activo entonces lee el sensor
       DS18LocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
+    }
+    if (OXY_ACTIVE) {  //Si el sensor de oxigención está activo entonces lee el sensor
+      OxyLocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
     timer_save_local = millis();
   }
@@ -72,7 +81,7 @@ void SaveLocal() {
 
 /**Función que verifica el tiempo y hace la subida de datos a ubidots en caso de que los sensores estén activos**/
 void UpToUbidtos() {
-  if (abs(millis() - timer_up_data) > 30000) {
+  if (abs(millis() - timer_up_data) > 300000) {
     arrowUp();
     if (DHT_ACTIVE) {  //Si el sensor de temperatura está activo entonces guarda su valor
       DHT11UpToUbi();

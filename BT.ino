@@ -1,12 +1,18 @@
-#include "BluetoothSerial.h"
-BluetoothSerial SerialBT;
+#include <SoftwareSerial.h>   // Incluimos la librería  SoftwareSerial  
+SoftwareSerial miBT(25,33);    // Definimos los pines RX y TX del Arduino conectados al Bluetooth
+
+#define DEBUG(a) Serial.println(a);
 void SetupBT()
 {
-   SerialBT.begin("SoatechBT"); //Bluetooth device name
+  miBT.begin(9600);       // Inicializamos el puerto serie BT (Para Modo AT 2)
 }
+ 
 void loopBT()
 {
-  if (SerialBT.available())
-     Serial.write(SerialBT.read());
-  delay(20);
+  if (miBT.available()) 
+  {
+      String data = miBT.readStringUntil('\n');
+      DEBUG(data);
+  }
+    
 }

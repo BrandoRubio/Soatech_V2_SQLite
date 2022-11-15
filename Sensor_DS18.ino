@@ -52,18 +52,17 @@ void DS18LocalSave(String date) {
   float temp1 = sensors.getTempCByIndex(0);  //Se obtiene la temperatura en ºC
   float temp2 = sensors.getTempCByIndex(1);  //Se obtiene la temperatura en ºC
   float temp3 = sensors.getTempCByIndex(2);  //Se obtiene la temperatura en ºC
-  float temp4 = sensors.getTempCByIndex(3);  //Se obtiene la temperatura en ºC
-  float temp5 = sensors.getTempCByIndex(4);  //Se obtiene la temperatura en ºC
-  if (SaveSensorValue("s_t1", date, String(temp1))) {
+  float temp4 = sensors.getTempCByIndex(3);  //Se obtiene la temperatura en ºC;
+  if (SaveSensorValue("s_t1", date, (temp1 == -127 ? "NULL" : String(temp1)))) {
     NoSD();
   }
-  if (SaveSensorValue("s_t2", date, String(temp2))) {
+  if (SaveSensorValue("s_t2", date, (temp2 == -127 ? "NULL" : String(temp2)))) {
     NoSD();
   }
-  if (SaveSensorValue("s_t3", date, String(temp3))) {
+  if (SaveSensorValue("s_t3", date, (temp3 == -127 ? "NULL" : String(temp3)))) {
     NoSD();
   }
-  if (SaveSensorValue("s_t4", date, String(temp4))) {
+  if (SaveSensorValue("s_t4", date, (temp4 == -127 ? "NULL" : String(temp4)))) {
     NoSD();
   }
 }

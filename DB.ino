@@ -31,7 +31,6 @@ static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azC
     DHT_ACTIVE = (String(argv[9]) == "true") ? true : false;
     activeSesors = (String(argv[9]) == "true") ? activeSesors + 1 : activeSesors;
     N_DHT = activeSesors;
-    Serial.println(N_DHT);
     String pines = argv[2];
     int cp = pines.indexOf(',');
     int cp2 = pines.indexOf(',', cp + 1);
@@ -56,9 +55,10 @@ static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azC
     TEMPMAXCONTROL = maxsc.substring(0, cp).toInt();
     HUMMAXCONTROL = maxsc.substring(cp + 1).toInt();
   }
-  if (String(argv[1]) == "Oxigenacion") {
-    OXYGEN_ACTIVE = (String(argv[9]) == "true") ? true : false;
+  if (String(argv[1]) == "Oxygen") {
+    OXY_ACTIVE = (String(argv[9]) == "true") ? true : false;
     activeSesors = (String(argv[9]) == "true") ? activeSesors + 1 : activeSesors;
+    N_OXY = activeSesors;
   }
   if (String(argv[1]) == "MQ135") {
     MQ135_ACTIVE = (String(argv[9]) == "true") ? true : false;
@@ -146,7 +146,7 @@ int SaveSensorValue(String n, String d, String v) {
   return rc;
 }
 bool first_time_values = true;
-DynamicJsonDocument values(10000);
+DynamicJsonDocument values(15000);
 static int callbackValues(void *data, int argc, char **argv, char **azColName) {
   values[argv[0]].add(String(argv[1]));
   if (first_time_values) {
@@ -173,13 +173,13 @@ int GetValuesFromDB(String s) {
 }
 int c = 0;
 static int callbackNewFile(void *data, int argc, char **argv, char **azColName) {
-  String m = String(c++) + "," + String(argv[0]) + "," + String(argv[1]) + "\n";
-  //appendFile(SD, "/data.csv", m.c_str());
+  values["sensor"].add(String(argv[1]));
+  values["dates"].add(String(argv[0]));
   return 0;
 }
-int GetValuesToFile(String s) {
+int GetValuesFromSensor(String s) {
   c = 0;
-  String sql = "SELECT date, value FROM registers WHERE sensor_name = '" + s + "' ORDER BY id DESC LIMIT 150";
+  String sql = "SELECT date, value FROM registers WHERE sensor_name = '" + s + "' ORDER BY id DESC LIMIT 500";
   if (db == NULL) {
     Serial.println("No database open");
     return 0;

@@ -12,7 +12,7 @@ sqlite3 *db = NULL;
 int rc;
 #define FORMAT_SPIFFS_IF_FAILED true
 
-DynamicJsonDocument results(5000);
+DynamicJsonDocument results(7500);
 static int callback(void *data, int argc, char **argv, char **azColName) {
   int i;
   for (i = 0; i < argc; i++) {

@@ -52,16 +52,20 @@ void YLCheck() {
   }
 }
 void YLLocalSave(String date) {
-  if (SaveSensorValue("s_h1", date, String(map(analogRead(YLPIN1), 0, 4095, 100, 0)))) {
+  float sh1 = map(analogRead(YLPIN1), 0, 4095, 100, 0);  
+  float sh2 = map(analogRead(YLPIN2), 0, 4095, 100, 0);  
+  float sh3 = map(analogRead(YLPIN3), 0, 4095, 100, 0);  
+  float sh4 = map(analogRead(YLPIN4), 0, 4095, 100, 0);  
+  if (SaveSensorValue("s_h1", date, (sh1 == 100 ? "NULL" : String(sh1)))) {
     NoSD();
   }
-  if (SaveSensorValue("s_h2", date, String(map(analogRead(YLPIN2), 0, 4095, 100, 0)))) {
+  if (SaveSensorValue("s_h2", date, (sh2 == 100 ? "NULL" : String(sh2)))) {
     NoSD();
   }
-  if (SaveSensorValue("s_h3", date, String(map(analogRead(YLPIN3), 0, 4095, 100, 0)))) {
+  if (SaveSensorValue("s_h3", date, (sh3 == 100 ? "NULL" : String(sh3)))) {
     NoSD();
   }
-  if (SaveSensorValue("s_h4", date, String(map(analogRead(YLPIN4), 0, 4095, 100, 0)))) {
+  if (SaveSensorValue("s_h4", date, (sh4 == 100 ? "NULL" : String(sh4)))) {
     NoSD();
   }
 }

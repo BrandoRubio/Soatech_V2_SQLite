@@ -40,6 +40,11 @@ void SetupServer() {
       json["STEMPRANGES"] = String(S_TEMPMIN) + " - " + String(S_TEMPMAX);
       json["STEMPCOLOR"] = (S_TEMP > S_TEMPMAX || S_TEMP < S_TEMPMIN) ? "danger" : "success";
     }
+    if (OXY_ACTIVE) {
+      json["OXY"] = OXY;
+      json["OXYRANGES"] = String(OXYMIN) + " - " + String(OXYMAX);
+      json["OXYCOLOR"] = (OXY > OXYMIN || OXY < OXYMAX) ? "danger" : "success";
+    }
     serializeJson(json, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);
@@ -57,6 +62,7 @@ void SetupServer() {
     serializeJson(results, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);
+    results.clear();
   });
 
   server.on("/getAllItems", HTTP_GET, [](AsyncWebServerRequest *request) {
@@ -105,7 +111,7 @@ void SetupServer() {
         fileName = p->value();
       }
     }
-    GetValuesFromDB(fileName);
+    GetValuesFromSensor(fileName);
     if (values.isNull()) {
       NoSD();
     }/* else {
@@ -114,19 +120,17 @@ void SetupServer() {
     serializeJson(values, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);
+    values.clear();
   });
 
   server.on("/getLastNValues", HTTP_GET, [](AsyncWebServerRequest *request) {
     AsyncResponseStream *response = request->beginResponseStream("application/json; charset=utf-8");
     //DynamicJsonDocument json(5000);
     first_time_values = true;
-    values.clear();
     if (DHT_ACTIVE) {
       GetValuesFromDB("temperatura");
-      delay(20);
       first_time_values = false;
       GetValuesFromDB("humedad");
-      delay(20);
       values["TEMPRANGES"] = String(TEMPMIN) + " - " + String(TEMPMAX);
       values["TEMPCOLOR"] = (TEMP >= TEMPMIN && TEMP <= TEMPMAX) ? "success" : "danger";
       values["HUMRANGES"] = String(HUMMIN) + " - " + String(HUMMAX);
@@ -134,36 +138,35 @@ void SetupServer() {
     }
     if (YL_ACTIVE) {
       GetValuesFromDB("s_h1");
-      delay(20);
       first_time_values = false;
       GetValuesFromDB("s_h2");
-      delay(20);
       GetValuesFromDB("s_h3");
-      delay(20);
       GetValuesFromDB("s_h4");
-      delay(20);
       values["SHUMRANGES"] = String(S_HUMMIN) + " - " + String(S_HUMMAX);
-      values["PSHUM"] = S_HUM;
+      //values["PSHUM"] = S_HUM;
       values["SHUMCOLOR"] = (S_HUM > S_HUMMAX || S_HUM < S_HUMMIN) ? "danger" : "success";
     }
     if (DS18_ACTIVE) {
       GetValuesFromDB("s_t1");
-      delay(20);
       first_time_values = false;
       GetValuesFromDB("s_t2");
-      delay(20);
       GetValuesFromDB("s_t3");
-      delay(20);
       GetValuesFromDB("s_t4");
-      delay(20);
       values["STEMPRANGES"] = String(S_TEMPMIN) + " - " + String(S_TEMPMAX);
-      values["PSTEMP"] = S_TEMP;
+      //values["PSTEMP"] = S_TEMP;
       values["STEMPCOLOR"] = (S_TEMP > S_TEMPMAX || S_TEMP < S_TEMPMIN) ? "danger" : "success";
+    }
+    if (OXY_ACTIVE) {
+      GetValuesFromDB("oxygen");
+      first_time_values = false;
+      values["OXYRANGES"] = String(OXYMIN) + " - " + String(OXYMAX);
+      values["OXYCOLOR"] = (OXY > OXYMIN || OXY < OXYMAX) ? "danger" : "success";
     }
     values["REGISTERS"] = NUM_REGISTERS;
     serializeJson(values, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);
+    values.clear();
   });
 
   server.on("/deleteFrom", HTTP_GET, [](AsyncWebServerRequest *request) {
@@ -236,7 +239,6 @@ void SetupServer() {
       }
       if (p->name() == "newReadPin") {
         newReadPin = p->value();
-        Serial.println(newReadPin);
       }
       if (p->name() == "newControlPinMin") {
         newPinMin = p->value();
@@ -255,7 +257,6 @@ void SetupServer() {
       }
       if (p->name() == "active") {
         active = p->value();
-        Serial.println(active);
       }
       if (p->name() == "id") {
         id = p->value();

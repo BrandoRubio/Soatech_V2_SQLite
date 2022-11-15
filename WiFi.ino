@@ -28,6 +28,8 @@ void Connect() {
       contador = 0;
       delay(100);
       WiFi.begin(WIFISSID.c_str(), PASSWORD.c_str());
+      lcd.setCursor(18, 3);
+      lcd.print(" ");
     }
   }
   SetupServer();

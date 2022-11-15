@@ -121,10 +121,10 @@ void DHT11Check() {
 }
 
 void DHT11LocalSave(String date) {
-  if (SaveSensorValue("temperatura", date, (isnan(TEMP) ? "0" : String(TEMP)))) {
+  if (SaveSensorValue("temperatura", date, (isnan(TEMP) ? "NULL" : String(TEMP)))) {
     NoSD();
   }
-  if (SaveSensorValue("humedad", date, (isnan(HUM) ? "0" : String(HUM)))) {
+  if (SaveSensorValue("humedad", date, (isnan(HUM) ? "NULL" : String(HUM)))) {
     NoSD();
   }
 }
