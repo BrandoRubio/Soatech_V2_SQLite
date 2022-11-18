@@ -28,15 +28,25 @@ void YLCheck() {
     counter++;
   }
   S_HUM = (sum / counter) ? sum / counter : 0;
-  if (S_HUM > S_HUMMAX) {  //controlar humedad mínima
+  if (S_HUM > S_HUMMAX && !STYLMIN) {  //controlar humedad mínima
     digitalWrite(S_HUMMIN_Ctrl, VHIGH);
+    DataLogger("Control para subir la humedad en sustrato", 0);
+    STYLMIN = true;
+    STYL = false;
   }
-  if (S_HUM >= (S_HUMIDEAL - 1) && S_HUM <= (S_HUMIDEAL + 1)) {  //Apagar controles
+  if (S_HUM >= (S_HUMIDEAL - 1) && S_HUM <= (S_HUMIDEAL + 1) && !STYL) {  //Apagar controles
     digitalWrite(S_HUMMIN_Ctrl, VLOW);
     digitalWrite(S_HUMMAX_Ctrl, VLOW);
+    DataLogger("Apagamos todos los controles de temperatura", 0);
+    STYLMAX = false;
+    STYLMIN = false;
+    STYL = true;
   }
-  if (S_HUM < S_HUMMIN) {  //controlar humedad máxima
+  if (S_HUM < S_HUMMIN && !STYLMAX) {  //controlar humedad máxima
     digitalWrite(S_HUMMAX_Ctrl, VHIGH);
+    DataLogger("Control para bajar humedad en sustrato", 0);
+    STYLMAX = true;
+    STYL = false;
   }
   if (alternadorLCD == NS_H) {
     lcd.setCursor(0, 0);
@@ -52,10 +62,10 @@ void YLCheck() {
   }
 }
 void YLLocalSave(String date) {
-  float sh1 = map(analogRead(YLPIN1), 0, 4095, 100, 0);  
-  float sh2 = map(analogRead(YLPIN2), 0, 4095, 100, 0);  
-  float sh3 = map(analogRead(YLPIN3), 0, 4095, 100, 0);  
-  float sh4 = map(analogRead(YLPIN4), 0, 4095, 100, 0);  
+  float sh1 = map(analogRead(YLPIN1), 0, 4095, 100, 0);
+  float sh2 = map(analogRead(YLPIN2), 0, 4095, 100, 0);
+  float sh3 = map(analogRead(YLPIN3), 0, 4095, 100, 0);
+  float sh4 = map(analogRead(YLPIN4), 0, 4095, 100, 0);
   if (SaveSensorValue("s_h1", date, (sh1 == 100 ? "NULL" : String(sh1)))) {
     NoSD();
   }
@@ -76,7 +86,7 @@ void YLUpToUbi() {
   float sh4 = map(analogRead(YLPIN4), 0, 4095, 100, 0);
   float sum = 0;
   int counter = 0;
-  if (sh1 != 100) { 
+  if (sh1 != 100) {
     ubidots.add("hs1", sh1);
     sum += sh1;
     counter++;

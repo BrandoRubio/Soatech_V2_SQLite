@@ -59,6 +59,12 @@ static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azC
     OXY_ACTIVE = (String(argv[9]) == "true") ? true : false;
     activeSesors = (String(argv[9]) == "true") ? activeSesors + 1 : activeSesors;
     N_OXY = activeSesors;
+    OXYPIN = String(argv[2]).toInt();
+    OXYMINCONTROL = String(argv[3]).toInt();
+    OXYMAXCONTROL = String(argv[4]).toInt();
+    OXYMIN = String(argv[6]).toInt();
+    OXYMAX = String(argv[7]).toInt();
+    OXYIDEAL = String(argv[8]).toInt();
   }
   if (String(argv[1]) == "MQ135") {
     MQ135_ACTIVE = (String(argv[9]) == "true") ? true : false;

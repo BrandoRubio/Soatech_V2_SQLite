@@ -96,18 +96,25 @@ void DHT11Check() {
   }
   TEMP = sumTemp / counter;
   HUM = sumHum / counter;
-  if (TEMP < (TEMPMIN + 1)) {
-    //Serial.println("Control para subir temperatura");
+  if (TEMP < (TEMPMIN + 1) && !STDHTMIN) {  //Cuando la temperatura baja a la mínima + 1 ACCIONA control
+    DataLogger("Control para subir temperatura", 0);
     digitalWrite(TEMPMINCONTROL, HIGH);
+    STDHTMIN = true;
+    STDHT = false;
   }
-  if (TEMP > (TEMPMAX - 1)) {
-    //Serial.println("Control para bajar temperatura");
+  if (TEMP > (TEMPMAX - 1) && !STDHTMAX) {  //Cuando la temperatura sube a la máxima - 1 ACCIONA control
+    DataLogger("Control para bajar temperatura", 0);
     digitalWrite(TEMPMAXCONTROL, HIGH);
+    STDHTMAX = true;
+    STDHT = false;
   }
-  if (TEMP >= (TEMPIDEAL - 1) && TEMP <= (TEMPIDEAL + 1)) {
-    //Serial.println("Apagamos todos los controles");
+  if (TEMP >= (TEMPIDEAL - 1) && TEMP <= (TEMPIDEAL + 1) && !STDHT) {  //Cuando la temperatura se encuentra estable desactiva todo el control
+    DataLogger("Apagamos todos los controles de temperatura", 0);
     digitalWrite(TEMPMINCONTROL, LOW);
     digitalWrite(TEMPMAXCONTROL, LOW);
+    STDHT = true;
+    STDHTMAX = false;
+    STDHTMIN = false;
   }
   if (alternadorLCD == N_DHT) {
     lcd.setCursor(0, 0);
