@@ -10,27 +10,33 @@ int interval_save_local = 300000;
 bool VHIGH = 1;
 bool VLOW = 0;
 //////////////--------------DHT11------------------//////////////
-bool DHT_ACTIVE = false;
+bool STDHTMIN, STDHTMAX, STDHT, DHT_ACTIVE = false;
 uint8_t DHTPIN1, DHTPIN2, DHTPIN3, DHTPIN4 = 0;
 int N_DHT, TEMPMIN, HUMMIN, TEMPMAX, HUMMAX, TEMPIDEAL, HUMIDEAL, TEMPMINCONTROL, TEMPMAXCONTROL, HUMMINCONTROL, HUMMAXCONTROL = 0;
 float TEMP, HUM = 0;
 //////////////--------------MQ135-----------------//////////////
 bool MQ135_ACTIVE = false;
 //////////////--------------YL-69-----------------//////////////
-bool YL_ACTIVE = false;
+bool STYLMIN, STYLMAX, STYL, YL_ACTIVE = false;
 uint8_t YLPIN1, YLPIN2, YLPIN3, YLPIN4, YLPIN5 = 0;
 int NS_H, S_HUMMIN, S_HUMMAX, S_HUMIDEAL, S_HUMMIN_Ctrl, S_HUMMAX_Ctrl = 0;
 float S_HUM = 0;
 //////////////--------------DS18------------------//////////////
-bool DS18_ACTIVE = false;
+bool STDS18MIN, STDS18MAX, DS18_ACTIVE = false;
 uint8_t DS18PIN = 0;
 int  N_OXY, NS_T, S_TEMPMIN, S_TEMPMAX, S_TEMPIDEAL, S_TEMPMIN_C, S_TEMPMAX_C = 0;
 float S_TEMP = 0;
 //////////////--------------OXYGEN----------------//////////////
+<<<<<<< HEAD
 bool OXYGEN_ACTIVE = false;
 bool OXY_ACTIVE = false;
 uint8_t OXYPIN = 0;
 int OXYMIN, OXYMAX, OXYMINCONTROL;
+=======
+bool STOXYMIN, STOXYMAX, STOXY, OXY_ACTIVE = false;
+uint8_t OXYPIN = 0;
+int OXYMIN, OXYMAX, OXYMINCONTROL, OXYIDEAL, OXYMAXCONTROL, N_OXY;
+>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
 float OXY = 0;
 String UBIVAR_OXY;
 //////////////--------------CONDUCTIVITY----------//////////////

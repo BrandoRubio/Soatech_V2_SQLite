@@ -19,6 +19,17 @@ void SetupServer() {
     request->send(response);
   });
 
+  server.on("/listDirLoggs", HTTP_GET, [](AsyncWebServerRequest *request) {
+    AsyncResponseStream *response = request->beginResponseStream("application/json");
+    listDir(SD, "Logger", 2);
+    listDir(SD, "Logging", 2);
+    listDir(SD, "UserLogging", 2);
+    serializeJson(results, *response);
+    response->addHeader("Access-Control-Allow-Origin", "*");
+    request->send(response);
+    results.clear();
+  });
+
   server.on("/getLastValues", HTTP_GET, [](AsyncWebServerRequest *request) {
     AsyncResponseStream *response = request->beginResponseStream("application/json");
     DynamicJsonDocument json(1024);
@@ -43,7 +54,7 @@ void SetupServer() {
     if (OXY_ACTIVE) {
       json["OXY"] = OXY;
       json["OXYRANGES"] = String(OXYMIN) + " - " + String(OXYMAX);
-      json["OXYCOLOR"] = (OXY > OXYMIN || OXY < OXYMAX) ? "danger" : "success";
+      json["OXYCOLOR"] = (OXY > OXYMAX || OXY < OXYMIN) ? "danger" : "success";
     }
     serializeJson(json, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
@@ -56,8 +67,6 @@ void SetupServer() {
     dbGetSensors("select * from sensors");
     if (results.isNull()) {
       NoSD();
-    } else {
-      Serial.println("hay datos en sensores");
     }
     serializeJson(results, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
@@ -114,13 +123,34 @@ void SetupServer() {
     GetValuesFromSensor(fileName);
     if (values.isNull()) {
       NoSD();
-    }/* else {
-      Serial.println("hay datos en sensores");
-    }*/
+    }
     serializeJson(values, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);
     values.clear();
+  });
+
+  server.on("/getFile", HTTP_GET, [](AsyncWebServerRequest *request) {
+    int paramsNr = request->params();
+    String fileName, fileRoute = "";
+    for (int i = 0; i < paramsNr; i++) {
+      AsyncWebParameter *p = request->getParam(i);
+      if (p->name() == "fileName") {
+        fileName = p->value();
+        Serial.println(fileName);
+      }
+      if (p->name() == "fileRoute") {
+        fileRoute = p->value();
+        Serial.println(fileRoute);
+      }
+    }
+    File file = SD.open(fileRoute);
+    if (file) {
+      AsyncWebServerResponse *response = request->beginResponse(file, fileName, "text/xhr", true);
+      request->send(response);
+    } else {
+      NoSD();
+    }
   });
 
   server.on("/getLastNValues", HTTP_GET, [](AsyncWebServerRequest *request) {
@@ -160,7 +190,7 @@ void SetupServer() {
       GetValuesFromDB("oxygen");
       first_time_values = false;
       values["OXYRANGES"] = String(OXYMIN) + " - " + String(OXYMAX);
-      values["OXYCOLOR"] = (OXY > OXYMIN || OXY < OXYMAX) ? "danger" : "success";
+      values["OXYCOLOR"] = (OXY > OXYMAX || OXY < OXYMIN) ? "danger" : "success";
     }
     values["REGISTERS"] = NUM_REGISTERS;
     serializeJson(values, *response);
@@ -173,16 +203,20 @@ void SetupServer() {
     AsyncResponseStream *response = request->beginResponseStream("application/json; charset=utf-8");
     DynamicJsonDocument json(1024);
     int paramsNr = request->params();
-    String sensor_name = "";
+    String ip, sensor_name = "";
     for (int i = 0; i < paramsNr; i++) {
       AsyncWebParameter *p = request->getParam(i);
       if (p->name() == "name") {
         sensor_name = p->value();
       }
+      if (p->name() == "ip") {
+        ip = p->value();
+      }
     }
     String query = "DELETE FROM registers WHERE sensor_name = '" + sensor_name + "'";
     int st = db_exec(query.c_str());
     json["status"] = st;
+    DataLogging("QUERY: " + query + " {ip: " + ip + "}", 0);
     serializeJson(json, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);
@@ -191,6 +225,7 @@ void SetupServer() {
   server.on("/updateDevice", HTTP_GET, [](AsyncWebServerRequest *request) {
     AsyncResponseStream *response = request->beginResponseStream("application/json; charset=utf-8");
     DynamicJsonDocument json(512);
+    String ip;
     String newName = NAME, newType = TYPE, newSSID = WIFISSID, newPassword = PASSWORD, newCompany = COMPANY, newTime = String(interval_save_local), newNR = NUM_REGISTERS;
     int paramsNr = request->params();
     for (int i = 0; i < paramsNr; i++) {
@@ -215,13 +250,23 @@ void SetupServer() {
       if (p->name() == "newNR") {
         newNR = p->value();
       }
+      if (p->name() == "ip") {
+        ip = p->value();
+      }
     }
     String query = "UPDATE device SET name = '" + newName + "', type = '" + newType + "', network = '" + newSSID + "', password = '" + newPassword + "', save_time = " + newTime + ", registers = '" + newNR + "' where id = 1";
-    json["response"] = db_exec(query.c_str());
+    int r = db_exec(query.c_str());
+    if (r) {
+      DataLogging("Fallo al actualizar el dispositivo {ip: " + ip + "}", 1);
+    } else {
+      DataLogging("Dispositivo actualizado {ip: " + ip + "}", 0);
+    }
+    json["response"] = r;
     json["status"] = "OK";
     serializeJson(json, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);
+    DataLogging("Reinicio por actualizacion del dispositivo", 0);
     delay(2000);
     WiFi.disconnect();
     ESP.restart();
@@ -230,7 +275,7 @@ void SetupServer() {
   server.on("/updateSensor", HTTP_GET, [](AsyncWebServerRequest *request) {
     AsyncResponseStream *response = request->beginResponseStream("application/json; charset=utf-8");
     DynamicJsonDocument json(5000);
-    String newUbiVar, newReadPin, newPinMin, newPinMax, newMin, newMax, newIdeal, active, id;
+    String newUbiVar, newReadPin, newPinMin, newPinMax, newMin, newMax, newIdeal, active, id, ip;
     int paramsNr = request->params();
     for (int i = 0; i < paramsNr; i++) {
       AsyncWebParameter *p = request->getParam(i);
@@ -261,12 +306,22 @@ void SetupServer() {
       if (p->name() == "id") {
         id = p->value();
       }
+      if (p->name() == "ip") {
+        ip = p->value();
+      }
     }
     String query = "UPDATE sensors SET read_pin = '" + newReadPin + "', pin_min = '" + newPinMin + "', pin_max = '" + newPinMax + "', ubi_var = '" + newUbiVar + "', min = '" + newMin + "', max = '" + newMax + "', ideal = '" + newIdeal + "', active = '" + active + "' where id = " + id + "";
-    Serial.println(db_exec(query.c_str()));
+    int r = db_exec(query.c_str());
+    if (r) {
+      DataLogging("Fallo al actualizar el sensor: " + newUbiVar, 1);
+    } else {
+      DataLogging("Sensor actualizado: " + newUbiVar, 0);
+    }
+    json["response"] = r;
     serializeJson(json, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);
+    DataLogging("Reinicio por actualizacion del sensor: " + newUbiVar + " {ip: " + ip + "}", 0);
     delay(2000);
     ESP.restart();
   });
@@ -274,58 +329,55 @@ void SetupServer() {
   server.on("/newSensor", HTTP_GET, [](AsyncWebServerRequest *request) {
     AsyncResponseStream *response = request->beginResponseStream("application/json; charset=utf-8");
     DynamicJsonDocument json(5000);
-    Serial.println("Nuevo Sensor");
-    String newName, newUbiVar, newReadPin, newControlPinMin, newControlPinMax, newMin, newMax, newIdeal, id, active;
+    String newName, newUbiVar, newReadPin, newControlPinMin, newControlPinMax, newMin, newMax, newIdeal, id, active, ip;
     int paramsNr = request->params();
     for (int i = 0; i < paramsNr; i++) {
       AsyncWebParameter *p = request->getParam(i);
       if (p->name() == "newName") {
         newName = p->value();
-        Serial.println(p->value());
       }
       if (p->name() == "newUbiVar") {
         newUbiVar = p->value();
-        Serial.println(p->value());
       }
       if (p->name() == "newReadPin") {
         newReadPin = p->value();
-        Serial.println(p->value());
       }
       if (p->name() == "newControlPinMin") {
         newControlPinMin = p->value();
-        Serial.println(p->value());
       }
       if (p->name() == "newControlPinMax") {
         newControlPinMax = p->value();
-        Serial.println(p->value());
       }
       if (p->name() == "newUbiVar") {
         newUbiVar = p->value();
-        Serial.println(p->value());
       }
       if (p->name() == "newMin") {
         newMin = p->value();
-        Serial.println(p->value());
       }
       if (p->name() == "newMax") {
         newMax = p->value();
-        Serial.println(p->value());
       }
       if (p->name() == "newIdeal") {
         newIdeal = p->value();
-        Serial.println(p->value());
       }
       if (p->name() == "active") {
         active = p->value();
-        Serial.println(p->value());
       }
       if (p->name() == "id") {
         id = p->value();
-        Serial.println(p->value());
+      }
+      if (p->name() == "ip") {
+        ip = p->value();
       }
     }
     String query = "INSERT INTO sensors (id, name, read_pin, pin_min, pin_max, ubi_var, min, max, ideal, active) VALUES (" + id + ",'" + newName + "','" + newReadPin + "', '" + newControlPinMin + "' ,'" + newControlPinMax + "' , '" + newUbiVar + "', '" + newMin + "', '" + newMax + "' , '" + newIdeal + "', '" + active + "')";
-    json["response"] = db_exec(query.c_str());
+    int r = db_exec(query.c_str());
+    if (r) {
+      DataLogging("Fallo al crear el sensor: " + newUbiVar + " {ip: " + ip + "}", 1);
+    } else {
+      DataLogging("Sensor creado: " + newUbiVar + " {ip: " + ip + "}", 0);
+    }
+    json["response"] = r;
     serializeJson(json, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);

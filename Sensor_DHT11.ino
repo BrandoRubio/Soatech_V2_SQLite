@@ -102,22 +102,41 @@ void DHT11Check() {
   TEMP = sumTemp / counter;
   dataLog("Obteniendo temperatura relativa promedio", 0 );
   HUM = sumHum / counter;
+<<<<<<< HEAD
   dataLog("Obteniendo humedad relativa promedio", 0 );
   if (TEMP < (TEMPMIN + 1)) {
     //Serial.println("Control para subir temperatura");
     digitalWrite(TEMPMINCONTROL, HIGH);
     dataLog("Activando control para aumentar temperatura", 0 );
+=======
+  if (TEMP < (TEMPMIN + 1) && !STDHTMIN) {  //Cuando la temperatura baja a la mínima + 1 ACCIONA control
+    DataLogger("Control para subir temperatura", 0);
+    digitalWrite(TEMPMINCONTROL, HIGH);
+    STDHTMIN = true;
+    STDHT = false;
+>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
   }
-  if (TEMP > (TEMPMAX - 1)) {
-    //Serial.println("Control para bajar temperatura");
+  if (TEMP > (TEMPMAX - 1) && !STDHTMAX) {  //Cuando la temperatura sube a la máxima - 1 ACCIONA control
+    DataLogger("Control para bajar temperatura", 0);
     digitalWrite(TEMPMAXCONTROL, HIGH);
+<<<<<<< HEAD
     dataLog("Inicializando control para bajar temperatura relativa", 0 );
+=======
+    STDHTMAX = true;
+    STDHT = false;
+>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
   }
-  if (TEMP >= (TEMPIDEAL - 1) && TEMP <= (TEMPIDEAL + 1)) {
-    //Serial.println("Apagamos todos los controles");
+  if (TEMP >= (TEMPIDEAL - 1) && TEMP <= (TEMPIDEAL + 1) && !STDHT) {  //Cuando la temperatura se encuentra estable desactiva todo el control
+    DataLogger("Apagamos todos los controles de temperatura", 0);
     digitalWrite(TEMPMINCONTROL, LOW);
     digitalWrite(TEMPMAXCONTROL, LOW);
+<<<<<<< HEAD
     dataLog("Control OK", 0 );
+=======
+    STDHT = true;
+    STDHTMAX = false;
+    STDHTMIN = false;
+>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
   }
   if (alternadorLCD == N_DHT) {
     lcd.setCursor(0, 0);

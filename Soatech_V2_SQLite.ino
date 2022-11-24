@@ -33,13 +33,18 @@ int db_open() {
   int rc = sqlite3_open("/sd/soatech.db", &db);
   if (rc) {
     NoSD();
-    Serial.print(F("Can't open database: "));
-    Serial.print(sqlite3_extended_errcode(db));
+    DataLogger("No se pudo abrir la base de datos", 1);
+    DataLogger("BD ERROR: " + String(sqlite3_extended_errcode(db)), 1);
+    DataLogger("BD ERROR: " + String(sqlite3_errmsg(db)), 1);
+    /*Serial.print(F("Can't open database: "));
+    Serial.print(sqlite3_extended_errcode(db));*/
     //Serial.print(" ");
-    Serial.println(sqlite3_errmsg(db));
+    //Serial.println(sqlite3_errmsg(db));
     return rc;
-  } else
+  } else {
     Serial.println(F("Opened database successfully"));
+    DataLogger("Base de datos abierta correctamente", 0);
+  }
   return rc;
 }
 
@@ -90,22 +95,30 @@ int dbGetSensors(const char *sql) {
 }
 
 void SetupDB() {
+  DataLogger("Iniciando base de datos", 0);
   if (!SPIFFS.begin(FORMAT_SPIFFS_IF_FAILED)) {
     Serial.println(F("Failed to mount file Serial"));
     return;
   }
-  SPI.begin();
-  SD_MMC.begin();
-  SD.begin();
   sqlite3_initialize();
   db_open();
+  DataLogger("Cargando datos del dispositivo", 0);
   loadTheData("Select * from Device");
+  DataLogger("Cargando datos de los sensores", 0);
   loadSensorsData("Select * from sensors");
 }
+<<<<<<< HEAD
 void listDir(fs::FS &fs, const char * dirname, uint8_t levels) {
   Serial.printf("Listing directory: %s\n", dirname);
 
   File root = fs.open(dirname);
+=======
+
+void listDir(fs::FS &fs, const char *dirname, uint8_t levels) {
+  Serial.printf("Listing directory: %s\n", dirname);
+
+  File root = fs.open("/" + String(dirname));
+>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
   if (!root) {
     Serial.println("Failed to open directory");
     return;
@@ -114,16 +127,26 @@ void listDir(fs::FS &fs, const char * dirname, uint8_t levels) {
     Serial.println("Not a directory");
     return;
   }
+<<<<<<< HEAD
 
   File file = root.openNextFile();
   while (file) {
     if (file.isDirectory()) {
       Serial.print("  DIR : ");
+=======
+  int i = 0;
+  File file = root.openNextFile();
+  results["DIRS"].add(dirname);
+  while (file) {
+    if (file.isDirectory()) {
+      //Serial.print("  DIR : ");
+>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
       Serial.println(file.name());
       if (levels) {
         listDir(fs, file.name(), levels - 1);
       }
     } else {
+<<<<<<< HEAD
       Serial.print("  FILE: ");
       Serial.print(file.name());
       Serial.print("  SIZE: ");
@@ -269,3 +292,20 @@ void testFileIO(fs::FS &fs, const char * path) {
   Serial.printf("%u bytes written for %u ms\n", 2048 * 512, end);
   file.close();
 }
+=======
+      //results[dirname].add(file.name());
+      String name = file.name();
+      name.replace("/"+String(dirname)+"/" ,"");
+      results[dirname][i]["rute"] = String(file.name());
+      results[dirname][i]["name"] = name;
+      results[dirname][i]["size"] = String(file.size());
+      i++;
+      /*Serial.print("  FILE: ");
+      Serial.print(file.name());
+      Serial.print("  SIZE: ");
+      Serial.println(file.size());*/
+    }
+    file = root.openNextFile();
+  }
+}
+>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
