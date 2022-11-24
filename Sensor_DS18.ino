@@ -10,6 +10,7 @@ void SetupDS18() {
 }
 void DS18Check() {
   sensors.requestTemperatures();             //Se envía el comando para leer la temperatura
+  dataLog("Incializando sensor de temperatura en sustrato", 0 );
   float temp1 = sensors.getTempCByIndex(0);  //Se obtiene la temperatura en ºC
   float temp2 = sensors.getTempCByIndex(1);  //Se obtiene la temperatura en ºC
   float temp3 = sensors.getTempCByIndex(2);  //Se obtiene la temperatura en ºC
@@ -18,21 +19,26 @@ void DS18Check() {
   int counter = 0;
   if (temp1 != -127) {
     sum += temp1;
+    dataLog("Inicializando primer sensor de sustrato", 0 );
     counter++;
   }
   if (temp2 != -127) {
     sum += temp2;
+    dataLog("Inicializando segunda sensor de sustrato", 0 );
     counter++;
   }
   if (temp3 != -127) {
     sum += temp3;
+    dataLog("Inicializando tercer sensor de sustrato", 0 );
     counter++;
   }
   if (temp4 != -127) {
     sum += temp4;
+    dataLog("Inicializando cuarto sensor de sustrato", 0 );
     counter++;
   }
   S_TEMP = (sum / counter) ? sum / counter : 0;
+  dataLog("Calculando promedio de temperatura en sustrato", 0 );
   if (alternadorLCD == NS_T) {
     lcd.setCursor(0, 0);
     lcd.print("T1:" + String(temp1) + " ");
@@ -48,6 +54,7 @@ void DS18Check() {
 }
 
 void DS18LocalSave(String date) {
+  dataLog("Guardando datos de Temperatura en micro SD", 0 );
   sensors.requestTemperatures();             //Se envía el comando para leer la temperatura
   float temp1 = sensors.getTempCByIndex(0);  //Se obtiene la temperatura en ºC
   float temp2 = sensors.getTempCByIndex(1);  //Se obtiene la temperatura en ºC
@@ -95,6 +102,7 @@ void DS18UpToUbi() {
     sum += temp4;
     counter++;
   }
+  dataLog("Cargando datos de temperatura en sustrato en la nube", 0 );
   S_TEMP = (sum / counter) ? sum / counter : 0;
   ubidots.add("P_T_S", S_TEMP);
   ubidots.publish(DEVICE_LABEL);

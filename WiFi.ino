@@ -1,5 +1,6 @@
 #include "WiFi.h"
 void Connect() {
+  dataLog("Conectando a red de wifi..... ", 0 );
   desconexionwifi();
   WiFi.begin(WIFISSID.c_str(), PASSWORD.c_str());
   /*lcd.clear();

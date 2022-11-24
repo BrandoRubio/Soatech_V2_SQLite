@@ -7,7 +7,7 @@ void Verification(){
   String Name = now.toString(buf2);
   String nameFolder = "/Logger/"+ Name +".csv"; 
 
-  if(sdW.fileExist(SD,nameFolder.c_str())== 1) //SI SE REINICIA EL ESP32, INDICA EL PUNTO DE RESET.
+  if(FileExist(SD,nameFolder.c_str())== 1) //SI SE REINICIA EL ESP32, INDICA EL PUNTO DE RESET.
   {
     sdW.appendFile(SD, nameFolder.c_str() , "Inicializando....... \n ");
   }
@@ -16,7 +16,7 @@ void Verification(){
 //ESCRITURA EN MEMORIA SD
 void dataLog(String instruction, int level)  // Registro de datos en archivo
 { 
-  String Niv []= {"[INFO] ","[ERROR] "}; 
+  String Niv []= {"[INFO] ","[ERROR] "};
   // INFO - informacion de la tarea, Error -- Error de ejecucion
 
   DateTime now = rtc.now();
@@ -29,7 +29,7 @@ void dataLog(String instruction, int level)  // Registro de datos en archivo
   String nameFolder = "/Logger/"+ Name +".csv"; 
   String text = Time + ",:-->,"+ Niv[level] + "," + instruction + "\n";
   
-  if(sdW.fileExist(SD,nameFolder.c_str())== 0) // SI EL ARCHIVO NO EXISTE, CREA UNO NUEVO
+   if(FileExist(SD,nameFolder.c_str())== 0) // SI EL ARCHIVO NO EXISTE, CREA UNO NUEVO
   {
      sdW.writeFile(SD, nameFolder.c_str(),"Hora, ,Nivel,Instruccion\r\n "); 
      sdW.appendFile(SD, nameFolder.c_str() , text.c_str()); 

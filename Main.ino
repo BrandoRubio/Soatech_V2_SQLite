@@ -2,22 +2,28 @@ void setup() {
   Serial.begin(115200);
   SetupLCD();
   SetupRTC();
+  Verification();
   //SetupBT();
   SetupDB();
   if (activeSesors == 0) {
     lcd.setCursor(0, 2);
     lcd.print(" Sensores inactivos ");
+    //dataLog("Sensores inactivos", 0 );
   }
   if (DHT_ACTIVE) {
+    //dataLog("Inicializando sensores de temperatura y Humedad", 0 );
     SetupDHT(DHTPIN1, DHTPIN2, DHTPIN3, DHTPIN4);
   }
   if (DS18_ACTIVE) {
+    //dataLog("Inicializando sensor de Temperatura en sustrato", 0 );
     SetupDS18();
   }
   if (YL_ACTIVE) {
+    //dataLog("Inicializando sensor de Humedad en sustrato", 0 );
     SetupYL();
   }
   if (OXY_ACTIVE) {
+    //dataLog("Inicializando sensor de Oxigeno", 0 );
     SetupOxy();
   }
   delay(1000);

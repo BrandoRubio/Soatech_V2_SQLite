@@ -27,6 +27,7 @@ void SetupDHT(uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4) {
 }
 
 void DHT11Check() {
+  dataLog("Revisando DHT11", 0 );
   float h1 = dht1.readHumidity();
   float t1 = dht1.readTemperature();
   float h2 = dht2.readHumidity();
@@ -43,6 +44,7 @@ void DHT11Check() {
   float sumHum = 0;
   float counter = 0;
   if (isnan(t1)) {
+    dataLog("Lectura de primer sensor DHT11", 0 );
     h1 = dht1.readHumidity();
     t1 = dht1.readTemperature();
     if (isnan(t1)) {
@@ -56,6 +58,7 @@ void DHT11Check() {
     counter++;
   }
   if (isnan(t2)) {
+    dataLog("Lectura de segundo sensor DHT11", 0 );
     h2 = dht1.readHumidity();
     t2 = dht1.readTemperature();
     if (isnan(t2)) {
@@ -69,6 +72,7 @@ void DHT11Check() {
     counter++;
   }
   if (isnan(t3)) {
+    dataLog("Lectura de tercer sensor DHT11", 0 );
     h3 = dht3.readHumidity();
     t3 = dht3.readTemperature();
     if (isnan(t3)) {
@@ -82,6 +86,7 @@ void DHT11Check() {
     counter++;
   }
   if (isnan(t4)) {
+    dataLog("Lectura de cuarto sensor DHT11", 0 );
     h4 = dht1.readHumidity();
     t4 = dht1.readTemperature();
     if (isnan(t4)) {
@@ -95,19 +100,24 @@ void DHT11Check() {
     counter++;
   }
   TEMP = sumTemp / counter;
+  dataLog("Obteniendo temperatura relativa promedio", 0 );
   HUM = sumHum / counter;
+  dataLog("Obteniendo humedad relativa promedio", 0 );
   if (TEMP < (TEMPMIN + 1)) {
     //Serial.println("Control para subir temperatura");
     digitalWrite(TEMPMINCONTROL, HIGH);
+    dataLog("Activando control para aumentar temperatura", 0 );
   }
   if (TEMP > (TEMPMAX - 1)) {
     //Serial.println("Control para bajar temperatura");
     digitalWrite(TEMPMAXCONTROL, HIGH);
+    dataLog("Inicializando control para bajar temperatura relativa", 0 );
   }
   if (TEMP >= (TEMPIDEAL - 1) && TEMP <= (TEMPIDEAL + 1)) {
     //Serial.println("Apagamos todos los controles");
     digitalWrite(TEMPMINCONTROL, LOW);
     digitalWrite(TEMPMAXCONTROL, LOW);
+    dataLog("Control OK", 0 );
   }
   if (alternadorLCD == N_DHT) {
     lcd.setCursor(0, 0);
@@ -121,6 +131,7 @@ void DHT11Check() {
 }
 
 void DHT11LocalSave(String date) {
+  dataLog("Guardando datos de temperatura y humedad relativa en Micro SD", 0 );
   if (SaveSensorValue("temperatura", date, (isnan(TEMP) ? "NULL" : String(TEMP)))) {
     NoSD();
   }
@@ -159,6 +170,7 @@ void DHT11UpToUbi() {
     ubidots.add("t4", t4);
     ubidots.add("h4", h4);
   }
+  dataLog("Subiendo datos de temperatura y humedad relativa a la nube", 0 );
   ubidots.add("Temperatura", TEMP);
   ubidots.add("Humedad", HUM);
   ubidots.publish(DEVICE_LABEL);

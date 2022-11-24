@@ -1,3 +1,4 @@
+
 void SetupYL() {
   pinMode(S_HUMMIN_Ctrl, OUTPUT);
   pinMode(S_HUMMAX_Ctrl, OUTPUT);
@@ -5,38 +6,47 @@ void SetupYL() {
   digitalWrite(S_HUMMAX_Ctrl, VLOW);
 }
 void YLCheck() {
-  float sh1 = map(analogRead(YLPIN1), 0, 4095, 100, 0);
-  float sh2 = map(analogRead(YLPIN2), 0, 4095, 100, 0);
-  float sh3 = map(analogRead(YLPIN3), 0, 4095, 100, 0);
-  float sh4 = map(analogRead(YLPIN4), 0, 4095, 100, 0);
+  
+  float sh1 = map(analogRead(YLPIN1), humedadAire, humedadAgua, 0, 100);
+  float sh2 = map(analogRead(YLPIN2), humedadAire1, humedadAgua1, 0, 100);
+  float sh3 = map(analogRead(YLPIN3), humedadAire2, humedadAgua2, 100, 0);
+  float sh4 = map(analogRead(YLPIN4), humedadAire3, humedadAgua3, 100, 0);
   float sum = 0;
   int counter = 0;
-  if (sh1 != 100) {
+  if (sh1 != -117) {
     sum += sh1;
     counter++;
+    dataLog("Inicializando primer sensor de humedad en sustrato", 0 );
   }
-  if (sh2 != 100) {
+  if (sh2 != -117) {
     sum += sh2;
     counter++;
+    dataLog("Inicializando segundo sensor de humedad en sustrato", 0 );
   }
-  if (sh3 != 100) {
+  if (sh3 != -117) {
     sum += sh3;
     counter++;
+    dataLog("Inicializando tercer sensor de humedad en sustrato", 0 );
   }
-  if (sh4 != 100) {
+  if (sh4 != -117) {
     sum += sh4;
     counter++;
+    dataLog("Inicializando cuarto sensor de humedad en sustrato", 0 );
   }
   S_HUM = (sum / counter) ? sum / counter : 0;
+  dataLog("Inicializando sensor de humedad en sustrato promedio", 0 );
   if (S_HUM > S_HUMMAX) {  //controlar humedad mínima
     digitalWrite(S_HUMMIN_Ctrl, VHIGH);
+    dataLog("Activando sontrol de humedad por valor al minimo", 0 );
   }
   if (S_HUM >= (S_HUMIDEAL - 1) && S_HUM <= (S_HUMIDEAL + 1)) {  //Apagar controles
     digitalWrite(S_HUMMIN_Ctrl, VLOW);
     digitalWrite(S_HUMMAX_Ctrl, VLOW);
+    dataLog("Humedad en sustrato OK", 0 );
   }
   if (S_HUM < S_HUMMIN) {  //controlar humedad máxima
     digitalWrite(S_HUMMAX_Ctrl, VHIGH);
+    dataLog("Inicializando control en humedad por valo al maximo", 0 );
   }
   if (alternadorLCD == NS_H) {
     lcd.setCursor(0, 0);
@@ -52,50 +62,49 @@ void YLCheck() {
   }
 }
 void YLLocalSave(String date) {
-  float sh1 = map(analogRead(YLPIN1), 0, 4095, 100, 0);  
-  float sh2 = map(analogRead(YLPIN2), 0, 4095, 100, 0);  
-  float sh3 = map(analogRead(YLPIN3), 0, 4095, 100, 0);  
-  float sh4 = map(analogRead(YLPIN4), 0, 4095, 100, 0);  
-  if (SaveSensorValue("s_h1", date, (sh1 == 100 ? "NULL" : String(sh1)))) {
+  dataLog("Inicializando valor de sensor de humedad en sustrato guardando en Micro SD", 0 );
+  if (SaveSensorValue("s_h1", date, String(map(analogRead(YLPIN1), 0, 4095, 100, 0)))) {
     NoSD();
   }
-  if (SaveSensorValue("s_h2", date, (sh2 == 100 ? "NULL" : String(sh2)))) {
+  if (SaveSensorValue("s_h2", date, String(map(analogRead(YLPIN2), 0, 4095, 100, 0)))) {
     NoSD();
   }
-  if (SaveSensorValue("s_h3", date, (sh3 == 100 ? "NULL" : String(sh3)))) {
+  if (SaveSensorValue("s_h3", date, String(map(analogRead(YLPIN3), 0, 4095, 100, 0)))) {
     NoSD();
   }
-  if (SaveSensorValue("s_h4", date, (sh4 == 100 ? "NULL" : String(sh4)))) {
+  if (SaveSensorValue("s_h4", date, String(map(analogRead(YLPIN4), 0, 4095, 100, 0)))) {
     NoSD();
   }
 }
 void YLUpToUbi() {
-  float sh1 = map(analogRead(YLPIN1), 0, 4095, 100, 0);
-  float sh2 = map(analogRead(YLPIN2), 0, 4095, 100, 0);
-  float sh3 = map(analogRead(YLPIN3), 0, 4095, 100, 0);
-  float sh4 = map(analogRead(YLPIN4), 0, 4095, 100, 0);
+  
+  float sh1 = map(analogRead(YLPIN1), humedadAire, humedadAgua, 0, 100);
+  float sh2 = map(analogRead(YLPIN2), humedadAire1, humedadAgua1, 0, 100);
+  float sh3 = map(analogRead(YLPIN3), humedadAire2, humedadAgua2, 100, 0);
+  float sh4 = map(analogRead(YLPIN4), humedadAire3, humedadAgua3, 100, 0);
   float sum = 0;
   int counter = 0;
-  if (sh1 != 100) { 
+  if (sh1 != -117) { 
     ubidots.add("hs1", sh1);
     sum += sh1;
     counter++;
   }
-  if (sh2 != 100) {
+  if (sh2 != -117) {
     ubidots.add("hs2", sh2);
     sum += sh2;
     counter++;
   }
-  if (sh3 != 100) {
+  if (sh3 != -117) {
     ubidots.add("hs3", sh3);
     sum += sh3;
     counter++;
   }
-  if (sh4 != 100) {
+  if (sh4 != -117) {
     ubidots.add("hs4", sh4);
     sum += sh4;
     counter++;
   }
+  dataLog("Enviando sensor de humedad en sustrtato en la nube ", 0 );
   S_HUM = (sum / counter) ? sum / counter : 0;
   ubidots.add("P_H_S", S_HUM);
   ubidots.publish(DEVICE_LABEL);

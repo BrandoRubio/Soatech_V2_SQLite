@@ -3,8 +3,10 @@
 RTC_DS3231 rtc;
 
 void SetupRTC() {
+  //dataLog("Inicializamos modulo RTC", 0 );
   if (! rtc.begin()) {
     Serial.println("Couldn't find RTC");
+    
     Serial.flush();
     while (1) delay(10);
   }
