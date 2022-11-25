@@ -71,12 +71,26 @@ static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azC
     activeSesors = (String(argv[9]) == "true") ? activeSesors + 1 : activeSesors;
   }
   if (String(argv[1]) == "Conductividad") {
-    CONDUCTIVITY_ACTIVE = (String(argv[9]) == "true") ? true : false;
+    COND_ACTIVE = (String(argv[9]) == "true") ? true : false;
     activeSesors = (String(argv[9]) == "true") ? activeSesors + 1 : activeSesors;
+    N_COND = activeSesors;
+    CONDPIN = String(argv[2]).toInt();
+    CONDMINCONTROL = String(argv[3]).toInt();
+    CONDMAXCONTROL = String(argv[4]).toInt();
+    CONDMIN = String(argv[6]).toInt();
+    CONDMAX = String(argv[7]).toInt();
+    CONDIDEAL = String(argv[8]).toInt();
   }
   if (String(argv[1]) == "PH") {
     PH_ACTIVE = (String(argv[9]) == "true") ? true : false;
     activeSesors = (String(argv[9]) == "true") ? activeSesors + 1 : activeSesors;
+    N_PH = activeSesors;
+    PHPIN = String(argv[2]).toInt();
+    PHMINCONTROL = String(argv[3]).toInt();
+    PHMAXCONTROL = String(argv[4]).toInt();
+    PHMIN = String(argv[6]).toInt();
+    PHMAX = String(argv[7]).toInt();
+    PHIDEAL = String(argv[8]).toInt();
   }
   if (String(argv[1]) == "Turvidez") {
     TURVIDEZ_ACTIVE = (String(argv[9]) == "true") ? true : false;

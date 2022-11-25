@@ -57,14 +57,14 @@ void OxyCheck() {
     STOXYMAX = true;
     STOXY = false;
   }*/
-  if (OXY >= (OXYIDEAL - 1) && OXY <= (OXYIDEAL + 1) && !STOXY) {
+  /*if (OXY >= (OXYIDEAL - 1) && OXY <= (OXYIDEAL + 1) && !STOXY) {
     DataLogger("Apagamos todos los controles de oxigenacion", 0);
     STOXY = true;
     STOXYMAX = false;
     STOXYMIN = false;
     digitalWrite(OXYMINCONTROL, VLOW);
     digitalWrite(OXYMAXCONTROL, VLOW);
-  }
+  }*/
   if (alternadorLCD == N_OXY) {
     lcd.setCursor(0, 0);
     lcd.print("Oxigenacion:" + String(OXY) + "   ");
@@ -80,4 +80,8 @@ void OxyLocalSave(String date) {
   if (SaveSensorValue("oxygen", date, (OXY == 0 ? "NULL" : String(OXY)))) {
     NoSD();
   }
+}
+void OxyUpToUbi() {
+  ubidots.add("Oxygen", OXY);
+  ubidots.publish(DEVICE_LABEL);
 }

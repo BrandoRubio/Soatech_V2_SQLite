@@ -40,9 +40,19 @@ void updateRTC() {
   unsigned long epochTime;
   epochTime = getTime();
   DateTime time = rtc.now();
-  Serial.println(String("DateTime::TIMESTAMP_FULL:\t") + time.timestamp(DateTime::TIMESTAMP_FULL));
-  rtc.adjust(DateTime(epochTime - 21600));  //Actualizamos la fecha desde NTP server
-  Serial.print("Epoch Time: ");
-  Serial.println(epochTime);
-  DataLogger("Actualizado el tiempo del reloj " + String(epochTime), 0);
+  if (epochTime) {
+    Serial.println(String("DateTime::TIMESTAMP_FULL:\t") + time.timestamp(DateTime::TIMESTAMP_FULL));
+    rtc.adjust(DateTime(epochTime - 21600));  //Actualizamos la fecha desde NTP server
+    DataLogger("Actualizada la hora del reloj " + time.timestamp(DateTime::TIMESTAMP_FULL), 0);
+  } else {
+    epochTime = getTime();
+    if (epochTime) {
+      Serial.println(String("DateTime::TIMESTAMP_FULL:\t") + time.timestamp(DateTime::TIMESTAMP_FULL));
+      Serial.println(time.unixtime());
+      DataLogger("Actualizada la hora del reloj " + time.timestamp(DateTime::TIMESTAMP_FULL), 0);
+    } else {
+      DataLogger("No se pudo obtener la hora desde la red", 1);
+      Serial.println("No se pudo actualizar la hora debido a la red.");
+    }
+  }
 }

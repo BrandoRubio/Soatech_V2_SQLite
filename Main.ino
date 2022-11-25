@@ -25,7 +25,10 @@ void setup() {
   if (OXY_ACTIVE) {
     //dataLog("Inicializando sensor de Oxigeno", 0 );
     SetupOxy();
-  }
+  }/*
+  if (PH_ACTIVE) {
+    SetupPH();
+  }*/
   delay(1000);
   SetupUbidots();
 }
@@ -52,6 +55,12 @@ void LocalCheck() {
     }
     if (OXY_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
       OxyCheck();
+    }
+    if (PH_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
+      PHCheck();
+    }
+    if (COND_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
+      CondCheck();
     }
     if (alternadorLCD < activeSesors) {
       alternadorLCD++;
@@ -81,6 +90,12 @@ void SaveLocal() {
     if (OXY_ACTIVE) {  //Si el sensor de oxigención está activo entonces lee el sensor
       OxyLocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
+    if (PH_ACTIVE) {  //Si el sensor de oxigención está activo entonces lee el sensor
+      PHLocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
+    }
+    if (COND_ACTIVE) {  //Si el sensor de oxigención está activo entonces lee el sensor
+      CondLocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
+    }
     timer_save_local = millis();
   }
 }
@@ -97,6 +112,15 @@ void UpToUbidtos() {
     }
     if (DS18_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
       DS18UpToUbi();
+    }
+    if (OXY_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
+      OxyUpToUbi();
+    }
+    if (PH_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
+      PHUpToUbi();
+    }
+    if (COND_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
+      CondUpToUbi();
     }
     timer_up_data = millis();
     lcd.setCursor(17, 3);

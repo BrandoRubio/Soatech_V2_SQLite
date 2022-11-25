@@ -40,9 +40,17 @@ int OXYMIN, OXYMAX, OXYMINCONTROL, OXYIDEAL, OXYMAXCONTROL, N_OXY;
 float OXY = 0;
 String UBIVAR_OXY;
 //////////////--------------CONDUCTIVITY----------//////////////
-bool CONDUCTIVITY_ACTIVE = false;
+//bool STCONDMIN, STCONDMAX, STCOND; 
+bool COND_ACTIVE = false;
+uint8_t CONDPIN = 0;
+int CONDMIN, CONDMAX, CONDMINCONTROL, CONDIDEAL, CONDMAXCONTROL, N_COND;
+float COND = 0;
 //////////////--------------PH--------------------//////////////
+//bool STPHMIN, STPHMAX, STPH;
 bool PH_ACTIVE = false;
+uint8_t PHPIN = 0;
+int PHMIN, PHMAX, PHMINCONTROL, PHIDEAL, PHMAXCONTROL, N_PH;
+float PH = 0;
 //////////////--------------TURVIDEZ--------------//////////////
 bool TURVIDEZ_ACTIVE = false;
 //////////////--------------Dispositivo------------//////////////

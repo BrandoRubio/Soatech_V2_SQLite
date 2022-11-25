@@ -56,6 +56,16 @@ void SetupServer() {
       json["OXYRANGES"] = String(OXYMIN) + " - " + String(OXYMAX);
       json["OXYCOLOR"] = (OXY > OXYMAX || OXY < OXYMIN) ? "danger" : "success";
     }
+    if (PH_ACTIVE) {
+      json["PH"] = PH;
+      json["PHRANGES"] = String(PHMIN) + " - " + String(PHMAX);
+      json["PHCOLOR"] = (PH > PHMAX || PH < PHMIN) ? "danger" : "success";
+    }
+    if (COND_ACTIVE) {
+      json["COND"] = COND;
+      json["CONDRANGES"] = String(CONDMIN) + " - " + String(CONDMAX);
+      json["CONDCOLOR"] = (COND > CONDMAX || COND < CONDMIN) ? "danger" : "success";
+    }
     serializeJson(json, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);
@@ -74,21 +84,9 @@ void SetupServer() {
     results.clear();
   });
 
-  server.on("/getAllItems", HTTP_GET, [](AsyncWebServerRequest *request) {
+  /*server.on("/getAllItems", HTTP_GET, [](AsyncWebServerRequest *request) {
     AsyncResponseStream *response = request->beginResponseStream("application/json; charset=utf-8");
     DynamicJsonDocument json(500);
-    /*uint8_t cardType = SD.cardType();
-    if (cardType == CARD_NONE) {
-      json["msjsd"] = "No SD.  ";
-    } else {
-      json["msjsd"] = "";
-    }
-    if (ubidots.connected()) {
-      json["msjnet"] = "Con Internet";
-    } else {
-      json["msjnet"] = "Sin internet";
-    }*/
-
     if (DHT_ACTIVE) {
       json["files"].add("temperatura");
       json["files"].add("humedad");
@@ -108,7 +106,7 @@ void SetupServer() {
     serializeJson(json, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);
-  });
+  });*/
 
   server.on("/createFileFrom", HTTP_GET, [](AsyncWebServerRequest *request) {
     AsyncResponseStream *response = request->beginResponseStream("application/json; charset=utf-8");
@@ -155,7 +153,6 @@ void SetupServer() {
 
   server.on("/getLastNValues", HTTP_GET, [](AsyncWebServerRequest *request) {
     AsyncResponseStream *response = request->beginResponseStream("application/json; charset=utf-8");
-    //DynamicJsonDocument json(5000);
     first_time_values = true;
     if (DHT_ACTIVE) {
       GetValuesFromDB("temperatura");
@@ -191,6 +188,18 @@ void SetupServer() {
       first_time_values = false;
       values["OXYRANGES"] = String(OXYMIN) + " - " + String(OXYMAX);
       values["OXYCOLOR"] = (OXY > OXYMAX || OXY < OXYMIN) ? "danger" : "success";
+    }
+    if (PH_ACTIVE) {
+      GetValuesFromDB("ph");
+      first_time_values = false;
+      values["PHRANGES"] = String(PHMIN) + " - " + String(PHMAX);
+      values["PHCOLOR"] = (PH > PHMAX || PH < PHMIN) ? "danger" : "success";
+    }
+    if (COND_ACTIVE) {
+      GetValuesFromDB("cond");
+      first_time_values = false;
+      values["CONDRANGES"] = String(CONDMIN) + " - " + String(CONDMAX);
+      values["CONDCOLOR"] = (COND > CONDMAX || COND < CONDMIN) ? "danger" : "success";
     }
     values["REGISTERS"] = NUM_REGISTERS;
     serializeJson(values, *response);
@@ -381,6 +390,8 @@ void SetupServer() {
     serializeJson(json, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);
+    delay(1000);
+    ESP.restart();
   });
 
   bool status;
