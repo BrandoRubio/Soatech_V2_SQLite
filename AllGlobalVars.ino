@@ -24,19 +24,19 @@ float S_HUM = 0;
 //////////////--------------DS18------------------//////////////
 bool STDS18MIN, STDS18MAX, DS18_ACTIVE = false;
 uint8_t DS18PIN = 0;
-int  N_OXY, NS_T, S_TEMPMIN, S_TEMPMAX, S_TEMPIDEAL, S_TEMPMIN_C, S_TEMPMAX_C = 0;
+int  NS_T, S_TEMPMIN, S_TEMPMAX, S_TEMPIDEAL, S_TEMPMIN_C, S_TEMPMAX_C = 0;
 float S_TEMP = 0;
 //////////////--------------OXYGEN----------------//////////////
-<<<<<<< HEAD
+/*<<<<<<< HEAD
 bool OXYGEN_ACTIVE = false;
 bool OXY_ACTIVE = false;
 uint8_t OXYPIN = 0;
 int OXYMIN, OXYMAX, OXYMINCONTROL;
-=======
+=======*/
 bool STOXYMIN, STOXYMAX, STOXY, OXY_ACTIVE = false;
 uint8_t OXYPIN = 0;
 int OXYMIN, OXYMAX, OXYMINCONTROL, OXYIDEAL, OXYMAXCONTROL, N_OXY;
->>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
+//>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677*/
 float OXY = 0;
 String UBIVAR_OXY;
 //////////////--------------CONDUCTIVITY----------//////////////

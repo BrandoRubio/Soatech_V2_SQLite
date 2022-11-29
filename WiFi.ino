@@ -1,10 +1,10 @@
 #include "WiFi.h"
 void Connect() {
-<<<<<<< HEAD
+  /*<<<<<<< HEAD
   dataLog("Conectando a red de wifi..... ", 0 );
-=======
+=======*/
   DataLogger("Conectando a la red " + WIFISSID, 0);
->>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
+  //>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
   desconexionwifi();
   WiFi.begin(WIFISSID.c_str(), PASSWORD.c_str());
   /*lcd.clear();
@@ -44,7 +44,7 @@ void Connect() {
   Serial.println(WiFi.localIP());
   conexionwifi();
   DataLogger("¡Conexión WiFi exitosa!", 0);
-  DataLogger("Conectando a Ubidots",0);
+  DataLogger("Conectando a Ubidots", 0);
   while (WiFi.status() == WL_CONNECTED) {
     LocalCheck();
     SaveLocal();
@@ -58,7 +58,7 @@ void Connect() {
       break;
     }
   }
-  DataLogger("¡Conexión a Ubidots exitosa!",0);
+  DataLogger("¡Conexión a Ubidots exitosa!", 0);
   updateRTC();
   delay(200);
   lcd.setCursor(0, 3);

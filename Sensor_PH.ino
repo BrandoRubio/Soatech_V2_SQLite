@@ -13,7 +13,7 @@ void PHCheck(){
   }*/
   if (alternadorLCD == N_PH) {
     lcd.setCursor(0, 0);
-    lcd.print("PH:" + String(PH) + "     ");
+    lcd.print("PH:" + String(PH) + "           ");
     lcd.setCursor(0, 1);
     lcd.print("                    ");
     lcd.setCursor(0, 2);

@@ -2,7 +2,7 @@ void setup() {
   Serial.begin(115200);
   SetupLCD();
   SetupRTC();
-  Verification();
+  //Verification();
   //SetupBT();
   SetupDB();
   if (activeSesors == 0) {

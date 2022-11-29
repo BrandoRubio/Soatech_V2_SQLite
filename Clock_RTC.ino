@@ -3,20 +3,14 @@
 RTC_DS3231 rtc;
 
 void SetupRTC() {
-<<<<<<< HEAD
-  //dataLog("Inicializamos modulo RTC", 0 );
-  if (! rtc.begin()) {
-    Serial.println("Couldn't find RTC");
-    
-=======
   SPI.begin();
   SD_MMC.begin();
   SD.begin();
   if (!rtc.begin()) {
     Serial.println("Couldn't find RTC");
->>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
+//>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
     Serial.flush();
-    while (1) delay(10);
+    //while (1) delay(10);
   }
   DataLogger("Iniciando......", 0);
   if (rtc.lostPower()) {

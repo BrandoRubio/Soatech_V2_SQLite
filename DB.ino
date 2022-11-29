@@ -26,7 +26,7 @@ int loadTheData(const char *sql) {
   return rc;
 }
 ///Carga de variables de todos los sensores///
-static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azColName) {  
+static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azColName) {
   if (String(argv[1]) == "DHT11") {
     DHT_ACTIVE = (String(argv[9]) == "true") ? true : false;
     activeSesors = (String(argv[9]) == "true") ? activeSesors + 1 : activeSesors;
@@ -40,20 +40,25 @@ static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azC
     DHTPIN3 = pines.substring(cp2 + 1, cp3).toInt();
     DHTPIN4 = pines.substring(cp3 + 1).toInt();
     String mins = argv[6];
-    TEMPMIN = mins.substring(0, cp).toInt();
-    HUMMIN = mins.substring(cp + 1).toInt();
+    int ci = mins.indexOf(',');
+    TEMPMIN = mins.substring(0, ci).toInt();
+    HUMMIN = mins.substring(ci + 1).toInt();
     String maxs = argv[7];
-    TEMPMAX = maxs.substring(0, cp).toInt();
-    HUMMAX = maxs.substring(cp + 1).toInt();
+    ci = maxs.indexOf(',');
+    TEMPMAX = maxs.substring(0, ci).toInt();
+    HUMMAX = maxs.substring(ci + 1).toInt();
     String ideals = argv[8];
-    TEMPIDEAL = ideals.substring(0, cp).toInt();
-    HUMIDEAL = ideals.substring(cp + 1).toInt();
+    ci = ideals.indexOf(',');
+    TEMPIDEAL = ideals.substring(0, ci).toInt();
+    HUMIDEAL = ideals.substring(ci + 1).toInt();
     String minsc = argv[3];
-    TEMPMINCONTROL = minsc.substring(0, cp).toInt();
-    HUMMINCONTROL = minsc.substring(cp + 1).toInt();
+    ci = minsc.indexOf(',');
+    TEMPMINCONTROL = minsc.substring(0, ci).toInt();
+    HUMMINCONTROL = minsc.substring(ci + 1).toInt();
     String maxsc = argv[4];
-    TEMPMAXCONTROL = maxsc.substring(0, cp).toInt();
-    HUMMAXCONTROL = maxsc.substring(cp + 1).toInt();
+    ci = maxsc.indexOf(',');
+    TEMPMAXCONTROL = maxsc.substring(0, ci).toInt();
+    HUMMAXCONTROL = maxsc.substring(ci + 1).toInt();
   }
   if (String(argv[1]) == "Oxygen") {
     OXY_ACTIVE = (String(argv[9]) == "true") ? true : false;

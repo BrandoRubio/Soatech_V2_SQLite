@@ -27,7 +27,7 @@ void SetupDHT(uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4) {
 }
 
 void DHT11Check() {
-  dataLog("Revisando DHT11", 0 );
+  //DataLogger("Revisando DHT11", 0 );
   float h1 = dht1.readHumidity();
   float t1 = dht1.readTemperature();
   float h2 = dht2.readHumidity();
@@ -44,7 +44,7 @@ void DHT11Check() {
   float sumHum = 0;
   float counter = 0;
   if (isnan(t1)) {
-    dataLog("Lectura de primer sensor DHT11", 0 );
+    //DataLogger("Lectura de primer sensor DHT11", 0 );
     h1 = dht1.readHumidity();
     t1 = dht1.readTemperature();
     if (isnan(t1)) {
@@ -58,7 +58,7 @@ void DHT11Check() {
     counter++;
   }
   if (isnan(t2)) {
-    dataLog("Lectura de segundo sensor DHT11", 0 );
+    //DataLogger("Lectura de segundo sensor DHT11", 0 );
     h2 = dht1.readHumidity();
     t2 = dht1.readTemperature();
     if (isnan(t2)) {
@@ -72,7 +72,7 @@ void DHT11Check() {
     counter++;
   }
   if (isnan(t3)) {
-    dataLog("Lectura de tercer sensor DHT11", 0 );
+    //DataLogger("Lectura de tercer sensor DHT11", 0 );
     h3 = dht3.readHumidity();
     t3 = dht3.readTemperature();
     if (isnan(t3)) {
@@ -86,7 +86,7 @@ void DHT11Check() {
     counter++;
   }
   if (isnan(t4)) {
-    dataLog("Lectura de cuarto sensor DHT11", 0 );
+    //DataLogger("Lectura de cuarto sensor DHT11", 0 );
     h4 = dht1.readHumidity();
     t4 = dht1.readTemperature();
     if (isnan(t4)) {
@@ -100,43 +100,43 @@ void DHT11Check() {
     counter++;
   }
   TEMP = sumTemp / counter;
-  dataLog("Obteniendo temperatura relativa promedio", 0 );
+  //DataLogger("Obteniendo temperatura relativa promedio", 0 );
   HUM = sumHum / counter;
-<<<<<<< HEAD
-  dataLog("Obteniendo humedad relativa promedio", 0 );
+/*<<<<<<< HEAD
+  //DataLogger("Obteniendo humedad relativa promedio", 0 );
   if (TEMP < (TEMPMIN + 1)) {
     //Serial.println("Control para subir temperatura");
     digitalWrite(TEMPMINCONTROL, HIGH);
-    dataLog("Activando control para aumentar temperatura", 0 );
-=======
+    //DataLogger("Activando control para aumentar temperatura", 0 );
+=======*/
   if (TEMP < (TEMPMIN + 1) && !STDHTMIN) {  //Cuando la temperatura baja a la mínima + 1 ACCIONA control
     DataLogger("Control para subir temperatura", 0);
     digitalWrite(TEMPMINCONTROL, HIGH);
     STDHTMIN = true;
     STDHT = false;
->>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
+//>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
   }
   if (TEMP > (TEMPMAX - 1) && !STDHTMAX) {  //Cuando la temperatura sube a la máxima - 1 ACCIONA control
     DataLogger("Control para bajar temperatura", 0);
     digitalWrite(TEMPMAXCONTROL, HIGH);
-<<<<<<< HEAD
-    dataLog("Inicializando control para bajar temperatura relativa", 0 );
-=======
+/*<<<<<<< HEAD
+    //DataLogger("Inicializando control para bajar temperatura relativa", 0 );
+=======*/
     STDHTMAX = true;
     STDHT = false;
->>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
+//>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
   }
   if (TEMP >= (TEMPIDEAL - 1) && TEMP <= (TEMPIDEAL + 1) && !STDHT) {  //Cuando la temperatura se encuentra estable desactiva todo el control
     DataLogger("Apagamos todos los controles de temperatura", 0);
     digitalWrite(TEMPMINCONTROL, LOW);
     digitalWrite(TEMPMAXCONTROL, LOW);
-<<<<<<< HEAD
-    dataLog("Control OK", 0 );
-=======
+/*<<<<<<< HEAD
+    //DataLogger("Control OK", 0 );
+=======*/
     STDHT = true;
     STDHTMAX = false;
     STDHTMIN = false;
->>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
+//>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
   }
   if (alternadorLCD == N_DHT) {
     lcd.setCursor(0, 0);
@@ -150,7 +150,7 @@ void DHT11Check() {
 }
 
 void DHT11LocalSave(String date) {
-  dataLog("Guardando datos de temperatura y humedad relativa en Micro SD", 0 );
+  DataLogger("Guardando datos de temperatura y humedad relativa en Micro SD", 0 );
   if (SaveSensorValue("temperatura", date, (isnan(TEMP) ? "NULL" : String(TEMP)))) {
     NoSD();
   }
@@ -189,7 +189,7 @@ void DHT11UpToUbi() {
     ubidots.add("t4", t4);
     ubidots.add("h4", h4);
   }
-  dataLog("Subiendo datos de temperatura y humedad relativa a la nube", 0 );
+  DataLogger("Subiendo datos de temperatura y humedad relativa a la nube", 0 );
   ubidots.add("Temperatura", TEMP);
   ubidots.add("Humedad", HUM);
   ubidots.publish(DEVICE_LABEL);
