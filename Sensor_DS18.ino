@@ -54,22 +54,22 @@ void DS18Check() {
 }
 
 void DS18LocalSave(String date) {
-  DataLogger("Guardando datos de Temperatura en micro SD", 0 );
+  //DataLogger("Guardando datos de Temperatura en micro SD", 0 );
   sensors.requestTemperatures();             //Se envía el comando para leer la temperatura
   float temp1 = sensors.getTempCByIndex(0);  //Se obtiene la temperatura en ºC
   float temp2 = sensors.getTempCByIndex(1);  //Se obtiene la temperatura en ºC
   float temp3 = sensors.getTempCByIndex(2);  //Se obtiene la temperatura en ºC
   float temp4 = sensors.getTempCByIndex(3);  //Se obtiene la temperatura en ºC;
-  if (SaveSensorValue("s_t1", date, (temp1 == -127 ? "NULL" : String(temp1)))) {
+  if (SaveSensorValue("s_t1", date, (temp1 == -127 ? "n" : String(temp1)))) {
     NoSD();
   }
-  if (SaveSensorValue("s_t2", date, (temp2 == -127 ? "NULL" : String(temp2)))) {
+  if (SaveSensorValue("s_t2", date, (temp2 == -127 ? "n" : String(temp2)))) {
     NoSD();
   }
-  if (SaveSensorValue("s_t3", date, (temp3 == -127 ? "NULL" : String(temp3)))) {
+  if (SaveSensorValue("s_t3", date, (temp3 == -127 ? "n" : String(temp3)))) {
     NoSD();
   }
-  if (SaveSensorValue("s_t4", date, (temp4 == -127 ? "NULL" : String(temp4)))) {
+  if (SaveSensorValue("s_t4", date, (temp4 == -127 ? "n" : String(temp4)))) {
     NoSD();
   }
 }
@@ -102,7 +102,7 @@ void DS18UpToUbi() {
     sum += temp4;
     counter++;
   }
-  DataLogger("Cargando datos de temperatura en sustrato en la nube", 0 );
+  //DataLogger("Cargando datos de temperatura en sustrato en la nube", 0 );
   S_TEMP = (sum / counter) ? sum / counter : 0;
   ubidots.add("P_T_S", S_TEMP);
   ubidots.publish(DEVICE_LABEL);

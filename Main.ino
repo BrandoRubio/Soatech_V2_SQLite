@@ -69,6 +69,8 @@ void LocalCheck() {
     }
     if (ubidots.connected()) {
       ubiOK();
+    }else{
+      
     }
     timer_local_check = millis();
   }
