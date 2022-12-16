@@ -8,8 +8,8 @@ void SetupYL() {
 void YLCheck() {
   float sh1 = map(analogRead(YLPIN1), humedadAire, humedadAgua, 0, 100);
   float sh2 = map(analogRead(YLPIN2), humedadAire1, humedadAgua1, 0, 100);
-  float sh3 = map(analogRead(YLPIN3), humedadAire2, humedadAgua2, 100, 0);
-  float sh4 = map(analogRead(YLPIN4), humedadAire3, humedadAgua3, 100, 0);
+  float sh3 = map(analogRead(YLPIN3), humedadAire2, humedadAgua2, 0, 100);
+  float sh4 = map(analogRead(YLPIN4), humedadAire3, humedadAgua3, 0, 100);
   float sum = 0;
   int counter = 0;
   if (sh1 != -117) {
@@ -38,7 +38,7 @@ void YLCheck() {
   if (S_HUM >= (S_HUMIDEAL - 1) && S_HUM <= (S_HUMIDEAL + 1) && !STYL) {  //Apagar controles
     digitalWrite(S_HUMMIN_Ctrl, VLOW);
     digitalWrite(S_HUMMAX_Ctrl, VLOW);
-    DataLogger("Apagamos todos los controles de temperatura", 0);
+    //DataLogger("Apagamos todos los controles de temperatura", 0);
     STYLMAX = false;
     STYLMIN = false;
     STYL = true;
@@ -63,10 +63,10 @@ void YLCheck() {
   }
 }
 void YLLocalSave(String date) {
-  float sh1 = map(analogRead(YLPIN1), 0, 4095, 100, 0);
-  float sh2 = map(analogRead(YLPIN2), 0, 4095, 100, 0);
-  float sh3 = map(analogRead(YLPIN3), 0, 4095, 100, 0);
-  float sh4 = map(analogRead(YLPIN4), 0, 4095, 100, 0);
+  float sh1 = map(analogRead(YLPIN1), humedadAire, humedadAgua, 0, 100);
+  float sh2 = map(analogRead(YLPIN2), humedadAire1, humedadAgua1, 0, 100);
+  float sh3 = map(analogRead(YLPIN3), humedadAire2, humedadAgua2, 0, 100);
+  float sh4 = map(analogRead(YLPIN4), humedadAire3, humedadAgua3, 0, 100);
   if (SaveSensorValue("s_h1", date, (sh1 == 100 ? "n" : String(sh1)))) {
     NoSD();
   }
@@ -84,8 +84,8 @@ void YLUpToUbi() {
   
   float sh1 = map(analogRead(YLPIN1), humedadAire, humedadAgua, 0, 100);
   float sh2 = map(analogRead(YLPIN2), humedadAire1, humedadAgua1, 0, 100);
-  float sh3 = map(analogRead(YLPIN3), humedadAire2, humedadAgua2, 100, 0);
-  float sh4 = map(analogRead(YLPIN4), humedadAire3, humedadAgua3, 100, 0);
+  float sh3 = map(analogRead(YLPIN3), humedadAire2, humedadAgua2, 0, 100);
+  float sh4 = map(analogRead(YLPIN4), humedadAire3, humedadAgua3, 0, 100);
   float sum = 0;
   int counter = 0;
   if (sh1 != -117) {

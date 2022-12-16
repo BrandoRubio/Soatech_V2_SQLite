@@ -1,9 +1,11 @@
 void setup() {
   Serial.begin(115200);
-  SetupLCD();
+  bool BT = false;
+  SetupLCD(BT);
   SetupRTC();
-  //Verification();
-  //SetupBT();
+  if (BT) {
+    SetupBT();
+  }
   SetupDB();
   if (activeSesors == 0) {
     lcd.setCursor(0, 2);
@@ -25,7 +27,7 @@ void setup() {
   if (OXY_ACTIVE) {
     //dataLog("Inicializando sensor de Oxigeno", 0 );
     SetupOxy();
-  }/*
+  } /*
   if (PH_ACTIVE) {
     SetupPH();
   }*/
@@ -69,8 +71,7 @@ void LocalCheck() {
     }
     if (ubidots.connected()) {
       ubiOK();
-    }else{
-      
+    } else {
     }
     timer_local_check = millis();
   }

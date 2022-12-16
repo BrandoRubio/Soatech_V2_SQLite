@@ -8,6 +8,10 @@ DHT dht4(0, DHTTipo);
 //DHT dht6(0, DHTTipo);
 
 void SetupDHT(uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4) {
+  Serial.println(pin1);
+  Serial.println(pin2);
+  Serial.println(pin3);
+  Serial.println(pin4);
   dht1._pin = pin1;
   dht2._pin = pin2;
   dht3._pin = pin3;

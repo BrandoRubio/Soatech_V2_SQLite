@@ -1,18 +1,8 @@
 #include "WiFi.h"
 void Connect() {
-  /*<<<<<<< HEAD
-  dataLog("Conectando a red de wifi..... ", 0 );
-=======*/
   DataLogger("Conectando a la red " + WIFISSID, 0);
-  //>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
   desconexionwifi();
   WiFi.begin(WIFISSID.c_str(), PASSWORD.c_str());
-  /*lcd.clear();
-  lcd.setCursor(0, 1);
-  lcd.print("    Conectando a  ");
-  lcd.setCursor(1, 2);
-  lcd.print(WIFISSID);*/
-
   int contador = 0;
   unsigned long currentMillis = millis();
   while (WiFi.status() != WL_CONNECTED) {

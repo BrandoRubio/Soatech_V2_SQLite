@@ -151,6 +151,16 @@ void SetupServer() {
     }
   });
 
+  server.on("/getDBSoatech", HTTP_GET, [](AsyncWebServerRequest *request) {
+    File file = SD.open("/soatech.db");
+    if (file) {
+      AsyncWebServerResponse *response = request->beginResponse(file, "db.db", "text/xhr", true);
+      request->send(response);
+    } else {
+      NoSD();
+    }
+  });
+
   server.on("/getLastNValues", HTTP_GET, [](AsyncWebServerRequest *request) {
     AsyncResponseStream *response = request->beginResponseStream("application/json; charset=utf-8");
     first_time_values = true;

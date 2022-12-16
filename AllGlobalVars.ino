@@ -63,10 +63,10 @@ String NUM_REGISTERS = "30";
 int activeSesors = 0;
 ///////////---------variables para sensor de humedad-------///////
 const int humedadAire = 4096;
-const int humedadAgua = 2220;
+const int humedadAgua = 2400;
 const int humedadAire1 = 4096;// segubndo sensor marcado
-const int humedadAgua1 = 2220;
+const int humedadAgua1 = 2480;
 const int humedadAire2 = 4096;
-const int humedadAgua2 = 2220;
+const int humedadAgua2 = 2360;
 const int humedadAire3 = 4096;// segubndo sensor marcado
-const int humedadAgua3 = 2220;
+const int humedadAgua3 = 2350;
