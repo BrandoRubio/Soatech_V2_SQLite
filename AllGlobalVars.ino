@@ -15,7 +15,15 @@ uint8_t DHTPIN1, DHTPIN2, DHTPIN3, DHTPIN4 = 0;
 int N_DHT, TEMPMIN, HUMMIN, TEMPMAX, HUMMAX, TEMPIDEAL, HUMIDEAL, TEMPMINCONTROL, TEMPMAXCONTROL, HUMMINCONTROL, HUMMAXCONTROL = 0;
 float TEMP, HUM = 0;
 //////////////--------------MQ135-----------------//////////////
-bool MQ135_ACTIVE = false;
+bool CO2_ACTIVE = false;
+uint8_t CO2PIN = 32;
+int CO2MIN, CO2MAX, CO2MINCONTROL, CO2IDEAL, CO2MAXCONTROL, N_CO2;
+double CO2 = (0);
+double NH3 = (0);
+/////////////---------------Luminosidad-----------/////////////
+bool LUM_ACTIVE = false;
+int LUMMIN, LUMMAX, LUMMINCONTROL, LUMIDEAL, LUMMAXCONTROL, NS_LUM;
+float lux = 0;
 //////////////--------------YL-69-----------------//////////////
 bool STYLMIN, STYLMAX, STYL, YL_ACTIVE = false;
 uint8_t YLPIN1, YLPIN2, YLPIN3, YLPIN4, YLPIN5 = 0;

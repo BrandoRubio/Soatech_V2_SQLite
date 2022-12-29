@@ -75,7 +75,7 @@ static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azC
       OXYIDEAL = String(argv[8]).toInt();
     }
   } else if (String(argv[1]) == "MQ135") {
-    MQ135_ACTIVE = (String(argv[9]) == "true") ? true : false;
+    CO2_ACTIVE = (String(argv[9]) == "true") ? true : false;
     activeSesors = (String(argv[9]) == "true") ? activeSesors + 1 : activeSesors;
   } else if (String(argv[1]) == "Conductividad") {
     if (String(argv[9]) == "true") {

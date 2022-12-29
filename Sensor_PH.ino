@@ -2,7 +2,7 @@
 int buf[10],temp11;
 
 void PHCheck(){
-  getPH();
+   PH= getPH();
   /*if (PH >= (PHIDEAL - 1) && PH <= (PHIDEAL + 1) && !STPH) {
     DataLogger("Apagamos todos los controles del PH", 0);
     STPH = true;
@@ -30,7 +30,7 @@ void PHUpToUbi() {
   ubidots.add("ph", PH);
   ubidots.publish(DEVICE_LABEL);
 }
-void getPH(){
+float getPH(){
   for(int i=0;i<10;i++) 
   { 
     buf[i]=analogRead(PHPIN);
@@ -52,5 +52,6 @@ void getPH(){
   for(int i=2;i<8;i++)
     avgValue+=buf[i];
   float pHVol=((((float)avgValue)*5.0)/4095.0)/6;
-  float PH = (-2.5 * pHVol) + 15.75;
+  float PH = (-2.9718 * pHVol) + 18.6;
+  return(PH);
 }

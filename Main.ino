@@ -27,7 +27,18 @@ void setup() {
   if (OXY_ACTIVE) {
     //dataLog("Inicializando sensor de Oxigeno", 0 );
     SetupOxy();
-  } /*
+  }
+  if (COND_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
+      setupConductivity();
+    }
+  if (CO2_ACTIVE) {  //Si el sensor de CO2 está activo entonces lee el sensor
+    SetupCO2();
+  }
+  if (LUM_ACTIVE) {  //Si el sensor de luminosidad está activo entonces lee el sensor
+    SetupLUM();
+  }
+  /*
+  }
   if (PH_ACTIVE) {
     SetupPH();
   }*/
@@ -64,6 +75,12 @@ void LocalCheck() {
     if (COND_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
       CondCheck();
     }
+    if (CO2_ACTIVE) {  //Si el sensor de CO2 está activo entonces lee el sensor
+      CO2Check();
+    }
+    if (LUM_ACTIVE) {  //Si el sensor de Luminosidad está activo entonces lee el sensor
+      LUMCheck();
+    }
     if (alternadorLCD < activeSesors) {
       alternadorLCD++;
     } else {
@@ -98,6 +115,12 @@ void SaveLocal() {
     }
     if (COND_ACTIVE) {  //Si el sensor de oxigención está activo entonces lee el sensor
       CondLocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
+    }
+    if (CO2_ACTIVE) {  //Si el sensor de oxigención está activo entonces lee el sensor
+      CO2LocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
+    }
+    if (LUM_ACTIVE) {  //Si el sensor de oxigención está activo entonces lee el sensor
+      LUMLocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
     timer_save_local = millis();
   }
