@@ -8,11 +8,9 @@ void SetupRTC() {
   SD.begin();
   if (!rtc.begin()) {
     Serial.println("Couldn't find RTC");
-//>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
     Serial.flush();
-    //while (1) delay(10);
   }
-  DataLogger("Iniciando......", 0);
+  DataLogger(".......Iniciando......", 0);
   if (rtc.lostPower()) {
     DataLogger("Batería del RTC agotada", 1);
     Serial.println("RTC lost power, let's set the time!");

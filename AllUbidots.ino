@@ -6,6 +6,7 @@ Ubidots ubidots(UBIDOTS_TOKEN);
 
 void SetupUbidots() {
   Connect();
+  //ubidots.setDebug(true);
   ubidots.setup();
 }
 
@@ -16,12 +17,14 @@ void loopUbidots() {
       ubidots.reconnect();
     } else {
       ubiOK();
+      checkBackup();
     }
     if (WiFi.status() != WL_CONNECTED) {
       Connect();
     } else {
       conexionwifi();
     }
+    timer_icons = millis();
   }
   ubidots.loop();
 }

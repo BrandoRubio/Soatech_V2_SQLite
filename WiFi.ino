@@ -1,5 +1,6 @@
 #include "WiFi.h"
 void Connect() {
+  //respaldando = true;
   DataLogger("Conectando a la red " + WIFISSID, 0);
   desconexionwifi();
   WiFi.begin(WIFISSID.c_str(), PASSWORD.c_str());
@@ -7,6 +8,7 @@ void Connect() {
   unsigned long currentMillis = millis();
   while (WiFi.status() != WL_CONNECTED) {
     LocalCheck();
+    UpToUbidtos();
     SaveLocal();
     bool ft = true;
     if (abs(millis() - currentMillis) > 1000) {
@@ -37,6 +39,7 @@ void Connect() {
   DataLogger("Conectando a Ubidots", 0);
   while (WiFi.status() == WL_CONNECTED) {
     LocalCheck();
+    UpToUbidtos();
     SaveLocal();
     if (abs(millis() - currentMillis) > 2000) {
       Serial.print("-");

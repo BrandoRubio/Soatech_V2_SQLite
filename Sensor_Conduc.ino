@@ -50,9 +50,13 @@ void CondLocalSave(String date) {
     NoSD();
   }
 }
-void CondUpToUbi() {
-  ubidots.add("conductividad", COND);
-  ubidots.publish(DEVICE_LABEL);
+void CondUpToUbi(String DATE) {
+  if (ubidots.connected()) {
+    ubidots.add("conductividad", COND);
+    ubidots.publish(DEVICE_LABEL);
+  } else {
+    db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('conductividad', '" + DATE + "','" + COND + "', 'no')").c_str());
+  }
 }
 void getCond() {
   static unsigned long analogSampleTimepoint = millis();

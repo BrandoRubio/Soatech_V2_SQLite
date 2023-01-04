@@ -22,7 +22,7 @@ double CO2 = (0);
 double NH3 = (0);
 /////////////---------------Luminosidad-----------/////////////
 bool LUM_ACTIVE = false;
-int LUMMIN, LUMMAX, LUMMINCONTROL, LUMIDEAL, LUMMAXCONTROL, NS_LUM;
+int LUMMIN, LUMMAX, LUMMINCONTROL, LUMIDEAL, LUMMAXCONTROL, N_LUM;
 float lux = 0;
 //////////////--------------YL-69-----------------//////////////
 bool STYLMIN, STYLMAX, STYL, YL_ACTIVE = false;
@@ -51,7 +51,7 @@ String UBIVAR_OXY;
 //bool STCONDMIN, STCONDMAX, STCOND; 
 bool COND_ACTIVE = false;
 uint8_t CONDPIN = 0;
-int CONDMIN, CONDMAX, CONDMINCONTROL, CONDIDEAL, CONDMAXCONTROL, N_COND;
+int CONDMIN, CONDMAX, /*CONDMINCONTROL, CONDIDEAL, CONDMAXCONTROL,*/ N_COND;
 float COND = 0;
 //////////////--------------PH--------------------//////////////
 //bool STPHMIN, STPHMAX, STPH;

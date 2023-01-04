@@ -49,15 +49,15 @@ int db_open() {
 }
 
 char *zErrMsg = 0;
-const char *data = "Salida:";
 int db_exec(const char *sql) {
+  //Serial.println(sql);
   if (db == NULL) {
     Serial.println("No database open");
     return 0;
   }
   results.clear();
   //long start = micros();
-  int rc = sqlite3_exec(db, sql, callback, (void *)data, &zErrMsg);
+  int rc = sqlite3_exec(db, sql, callback, (void *)"", &zErrMsg);
   if (rc != SQLITE_OK) {
     Serial.print(F("SQL error: "));
     Serial.print(sqlite3_extended_errcode(db));
@@ -79,7 +79,7 @@ int dbGetSensors(const char *sql) {
   results.clear();
   //first_time = true;
   //long start = micros();
-  int rc = sqlite3_exec(db, sql, callbackSensors, (void *)data, &zErrMsg);
+  int rc = sqlite3_exec(db, sql, callbackSensors, (void *)"", &zErrMsg);
   if (rc != SQLITE_OK) {
     Serial.print(F("SQL error: "));
     Serial.print(sqlite3_extended_errcode(db));

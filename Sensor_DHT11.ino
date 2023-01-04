@@ -8,10 +8,6 @@ DHT dht4(0, DHTTipo);
 //DHT dht6(0, DHTTipo);
 
 void SetupDHT(uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4) {
-  Serial.println(pin1);
-  Serial.println(pin2);
-  Serial.println(pin3);
-  Serial.println(pin4);
   dht1._pin = pin1;
   dht2._pin = pin2;
   dht3._pin = pin3;
@@ -31,7 +27,6 @@ void SetupDHT(uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4) {
 }
 
 void DHT11Check() {
-  //DataLogger("Revisando DHT11", 0 );
   float h1 = dht1.readHumidity();
   float t1 = dht1.readTemperature();
   float h2 = dht2.readHumidity();
@@ -40,19 +35,13 @@ void DHT11Check() {
   float t3 = dht3.readTemperature();
   float h4 = dht4.readHumidity();
   float t4 = dht4.readTemperature();
-  /*float h5 = dht4.readHumidity();
-  float t5 = dht4.readTemperature();
-  float h6 = dht4.readHumidity();
-  float t6 = dht4.readTemperature();*/
   float sumTemp = 0;
   float sumHum = 0;
   float counter = 0;
   if (isnan(t1)) {
-    //DataLogger("Lectura de primer sensor DHT11", 0 );
     h1 = dht1.readHumidity();
     t1 = dht1.readTemperature();
     if (isnan(t1)) {
-      //Serial.println("e1");
       t1 = 0;
       h1 = 0;
     }
@@ -62,11 +51,9 @@ void DHT11Check() {
     counter++;
   }
   if (isnan(t2)) {
-    //DataLogger("Lectura de segundo sensor DHT11", 0 );
     h2 = dht1.readHumidity();
     t2 = dht1.readTemperature();
     if (isnan(t2)) {
-      //Serial.println("e2");
       t2 = 0;
       h2 = 0;
     }
@@ -76,11 +63,9 @@ void DHT11Check() {
     counter++;
   }
   if (isnan(t3)) {
-    //DataLogger("Lectura de tercer sensor DHT11", 0 );
     h3 = dht3.readHumidity();
     t3 = dht3.readTemperature();
     if (isnan(t3)) {
-      //Serial.println("e3");
       t3 = 0;
       h3 = 0;
     }
@@ -90,7 +75,6 @@ void DHT11Check() {
     counter++;
   }
   if (isnan(t4)) {
-    //DataLogger("Lectura de cuarto sensor DHT11", 0 );
     h4 = dht1.readHumidity();
     t4 = dht1.readTemperature();
     if (isnan(t4)) {
@@ -104,43 +88,28 @@ void DHT11Check() {
     counter++;
   }
   TEMP = sumTemp / counter;
-  //DataLogger("Obteniendo temperatura relativa promedio", 0 );
   HUM = sumHum / counter;
-/*<<<<<<< HEAD
-  //DataLogger("Obteniendo humedad relativa promedio", 0 );
-  if (TEMP < (TEMPMIN + 1)) {
-    //Serial.println("Control para subir temperatura");
-    digitalWrite(TEMPMINCONTROL, HIGH);
-    //DataLogger("Activando control para aumentar temperatura", 0 );
-=======*/
   if (TEMP < (TEMPMIN + 1) && !STDHTMIN) {  //Cuando la temperatura baja a la mínima + 1 ACCIONA control
     DataLogger("Control para subir temperatura", 0);
     digitalWrite(TEMPMINCONTROL, HIGH);
     STDHTMIN = true;
     STDHT = false;
-//>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
   }
   if (TEMP > (TEMPMAX - 1) && !STDHTMAX) {  //Cuando la temperatura sube a la máxima - 1 ACCIONA control
     DataLogger("Control para bajar temperatura", 0);
     digitalWrite(TEMPMAXCONTROL, HIGH);
-/*<<<<<<< HEAD
-    //DataLogger("Inicializando control para bajar temperatura relativa", 0 );
-=======*/
     STDHTMAX = true;
     STDHT = false;
-//>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
+    //>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
   }
   if (TEMP >= (TEMPIDEAL - 1) && TEMP <= (TEMPIDEAL + 1) && !STDHT) {  //Cuando la temperatura se encuentra estable desactiva todo el control
     DataLogger("Apagamos todos los controles de temperatura", 0);
     digitalWrite(TEMPMINCONTROL, LOW);
     digitalWrite(TEMPMAXCONTROL, LOW);
-/*<<<<<<< HEAD
-    //DataLogger("Control OK", 0 );
-=======*/
     STDHT = true;
     STDHTMAX = false;
     STDHTMIN = false;
-//>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
+    //>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
   }
   if (alternadorLCD == N_DHT) {
     lcd.setCursor(0, 0);
@@ -154,7 +123,7 @@ void DHT11Check() {
 }
 
 void DHT11LocalSave(String date) {
-  DataLogger("Guardando datos de temperatura y humedad relativa en Micro SD", 0 );
+  DataLogger("Guardando datos de temperatura y humedad relativa en Micro SD", 0);
   if (SaveSensorValue("temperatura", date, (isnan(TEMP) ? "NULL" : String(TEMP)))) {
     NoSD();
   }
@@ -163,7 +132,7 @@ void DHT11LocalSave(String date) {
   }
 }
 
-void DHT11UpToUbi() {
+void DHT11UpToUbi(String DATE) {
   float h1 = dht1.readHumidity();
   float t1 = dht1.readTemperature();
   float h2 = dht2.readHumidity();
@@ -175,26 +144,52 @@ void DHT11UpToUbi() {
   delay(20);
   if (isnan(t1) || isnan(h1)) {
   } else {
-    ubidots.add("t1", t1);
-    ubidots.add("h1", h1);
+    if (ubidots.connected()) {
+      ubidots.add("t1", t1);
+      ubidots.add("h1", h1);
+    } else {
+      Serial.print("~");
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('t1', '" + DATE + "','" + t1 + "', 'no')").c_str());
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('h1', '" + DATE + "','" + h1 + "', 'no')").c_str());
+    }
   }
   if (isnan(t2) || isnan(h2)) {
   } else {
-    ubidots.add("t2", t2);
-    ubidots.add("h2", h2);
+    if (ubidots.connected()) {
+      ubidots.add("t2", t2);
+      ubidots.add("h2", h2);
+    } else {
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('t2', '" + DATE + "','" + t2 + "', 'no')").c_str());
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('h2', '" + DATE + "','" + h2 + "', 'no')").c_str());
+    }
   }
   if (isnan(t3) || isnan(h3)) {
   } else {
-    ubidots.add("t3", t3);
-    ubidots.add("h3", h3);
+    if (ubidots.connected()) {
+      ubidots.add("t3", t3);
+      ubidots.add("h3", h3);
+    } else {
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('t3', '" + DATE + "','" + t3 + "', 'no')").c_str());
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('h3', '" + DATE + "','" + h3 + "', 'no')").c_str());
+    }
   }
   if (isnan(t4) || isnan(h4)) {
   } else {
-    ubidots.add("t4", t4);
-    ubidots.add("h4", h4);
+    if (ubidots.connected()) {
+      ubidots.add("t4", t4);
+      ubidots.add("h4", h4);
+    } else {
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('t4', '" + DATE + "','" + t4 + "', 'no')").c_str());
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('h4', '" + DATE + "','" + h4 + "', 'no')").c_str());
+    }
   }
-  DataLogger("Subiendo datos de temperatura y humedad relativa a la nube", 0 );
-  ubidots.add("Temperatura", TEMP);
-  ubidots.add("Humedad", HUM);
+  if (ubidots.connected()) {
+    DataLogger("Subiendo datos de temperatura y humedad relativa a la nube", 0);
+    ubidots.add("Temperatura", TEMP);
+    ubidots.add("Humedad", HUM);
+  } else {
+    db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('Temperatura', '" + DATE + "','" + TEMP + "', 'no')").c_str());
+    db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('Humedad', '" + DATE + "','" + HUM + "', 'no')").c_str());
+  }
   ubidots.publish(DEVICE_LABEL);
 }

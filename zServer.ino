@@ -66,6 +66,16 @@ void SetupServer() {
       json["CONDRANGES"] = String(CONDMIN) + " - " + String(CONDMAX);
       json["CONDCOLOR"] = (COND > CONDMAX || COND < CONDMIN) ? "danger" : "success";
     }
+    if (CO2_ACTIVE) {
+      json["CO2"] = CO2;
+      json["CO2RANGES"] = String(CO2MIN) + " - " + String(CO2MAX);
+      json["CO2COLOR"] = (CO2 > CO2MAX || CO2 < CO2MIN) ? "danger" : "success";
+    }
+    if (LUM_ACTIVE) {
+      json["LUM"] = lux;
+      json["LUMRANGES"] = String(LUMMIN) + " - " + String(LUMMAX);
+      json["LUMCOLOR"] = (lux > LUMMAX || lux < LUMMIN) ? "danger" : "success";
+    }
     serializeJson(json, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);
@@ -211,6 +221,18 @@ void SetupServer() {
       values["CONDRANGES"] = String(CONDMIN) + " - " + String(CONDMAX);
       values["CONDCOLOR"] = (COND > CONDMAX || COND < CONDMIN) ? "danger" : "success";
     }
+    if (CO2_ACTIVE) {
+      GetValuesFromDB("CO2");
+      first_time_values = false;
+      values["CO2RANGES"] = String(CO2MIN) + " - " + String(CO2MAX);
+      values["CO2COLOR"] = (CO2 > CO2MAX || CO2 < CO2MIN) ? "danger" : "success";
+    }
+    if (LUM_ACTIVE) {
+      GetValuesFromDB("luminosidad");
+      first_time_values = false;
+      values["LUMRANGES"] = String(LUMMIN) + " - " + String(LUMMAX);
+      values["LUMCOLOR"] = (lux > LUMMAX || lux < LUMMIN) ? "danger" : "success";
+    }
     values["REGISTERS"] = NUM_REGISTERS;
     serializeJson(values, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
@@ -221,21 +243,8 @@ void SetupServer() {
   server.on("/deleteFrom", HTTP_GET, [](AsyncWebServerRequest *request) {
     AsyncResponseStream *response = request->beginResponseStream("application/json; charset=utf-8");
     DynamicJsonDocument json(1024);
-    int paramsNr = request->params();
-    String ip, sensor_name = "";
-    for (int i = 0; i < paramsNr; i++) {
-      AsyncWebParameter *p = request->getParam(i);
-      if (p->name() == "name") {
-        sensor_name = p->value();
-      }
-      if (p->name() == "ip") {
-        ip = p->value();
-      }
-    }
-    String query = "DELETE FROM registers WHERE sensor_name = '" + sensor_name + "'";
+    String query = "DELETE FROM registers_no_con WHERE id = 15";
     int st = db_exec(query.c_str());
-    json["status"] = st;
-    DataLogging("QUERY: " + query + " {ip: " + ip + "}", 0);
     serializeJson(json, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);

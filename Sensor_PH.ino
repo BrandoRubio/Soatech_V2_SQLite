@@ -26,9 +26,13 @@ void PHLocalSave(String date) {
     NoSD();
   }
 }
-void PHUpToUbi() {
-  ubidots.add("ph", PH);
-  ubidots.publish(DEVICE_LABEL);
+void PHUpToUbi(String DATE) {
+  if (ubidots.connected()) {
+    ubidots.add("ph", PH);
+    ubidots.publish(DEVICE_LABEL);
+  } else {
+    db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('ph', '" + DATE + "','" + PH + "', 'no')").c_str());
+  }
 }
 float getPH(){
   for(int i=0;i<10;i++) 

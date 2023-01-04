@@ -1,11 +1,10 @@
 void setup() {
   Serial.begin(115200);
-  bool BT = false;
-  SetupLCD(BT);
+  SetupLCD();
   SetupRTC();
-  if (BT) {
+  /*if (BT) {
     SetupBT();
-  }
+  }*/
   SetupDB();
   if (activeSesors == 0) {
     lcd.setCursor(0, 2);
@@ -129,24 +128,31 @@ void SaveLocal() {
 /**Función que verifica el tiempo y hace la subida de datos a ubidots en caso de que los sensores estén activos**/
 void UpToUbidtos() {
   if (abs(millis() - timer_up_data) > 300000) {
+    DateTime now = rtc.now();
     arrowUp();
     if (DHT_ACTIVE) {  //Si el sensor de temperatura está activo entonces guarda su valor
-      DHT11UpToUbi();
+      DHT11UpToUbi(String(now.unixtime()));
     }
-    if (YL_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
-      YLUpToUbi();
+    if (YL_ACTIVE) {  //Si el sensor de temperatura en sustrato está activo entonces lee el sensor
+      YLUpToUbi(String(now.unixtime()));
     }
-    if (DS18_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
-      DS18UpToUbi();
+    if (DS18_ACTIVE) {  //Si el sensor de Humedad en sustrato está activo entonces lee el sensor
+      DS18UpToUbi(String(now.unixtime()));
     }
-    if (OXY_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
-      OxyUpToUbi();
+    if (OXY_ACTIVE) {  //Si el sensor de Oxigenacion está activo entonces lee el sensor
+      OxyUpToUbi(String(now.unixtime()));
     }
-    if (PH_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
-      PHUpToUbi();
+    if (PH_ACTIVE) {  //Si el sensor de PH está activo entonces lee el sensor
+      PHUpToUbi(String(now.unixtime()));
     }
-    if (COND_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
-      CondUpToUbi();
+    if (COND_ACTIVE) {  //Si el sensor de Conductividad está activo entonces lee el sensor
+      CondUpToUbi(String(now.unixtime()));
+    }
+    if (CO2_ACTIVE) {  //Si el sensor de CO2 está activo entonces lee el sensor
+      CO2UpToUbi(now.timestamp(DateTime::TIMESTAMP_FULL));
+    }
+    if (LUM_ACTIVE) {  //Si el sensor de luminosidad está activo entonces lee el sensor
+      LUMUpToUbi(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
     timer_up_data = millis();
     lcd.setCursor(17, 3);

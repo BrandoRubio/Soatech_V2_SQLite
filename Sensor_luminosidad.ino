@@ -7,29 +7,30 @@ void SetupLUM() {
   lightMeter.begin();
 }
 void LUMCheck() {
-  float lux =lightMeter.readLightLevel();
-  if (alternadorLCD == NS_LUM) {
+  lux = lightMeter.readLightLevel();
+  if (alternadorLCD == N_LUM) {
     lcd.setCursor(0, 0);
     lcd.print("Luminosidad:" + String(lux) + " ");
     lcd.setCursor(0, 1);
     lcd.print("                        ");
     lcd.setCursor(0, 2);
     lcd.print("                        ");
-    lcd.setCursor(0, 3);
   }
 }
 
 void LUMLocalSave(String date) {
-  //DataLogger("Guardando datos de Temperatura en micro SD", 0 );
-  float lux =lightMeter.readLightLevel();
-  if (SaveSensorValue("Luminosidad", date, (lux == -2 ? "n" : String(lux)))) {
-    NoSD(); }
+  if (SaveSensorValue("luminosidad", date, (lux == -2 ? "n" : String(lux)))) {
+    NoSD();
+  }
 }
 
-void LUMUpToUbi() {
-  float lux =lightMeter.readLightLevel();
+void LUMUpToUbi(String DATE) {
   if (lux != -2) {
-    ubidots.add("luminosidad", lux);
+    if (ubidots.connected()) {
+      ubidots.add("luminosidad", lux);
+      ubidots.publish(DEVICE_LABEL);
+    } else {
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('luminosidad', '" + DATE + "','" + lux + "', 'no')").c_str());
+    }
   }
-  ubidots.publish(DEVICE_LABEL);
 }

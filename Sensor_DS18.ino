@@ -9,7 +9,7 @@ void SetupDS18() {
   sensors.begin();  //Se inicia el sensor
 }
 void DS18Check() {
-  sensors.requestTemperatures();             //Se envía el comando para leer la temperatura
+  sensors.requestTemperatures();  //Se envía el comando para leer la temperatura
   //dataLog("Incializando sensor de temperatura en sustrato", 0 );
   float temp1 = sensors.getTempCByIndex(0);  //Se obtiene la temperatura en ºC
   float temp2 = sensors.getTempCByIndex(1);  //Se obtiene la temperatura en ºC
@@ -74,7 +74,7 @@ void DS18LocalSave(String date) {
   }
 }
 
-void DS18UpToUbi() {
+void DS18UpToUbi(String DATE) {
   sensors.requestTemperatures();             //Se envía el comando para leer la temperatura
   float temp1 = sensors.getTempCByIndex(0);  //Se obtiene la temperatura en ºC
   float temp2 = sensors.getTempCByIndex(1);  //Se obtiene la temperatura en ºC
@@ -83,27 +83,47 @@ void DS18UpToUbi() {
   float sum = 0;
   int counter = 0;
   if (temp1 != -127) {
-    ubidots.add("ts1", temp1);
     sum += temp1;
     counter++;
+    if (ubidots.connected()) {
+      ubidots.add("ts1", temp1);
+    } else {
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('ts1', '" + DATE + "','" + temp1 + "', 'no')").c_str());
+    }
   }
   if (temp2 != -127) {
-    ubidots.add("ts2", temp2);
     sum += temp2;
     counter++;
+    if (ubidots.connected()) {
+      ubidots.add("ts2", temp2);
+    } else {
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('ts2', '" + DATE + "','" + temp2 + "', 'no')").c_str());
+    }
   }
   if (temp3 != -127) {
-    ubidots.add("ts3", temp3);
     sum += temp3;
     counter++;
+    if (ubidots.connected()) {
+      ubidots.add("ts3", temp3);
+    } else {
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('ts3', '" + DATE + "','" + temp3 + "', 'no')").c_str());
+    }
   }
   if (temp4 != -127) {
-    ubidots.add("ts4", temp4);
     sum += temp4;
     counter++;
+    if (ubidots.connected()) {
+      ubidots.add("ts4", temp4);
+    } else {
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('ts4', '" + DATE + "','" + temp4 + "', 'no')").c_str());
+    }
+  }
+  S_TEMP = (sum / counter) ? sum / counter : 0;
+  if (ubidots.connected()) {
+    ubidots.add("P_T_S", S_TEMP);
+    ubidots.publish(DEVICE_LABEL);
+  } else {
+    db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('P_T_S', '" + DATE + "','" + S_TEMP + "', 'no')").c_str());
   }
   //DataLogger("Cargando datos de temperatura en sustrato en la nube", 0 );
-  S_TEMP = (sum / counter) ? sum / counter : 0;
-  ubidots.add("P_T_S", S_TEMP);
-  ubidots.publish(DEVICE_LABEL);
 }

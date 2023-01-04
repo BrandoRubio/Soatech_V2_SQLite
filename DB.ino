@@ -8,13 +8,12 @@ static int callbackLoadDeviceData(void *data, int argc, char **argv, char **azCo
   NUM_REGISTERS = argv[7];
   return 0;
 }
-const char *dataLoad = "Salida:";
 int loadTheData(const char *sql) {
   if (db == NULL) {
     Serial.println("No database open");
     return 0;
   }
-  int rc = sqlite3_exec(db, sql, callbackLoadDeviceData, (void *)dataLoad, &zErrMsg);
+  int rc = sqlite3_exec(db, sql, callbackLoadDeviceData, (void *)"", &zErrMsg);
   if (rc != SQLITE_OK) {
     Serial.print(F("SQL error: "));
     Serial.print(sqlite3_extended_errcode(db));
@@ -74,9 +73,29 @@ static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azC
       OXYMAX = String(argv[7]).toInt();
       OXYIDEAL = String(argv[8]).toInt();
     }
-  } else if (String(argv[1]) == "MQ135") {
-    CO2_ACTIVE = (String(argv[9]) == "true") ? true : false;
-    activeSesors = (String(argv[9]) == "true") ? activeSesors + 1 : activeSesors;
+  } else if (String(argv[1]) == "CO2") {
+    if (String(argv[9]) == "true") {
+      CO2_ACTIVE = true;
+      activeSesors++;
+      N_CO2 = activeSesors;
+      CO2PIN = String(argv[2]).toInt();
+      CO2MINCONTROL = String(argv[3]).toInt();
+      CO2MAXCONTROL = String(argv[4]).toInt();
+      CO2MIN = String(argv[6]).toInt();
+      CO2MAX = String(argv[7]).toInt();
+      CO2IDEAL = String(argv[8]).toInt();
+    }
+  } else if (String(argv[1]) == "Luminosidad") {
+    if (String(argv[9]) == "true") {
+      LUM_ACTIVE = true;
+      activeSesors++;
+      N_LUM = activeSesors;
+      LUMMINCONTROL = String(argv[3]).toInt();
+      LUMMAXCONTROL = String(argv[4]).toInt();
+      LUMMIN = String(argv[6]).toInt();
+      LUMMAX = String(argv[7]).toInt();
+      LUMIDEAL = String(argv[8]).toInt();
+    }
   } else if (String(argv[1]) == "Conductividad") {
     if (String(argv[9]) == "true") {
       activeSesors++;  // = (String(argv[9]) == "true") ? activeSesors + 1 : activeSesors;
@@ -84,11 +103,11 @@ static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azC
       //activeSesors = (String(argv[9]) == "true") ? activeSesors + 1 : activeSesors;
       N_COND = activeSesors;
       CONDPIN = String(argv[2]).toInt();
-      CONDMINCONTROL = String(argv[3]).toInt();
-      CONDMAXCONTROL = String(argv[4]).toInt();
+      //CONDMINCONTROL = String(argv[3]).toInt();
+      //CONDMAXCONTROL = String(argv[4]).toInt();
       CONDMIN = String(argv[6]).toInt();
       CONDMAX = String(argv[7]).toInt();
-      CONDIDEAL = String(argv[8]).toInt();
+      //CONDIDEAL = String(argv[8]).toInt();
     }
   } else if (String(argv[1]) == "PH") {
     if (String(argv[9]) == "true") {
@@ -143,13 +162,12 @@ static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azC
   }
   return 0;
 }
-const char *sensorsData = "Sensores:";
 int loadSensorsData(const char *sql) {
   if (db == NULL) {
     Serial.println("No database open");
     return 0;
   }
-  int rc = sqlite3_exec(db, sql, callbackLoadSensorsData, (void *)sensorsData, &zErrMsg);
+  int rc = sqlite3_exec(db, sql, callbackLoadSensorsData, (void *)"", &zErrMsg);
   if (rc != SQLITE_OK) {
     Serial.print(F("SQL error: "));
     Serial.print(sqlite3_extended_errcode(db));
@@ -169,7 +187,7 @@ int SaveSensorValue(String n, String d, String v) {
     Serial.println("No database open");
     return 0;
   }
-  int rc = sqlite3_exec(db, sql.c_str(), callbackSaveValue, (void *)sensorsData, &zErrMsg);
+  int rc = sqlite3_exec(db, sql.c_str(), callbackSaveValue, (void *)"", &zErrMsg);
   if (rc != SQLITE_OK) {
     Serial.print(F("SQL error: "));
     Serial.print(sqlite3_extended_errcode(db));
@@ -195,7 +213,7 @@ int GetValuesFromDB(String s) {
     Serial.println("No database open");
     return 0;
   }
-  int rc = sqlite3_exec(db, sql.c_str(), callbackValues, (void *)sensorsData, &zErrMsg);
+  int rc = sqlite3_exec(db, sql.c_str(), callbackValues, (void *)"", &zErrMsg);
   if (rc != SQLITE_OK) {
     Serial.print(F("SQL error: "));
     Serial.print(sqlite3_extended_errcode(db));
@@ -219,7 +237,7 @@ int GetValuesFromSensor(String s) {
     Serial.println("No database open");
     return 0;
   }
-  int rc = sqlite3_exec(db, sql.c_str(), callbackNewFile, (void *)sensorsData, &zErrMsg);
+  int rc = sqlite3_exec(db, sql.c_str(), callbackNewFile, (void *)"", &zErrMsg);
   if (rc != SQLITE_OK) {
     Serial.print(F("SQL error: "));
     Serial.print(sqlite3_extended_errcode(db));
