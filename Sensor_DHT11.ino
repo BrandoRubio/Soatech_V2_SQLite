@@ -22,8 +22,10 @@ void SetupDHT() {
   dht6.begin();
   pinMode(TEMPMINCONTROL, OUTPUT);
   pinMode(TEMPMAXCONTROL, OUTPUT);
+  pinMode(TEMPFAN, OUTPUT);
   digitalWrite(TEMPMINCONTROL, LOW);
   digitalWrite(TEMPMAXCONTROL, LOW);
+  digitalWrite(TEMPFAN, LOW);
 }
 
 void DHT11Check() {
@@ -91,10 +93,10 @@ void DHT11Check() {
     sumHum = sumHum + h4;
     counter++;
   }
-  if (isnan(t4)) {
+  if (isnan(t5)) {
     h5 = dht5.readHumidity();
     t5 = dht5.readTemperature();
-    if (isnan(t4)) {
+    if (isnan(t5)) {
       //Serial.println("e4");
       t5 = 0;
       h5 = 0;

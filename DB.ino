@@ -40,9 +40,15 @@ static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azC
       DHTPIN1 = pines.substring(0, cp).toInt();
       DHTPIN2 = pines.substring(cp + 1, cp2).toInt();
       DHTPIN3 = pines.substring(cp2 + 1, cp3).toInt();
-      DHTPIN4 = pines.substring(cp3 + 1).toInt();
-      DHTPIN5 = pines.substring(cp4 + 1).toInt();
+      DHTPIN4 = pines.substring(cp3 + 1, cp4).toInt();
+      DHTPIN5 = pines.substring(cp4 + 1, cp5).toInt();
       DHTPIN6 = pines.substring(cp5 + 1).toInt();
+      Serial.println("DHT11 : 1 : " + String(DHTPIN1));
+      Serial.println("DHT11 : 2 : " + String(DHTPIN2));
+      Serial.println("DHT11 : 3 : " + String(DHTPIN3));
+      Serial.println("DHT11 : 4 : " + String(DHTPIN4));
+      Serial.println("DHT11 : 5 : " + String(DHTPIN5));
+      Serial.println("DHT11 : 6 : " + String(DHTPIN6));
       String mins = argv[6];
       int ci = mins.indexOf(',');
       TEMPMIN = mins.substring(0, ci).toInt();
@@ -62,9 +68,6 @@ static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azC
       TEMPMINCONTROL = minsc.substring(0, ci).toInt();
       HUMMINCONTROL = minsc.substring(ci + 1, cp2).toInt();
       TEMPFAN = minsc.substring(cp2 + 1).toInt();
-      Serial.println("PIN del temp min es: " + String(TEMPMINCONTROL));
-      Serial.println("PIN del hum min es: " + String(HUMMINCONTROL));
-      Serial.println("PIN del ventilador es: " + String(TEMPFAN));
       String maxsc = argv[4];
       ci = maxsc.indexOf(',');
       TEMPMAXCONTROL = maxsc.substring(0, ci).toInt();
