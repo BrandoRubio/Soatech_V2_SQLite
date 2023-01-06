@@ -35,6 +35,10 @@ void DHT11Check() {
   float t3 = dht3.readTemperature();
   float h4 = dht4.readHumidity();
   float t4 = dht4.readTemperature();
+  float h5 = dht5.readHumidity();
+  float t5 = dht5.readTemperature();
+  float h6 = dht6.readHumidity();
+  float t6 = dht6.readTemperature();
   float sumTemp = 0;
   float sumHum = 0;
   float counter = 0;
@@ -51,8 +55,8 @@ void DHT11Check() {
     counter++;
   }
   if (isnan(t2)) {
-    h2 = dht1.readHumidity();
-    t2 = dht1.readTemperature();
+    h2 = dht2.readHumidity();
+    t2 = dht2.readTemperature();
     if (isnan(t2)) {
       t2 = 0;
       h2 = 0;
@@ -75,8 +79,8 @@ void DHT11Check() {
     counter++;
   }
   if (isnan(t4)) {
-    h4 = dht1.readHumidity();
-    t4 = dht1.readTemperature();
+    h4 = dht4.readHumidity();
+    t4 = dht4.readTemperature();
     if (isnan(t4)) {
       //Serial.println("e4");
       t4 = 0;
@@ -85,6 +89,32 @@ void DHT11Check() {
   } else {
     sumTemp = sumTemp + t4;
     sumHum = sumHum + h4;
+    counter++;
+  }
+  if (isnan(t4)) {
+    h5 = dht5.readHumidity();
+    t5 = dht5.readTemperature();
+    if (isnan(t4)) {
+      //Serial.println("e4");
+      t5 = 0;
+      h5 = 0;
+    }
+  } else {
+    sumTemp = sumTemp + t5;
+    sumHum = sumHum + h5;
+    counter++;
+  }
+  if (isnan(t6)) {
+    h6 = dht6.readHumidity();
+    t6 = dht6.readTemperature();
+    if (isnan(t6)) {
+      //Serial.println("e4");
+      t6 = 0;
+      h6 = 0;
+    }
+  } else {
+    sumTemp = sumTemp + t6;
+    sumHum = sumHum + h6;
     counter++;
   }
   TEMP = sumTemp / counter;
@@ -141,6 +171,10 @@ void DHT11UpToUbi(String DATE) {
   float t3 = dht3.readTemperature();
   float h4 = dht4.readHumidity();
   float t4 = dht4.readTemperature();
+  float h5 = dht5.readHumidity();
+  float t5 = dht5.readTemperature();
+  float h6 = dht6.readHumidity();
+  float t6 = dht6.readTemperature();
   delay(20);
   if (isnan(t1) || isnan(h1)) {
   } else {
@@ -181,6 +215,26 @@ void DHT11UpToUbi(String DATE) {
     } else {
       db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('t4', '" + DATE + "','" + t4 + "', 'no')").c_str());
       db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('h4', '" + DATE + "','" + h4 + "', 'no')").c_str());
+    }
+  }
+  if (isnan(t5) || isnan(h5)) {
+  } else {
+    if (ubidots.connected()) {
+      ubidots.add("t5", t5);
+      ubidots.add("h5", h5);
+    } else {
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('t5', '" + DATE + "','" + t5 + "', 'no')").c_str());
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('h5', '" + DATE + "','" + h5 + "', 'no')").c_str());
+    }
+  }
+  if (isnan(t6) || isnan(h6)) {
+  } else {
+    if (ubidots.connected()) {
+      ubidots.add("t4", t6);
+      ubidots.add("h4", h6);
+    } else {
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('t6', '" + DATE + "','" + t6 + "', 'no')").c_str());
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('h6', '" + DATE + "','" + h6 + "', 'no')").c_str());
     }
   }
   if (ubidots.connected()) {

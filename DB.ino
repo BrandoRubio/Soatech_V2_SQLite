@@ -56,11 +56,14 @@ static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azC
       TEMPIDEAL = ideals.substring(0, ci).toInt();
       HUMIDEAL = ideals.substring(ci + 1).toInt();
       String minsc = argv[3];
-      ci = c.indexOf(',');
+      ci = minsc.indexOf(',');
+      cp2 = minsc.indexOf(',', cp + 1);
+      cp3 = minsc.indexOf(',', cp2 + 1);
       TEMPMINCONTROL = minsc.substring(0, ci).toInt();
-      HUMMINCONTROL = minsc.substring(ci + 1).toInt();
-      TEMPFAN = minsc.substring(cp2 + 1, cp3).toInt();
-      Serial.println("PIN del ventilador es: " + String(TEMPFAN));
+      HUMMINCONTROL = minsc.substring(ci + 1, cp2).toInt();
+      TEMPFAN = minsc.substring(cp2 + 1).toInt();
+      Serial.println("PIN del temp min es: " + String(TEMPMINCONTROL));
+      Serial.println("PIN del hum min es: " + String(HUMMINCONTROL));
       Serial.println("PIN del ventilador es: " + String(TEMPFAN));
       String maxsc = argv[4];
       ci = maxsc.indexOf(',');
