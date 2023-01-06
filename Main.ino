@@ -13,7 +13,7 @@ void setup() {
   }
   if (DHT_ACTIVE) {
     //dataLog("Inicializando sensores de temperatura y Humedad", 0 );
-    SetupDHT(DHTPIN1, DHTPIN2, DHTPIN3, DHTPIN4);
+    SetupDHT();
   }
   if (DS18_ACTIVE) {
     //dataLog("Inicializando sensor de Temperatura en sustrato", 0 );

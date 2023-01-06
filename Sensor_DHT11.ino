@@ -4,22 +4,22 @@ DHT dht1(0, DHTTipo);
 DHT dht2(0, DHTTipo);
 DHT dht3(0, DHTTipo);
 DHT dht4(0, DHTTipo);
-//DHT dht5(0, DHTTipo);
-//DHT dht6(0, DHTTipo);
+DHT dht5(0, DHTTipo);
+DHT dht6(0, DHTTipo);
 
-void SetupDHT(uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4) {
-  dht1._pin = pin1;
-  dht2._pin = pin2;
-  dht3._pin = pin3;
-  dht4._pin = pin4;
-  //dht5._pin = 12;
-  //dht6._pin = 11;
+void SetupDHT() {
+  dht1._pin = DHTPIN1;
+  dht2._pin = DHTPIN2;
+  dht3._pin = DHTPIN3;
+  dht4._pin = DHTPIN4;
+  dht5._pin = DHTPIN5;
+  dht6._pin = DHTPIN6;
   dht1.begin();
   dht2.begin();
   dht3.begin();
   dht4.begin();
-  //dht5.begin();
-  //dht6.begin();
+  dht5.begin();
+  dht6.begin();
   pinMode(TEMPMINCONTROL, OUTPUT);
   pinMode(TEMPMAXCONTROL, OUTPUT);
   digitalWrite(TEMPMINCONTROL, LOW);
