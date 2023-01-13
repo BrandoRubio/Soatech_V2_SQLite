@@ -52,7 +52,6 @@ char *zErrMsg = 0;
 int db_exec(const char *sql) {
   //Serial.println(sql);
   if (db == NULL) {
-    Serial.println("No database open");
     return 0;
   }
   results.clear();
@@ -73,7 +72,6 @@ int db_exec(const char *sql) {
 }
 int dbGetSensors(const char *sql) {
   if (db == NULL) {
-    Serial.println("No database open");
     return 0;
   }
   results.clear();

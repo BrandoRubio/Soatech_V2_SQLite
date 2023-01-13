@@ -19,7 +19,7 @@ static int callbackBackup(void *data, int argc, char **argv, char **azColName) {
     float VAL = String(argv[3]).toFloat();
     char *uc = "";
     ubidots.add(VAR, VAL, uc, DATE);
-    ubidots.publish(DEVICE_LABEL);
+    ubidots.publish(DEVICE_LABEL.c_str());
     if (db_exec(("UPDATE registers_no_con SET status = 'send' WHERE id = " + uid).c_str())) {
       int e = db_exec(("DELETE from registers_no_con WHERE id = " + uid).c_str());
       Serial.print("Registro eliminado: " + uid + "(" + String(e) + ")");
@@ -36,7 +36,6 @@ static int callbackBackup(void *data, int argc, char **argv, char **azColName) {
 }
 int checkNotUploadedValues(const char *sql) {
   if (db == NULL) {
-    Serial.println("No database open");
     return 0;
   }
   int rc = sqlite3_exec(db, sql, callbackBackup, (void *)"", &zErrMsg);

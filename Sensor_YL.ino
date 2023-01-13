@@ -1,4 +1,3 @@
-
 void SetupYL() {
   pinMode(S_HUMMIN_Ctrl, OUTPUT);
   pinMode(S_HUMMAX_Ctrl, OUTPUT);
@@ -127,7 +126,7 @@ void YLUpToUbi(String DATE) {
   S_HUM = (sum / counter) ? sum / counter : 0;
   if (ubidots.connected()) {
     ubidots.add("P_H_S", S_HUM);
-    ubidots.publish(DEVICE_LABEL);
+    ubidots.publish(DEVICE_LABEL.c_str());
   } else {
     db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('P_H_S', '" + DATE + "','" + S_HUM + "', 'no')").c_str());
   }

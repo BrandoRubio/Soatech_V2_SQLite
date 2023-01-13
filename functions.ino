@@ -1,4 +1,3 @@
-
 byte customChar[] = { //flecha hacia arriba
   B00000,
   B00100,

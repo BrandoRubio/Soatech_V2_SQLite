@@ -69,10 +69,9 @@ void CO2UpToUbi(String DATE) {
   if (CO2 != 0) {
     if (ubidots.connected()) {
       ubidots.add("CO2", CO2);
-      ubidots.publish(DEVICE_LABEL);
+      ubidots.publish(DEVICE_LABEL.c_str());
     } else {
       db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('CO2', '" + DATE + "','" + CO2 + "', 'no')").c_str());
     }
   }
-  ubidots.publish(DEVICE_LABEL);
 }

@@ -121,7 +121,7 @@ void DS18UpToUbi(String DATE) {
   S_TEMP = (sum / counter) ? sum / counter : 0;
   if (ubidots.connected()) {
     ubidots.add("P_T_S", S_TEMP);
-    ubidots.publish(DEVICE_LABEL);
+    ubidots.publish(DEVICE_LABEL.c_str());
   } else {
     db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('P_T_S', '" + DATE + "','" + S_TEMP + "', 'no')").c_str());
   }

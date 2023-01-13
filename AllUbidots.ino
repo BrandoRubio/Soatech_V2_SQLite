@@ -1,16 +1,17 @@
 #include "UbidotsEsp32Mqtt.h"
-const char *UBIDOTS_TOKEN = "BBFF-kmYShN0MgTkqgAFXdybS2SSrYJVzMF";  //TOKEN de ubidots
-const char *DEVICE_LABEL = "test-brando";
+String UBIDOTS_TOKEN = "";  //TOKEN de ubidots
+String DEVICE_LABEL = "";
 
-Ubidots ubidots(UBIDOTS_TOKEN);
+Ubidots ubidots("");
 
 void SetupUbidots() {
+  ubidots._token = UBIDOTS_TOKEN.c_str();//se asigna el token del dispositivo extraído de la base de datos
   Connect();
   //ubidots.setDebug(true);
   ubidots.setup();
 }
 
-void loopUbidots() {
+void loopUbidots() {//se repite el proceso de comprobar si está conectado o no a ubidots
   if (abs(millis() - timer_icons) > 2000) {
     if (!ubidots.connected()) {
       desconexionwifi();

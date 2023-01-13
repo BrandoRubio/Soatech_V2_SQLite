@@ -17,18 +17,16 @@ void LUMCheck() {
     lcd.print("                        ");
   }
 }
-
 void LUMLocalSave(String date) {
   if (SaveSensorValue("luminosidad", date, (lux == -2 ? "n" : String(lux)))) {
     NoSD();
   }
 }
-
 void LUMUpToUbi(String DATE) {
   if (lux != -2) {
     if (ubidots.connected()) {
       ubidots.add("luminosidad", lux);
-      ubidots.publish(DEVICE_LABEL);
+      ubidots.publish(DEVICE_LABEL.c_str());
     } else {
       db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('luminosidad', '" + DATE + "','" + lux + "', 'no')").c_str());
     }

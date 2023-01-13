@@ -5,7 +5,7 @@ unsigned long timer_save_local;
 unsigned long timer_icons;
 //////////////--------------Intervalos-------------//////////////
 const int interval_local_check = 2000;
-int interval_save_local = 300000;
+int interval_save_local = 30000;
 //////////////-----Estado alto - bajo (Relays)-----//////////////
 bool VHIGH = 1;
 bool VLOW = 0;
@@ -35,26 +35,17 @@ uint8_t DS18PIN = 0;
 int  NS_T, S_TEMPMIN, S_TEMPMAX, S_TEMPIDEAL, S_TEMPMIN_C, S_TEMPMAX_C = 0;
 float S_TEMP = 0;
 //////////////--------------OXYGEN----------------//////////////
-/*<<<<<<< HEAD
-bool OXYGEN_ACTIVE = false;
-bool OXY_ACTIVE = false;
-uint8_t OXYPIN = 0;
-int OXYMIN, OXYMAX, OXYMINCONTROL;
-=======*/
 bool STOXYMIN, STOXYMAX, STOXY, OXY_ACTIVE = false;
 uint8_t OXYPIN = 0;
 int OXYMIN, OXYMAX, OXYMINCONTROL, OXYIDEAL, OXYMAXCONTROL, N_OXY;
-//>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677*/
 float OXY = 0;
 String UBIVAR_OXY;
 //////////////--------------CONDUCTIVITY----------//////////////
-//bool STCONDMIN, STCONDMAX, STCOND; 
 bool COND_ACTIVE = false;
 uint8_t CONDPIN = 0;
 int CONDMIN, CONDMAX, /*CONDMINCONTROL, CONDIDEAL, CONDMAXCONTROL,*/ N_COND;
 float COND = 0;
 //////////////--------------PH--------------------//////////////
-//bool STPHMIN, STPHMAX, STPH;
 bool PH_ACTIVE = false;
 uint8_t PHPIN = 0;
 int PHMIN, PHMAX, PHMINCONTROL, PHIDEAL, PHMAXCONTROL, N_PH;
@@ -72,9 +63,9 @@ int activeSesors = 0;
 ///////////---------variables para sensor de humedad-------///////
 const int humedadAire = 4096;
 const int humedadAgua = 2400;
-const int humedadAire1 = 4096;// segubndo sensor marcado
+const int humedadAire1 = 4096;// segundo sensor marcado
 const int humedadAgua1 = 2480;
 const int humedadAire2 = 4096;
 const int humedadAgua2 = 2360;
-const int humedadAire3 = 4096;// segubndo sensor marcado
+const int humedadAire3 = 4096;// segundo sensor marcado
 const int humedadAgua3 = 2350;

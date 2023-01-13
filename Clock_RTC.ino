@@ -13,7 +13,6 @@ void SetupRTC() {
   DataLogger(".......Iniciando......", 0);
   if (rtc.lostPower()) {
     DataLogger("Batería del RTC agotada", 1);
-    Serial.println("RTC lost power, let's set the time!");
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
   configTime(0, 0, "pool.ntp.org");

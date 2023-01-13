@@ -69,7 +69,7 @@ void OxyLocalSave(String date) {
 void OxyUpToUbi(String DATE) {
   if (ubidots.connected()) {
     ubidots.add("Oxygen", OXY);
-    ubidots.publish(DEVICE_LABEL);
+    ubidots.publish(DEVICE_LABEL.c_str());
   } else {
     db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('Oxygen', '" + DATE + "','" + OXY + "', 'no'").c_str());
   }

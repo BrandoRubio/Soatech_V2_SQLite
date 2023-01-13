@@ -44,6 +44,10 @@ void DHT11Check() {
   float sumTemp = 0;
   float sumHum = 0;
   float counter = 0;
+  int cs = 0;        //conteo superior
+  float ss, ps = 0;  // sumatoria y promedio parte superior
+  int ci = 0;        //conteo inferior
+  float si, pi = 0;  // sumatoria y promedio parte inferior
   if (isnan(t1)) {
     h1 = dht1.readHumidity();
     t1 = dht1.readTemperature();
@@ -55,6 +59,8 @@ void DHT11Check() {
     sumTemp = sumTemp + t1;
     sumHum = sumHum + h1;
     counter++;
+    ss = ss + t1;
+    cs++;
   }
   if (isnan(t2)) {
     h2 = dht2.readHumidity();
@@ -67,6 +73,8 @@ void DHT11Check() {
     sumTemp = sumTemp + t2;
     sumHum = sumHum + h2;
     counter++;
+    ss = ss + t2;
+    cs++;
   }
   if (isnan(t3)) {
     h3 = dht3.readHumidity();
@@ -79,6 +87,8 @@ void DHT11Check() {
     sumTemp = sumTemp + t3;
     sumHum = sumHum + h3;
     counter++;
+    ss = ss + t3;
+    cs++;
   }
   if (isnan(t4)) {
     h4 = dht4.readHumidity();
@@ -92,6 +102,8 @@ void DHT11Check() {
     sumTemp = sumTemp + t4;
     sumHum = sumHum + h4;
     counter++;
+    ss = ss + t4;
+    cs++;
   }
   if (isnan(t5)) {
     h5 = dht5.readHumidity();
@@ -105,6 +117,8 @@ void DHT11Check() {
     sumTemp = sumTemp + t5;
     sumHum = sumHum + h5;
     counter++;
+    si = si + t5;
+    ci++;
   }
   if (isnan(t6)) {
     h6 = dht6.readHumidity();
@@ -118,6 +132,8 @@ void DHT11Check() {
     sumTemp = sumTemp + t6;
     sumHum = sumHum + h6;
     counter++;
+    si = si + t6;
+    ci++;
   }
   TEMP = sumTemp / counter;
   HUM = sumHum / counter;
@@ -142,6 +158,11 @@ void DHT11Check() {
     STDHTMAX = false;
     STDHTMIN = false;
     //>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
+  }
+  ps = ss / cs;
+  pi = si / ci;
+  if ((ps - pi) >= 3 || (ps - pi) <= -3) {
+    digitalWrite(TEMPFAN, HIGH);
   }
   if (alternadorLCD == N_DHT) {
     lcd.setCursor(0, 0);
@@ -177,20 +198,27 @@ void DHT11UpToUbi(String DATE) {
   float t5 = dht5.readTemperature();
   float h6 = dht6.readHumidity();
   float t6 = dht6.readTemperature();
+  int cs = 0;        //conteo superior
+  float ss, ps = 0;  // sumatoria y promedio parte superior
+  int ci = 0;        //conteo inferior
+  float si, pi = 0;  // sumatoria y promedio parte inferior
   delay(20);
   if (isnan(t1) || isnan(h1)) {
   } else {
+    ss = ss + t1;
+    cs++;
     if (ubidots.connected()) {
       ubidots.add("t1", t1);
       ubidots.add("h1", h1);
     } else {
-      Serial.print("~");
       db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('t1', '" + DATE + "','" + t1 + "', 'no')").c_str());
       db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('h1', '" + DATE + "','" + h1 + "', 'no')").c_str());
     }
   }
   if (isnan(t2) || isnan(h2)) {
   } else {
+    ss = ss + t2;
+    cs++;
     if (ubidots.connected()) {
       ubidots.add("t2", t2);
       ubidots.add("h2", h2);
@@ -201,6 +229,8 @@ void DHT11UpToUbi(String DATE) {
   }
   if (isnan(t3) || isnan(h3)) {
   } else {
+    ss = ss + t3;
+    cs++;
     if (ubidots.connected()) {
       ubidots.add("t3", t3);
       ubidots.add("h3", h3);
@@ -211,6 +241,8 @@ void DHT11UpToUbi(String DATE) {
   }
   if (isnan(t4) || isnan(h4)) {
   } else {
+    ss = ss + t4;
+    cs++;
     if (ubidots.connected()) {
       ubidots.add("t4", t4);
       ubidots.add("h4", h4);
@@ -221,6 +253,8 @@ void DHT11UpToUbi(String DATE) {
   }
   if (isnan(t5) || isnan(h5)) {
   } else {
+    si = si + t5;
+    ci++;
     if (ubidots.connected()) {
       ubidots.add("t5", t5);
       ubidots.add("h5", h5);
@@ -231,6 +265,8 @@ void DHT11UpToUbi(String DATE) {
   }
   if (isnan(t6) || isnan(h6)) {
   } else {
+    si = si + t6;
+    ci++;
     if (ubidots.connected()) {
       ubidots.add("t4", t6);
       ubidots.add("h4", h6);
@@ -247,5 +283,23 @@ void DHT11UpToUbi(String DATE) {
     db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('Temperatura', '" + DATE + "','" + TEMP + "', 'no')").c_str());
     db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('Humedad', '" + DATE + "','" + HUM + "', 'no')").c_str());
   }
-  ubidots.publish(DEVICE_LABEL);
+  ubidots.publish(DEVICE_LABEL.c_str());
+  if (ubidots.connected()) {
+    if (cs) {
+      ps = ss / cs;
+      ubidots.add("tps", ps);
+    }
+    if (ci) {
+      pi = si / ci;
+      ubidots.add("tpi", pi);
+    }
+    ubidots.publish(DEVICE_LABEL.c_str());
+  } else {
+    if (cs) {
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('tps', '" + DATE + "','" + ps + "', 'no')").c_str());
+    }
+    if (ci) {
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('tpi', '" + DATE + "','" + pi + "', 'no')").c_str());
+    }
+  }
 }

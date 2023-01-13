@@ -6,20 +6,21 @@ static int callbackLoadDeviceData(void *data, int argc, char **argv, char **azCo
   COMPANY = argv[5];
   interval_save_local = String(argv[6]).toInt();
   NUM_REGISTERS = argv[7];
+  UBIDOTS_TOKEN = String(argv[8]);
+  DEVICE_LABEL = String(argv[9]);
   return 0;
 }
 int loadTheData(const char *sql) {
   if (db == NULL) {
-    Serial.println("No database open");
     return 0;
   }
   int rc = sqlite3_exec(db, sql, callbackLoadDeviceData, (void *)"", &zErrMsg);
   if (rc != SQLITE_OK) {
-    Serial.print(F("SQL error: "));
+    /*Serial.print(F("SQL error: "));
     Serial.print(sqlite3_extended_errcode(db));
     Serial.print(" ");
     Serial.println(zErrMsg);
-    sqlite3_free(zErrMsg);
+    sqlite3_free(zErrMsg);*/
   } else
     Serial.print("");
   return rc;
@@ -177,16 +178,15 @@ static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azC
 }
 int loadSensorsData(const char *sql) {
   if (db == NULL) {
-    Serial.println("No database open");
     return 0;
   }
   int rc = sqlite3_exec(db, sql, callbackLoadSensorsData, (void *)"", &zErrMsg);
   if (rc != SQLITE_OK) {
-    Serial.print(F("SQL error: "));
+    /*Serial.print(F("SQL error: "));
     Serial.print(sqlite3_extended_errcode(db));
     Serial.print(" ");
     Serial.println(zErrMsg);
-    sqlite3_free(zErrMsg);
+    sqlite3_free(zErrMsg);*/
   } else
     Serial.print("");
   return rc;
@@ -197,16 +197,15 @@ static int callbackSaveValue(void *data, int argc, char **argv, char **azColName
 int SaveSensorValue(String n, String d, String v) {
   String sql = "INSERT INTO registers (sensor_name, date, value) VALUES ('" + n + "', '" + d + "','" + v + "')";
   if (db == NULL) {
-    Serial.println("No database open");
     return 0;
   }
   int rc = sqlite3_exec(db, sql.c_str(), callbackSaveValue, (void *)"", &zErrMsg);
   if (rc != SQLITE_OK) {
-    Serial.print(F("SQL error: "));
+    /*Serial.print(F("SQL error: "));
     Serial.print(sqlite3_extended_errcode(db));
     Serial.print(" ");
     Serial.println(zErrMsg);
-    sqlite3_free(zErrMsg);
+    sqlite3_free(zErrMsg);*/
   } else
     Serial.print("");
   return rc;
@@ -223,16 +222,15 @@ static int callbackValues(void *data, int argc, char **argv, char **azColName) {
 int GetValuesFromDB(String s) {
   String sql = "SELECT sensor_name, value, date FROM registers WHERE sensor_name = '" + s + "' ORDER BY id DESC LIMIT " + NUM_REGISTERS;
   if (db == NULL) {
-    Serial.println("No database open");
     return 0;
   }
   int rc = sqlite3_exec(db, sql.c_str(), callbackValues, (void *)"", &zErrMsg);
   if (rc != SQLITE_OK) {
-    Serial.print(F("SQL error: "));
+    /*Serial.print(F("SQL error: "));
     Serial.print(sqlite3_extended_errcode(db));
     Serial.print(" ");
     Serial.println(zErrMsg);
-    sqlite3_free(zErrMsg);
+    sqlite3_free(zErrMsg);*/
   } else
     Serial.print("");
   return rc;
@@ -247,16 +245,15 @@ int GetValuesFromSensor(String s) {
   c = 0;
   String sql = "SELECT date, value FROM registers WHERE sensor_name = '" + s + "' ORDER BY id DESC LIMIT 500";
   if (db == NULL) {
-    Serial.println("No database open");
     return 0;
   }
   int rc = sqlite3_exec(db, sql.c_str(), callbackNewFile, (void *)"", &zErrMsg);
   if (rc != SQLITE_OK) {
-    Serial.print(F("SQL error: "));
+    /*Serial.print(F("SQL error: "));
     Serial.print(sqlite3_extended_errcode(db));
     Serial.print(" ");
     Serial.println(zErrMsg);
-    sqlite3_free(zErrMsg);
+    sqlite3_free(zErrMsg);*/
   } else
     Serial.print("");
   return rc;

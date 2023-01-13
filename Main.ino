@@ -1,5 +1,5 @@
 void setup() {
-  Serial.begin(115200);
+  //Serial.begin(115200);
   SetupLCD();
   SetupRTC();
   /*if (BT) {
@@ -80,7 +80,7 @@ void LocalCheck() {
     if (LUM_ACTIVE) {  //Si el sensor de Luminosidad está activo entonces lee el sensor
       LUMCheck();
     }
-    if (alternadorLCD < activeSesors) {
+    if (alternadorLCD < activeSesors) {// incrementa en 1 cada 2 segundos, lo que hace ir alternando entre los elementos activos
       alternadorLCD++;
     } else {
       alternadorLCD = 1;
@@ -109,16 +109,16 @@ void SaveLocal() {
     if (OXY_ACTIVE) {  //Si el sensor de oxigención está activo entonces lee el sensor
       OxyLocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
-    if (PH_ACTIVE) {  //Si el sensor de oxigención está activo entonces lee el sensor
+    if (PH_ACTIVE) {  //Si el sensor de PH está activo entonces lee el sensor
       PHLocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
-    if (COND_ACTIVE) {  //Si el sensor de oxigención está activo entonces lee el sensor
+    if (COND_ACTIVE) {  //Si el sensor de conductividad está activo entonces lee el sensor
       CondLocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
-    if (CO2_ACTIVE) {  //Si el sensor de oxigención está activo entonces lee el sensor
+    if (CO2_ACTIVE) {  //Si el sensor de cO2 está activo entonces lee el sensor
       CO2LocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
-    if (LUM_ACTIVE) {  //Si el sensor de oxigención está activo entonces lee el sensor
+    if (LUM_ACTIVE) {  //Si el sensor de luminosidad está activo entonces lee el sensor
       LUMLocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
     timer_save_local = millis();
@@ -127,7 +127,7 @@ void SaveLocal() {
 
 /**Función que verifica el tiempo y hace la subida de datos a ubidots en caso de que los sensores estén activos**/
 void UpToUbidtos() {
-  if (abs(millis() - timer_up_data) > 300000) {
+  if (abs(millis() - timer_up_data) > 600000) {
     DateTime now = rtc.now();
     arrowUp();
     if (DHT_ACTIVE) {  //Si el sensor de temperatura está activo entonces guarda su valor

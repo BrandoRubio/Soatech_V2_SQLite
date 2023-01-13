@@ -1,6 +1,13 @@
 #include "WiFi.h"
 void Connect() {
-  //respaldando = true;
+  if (UBIDOTS_TOKEN == "") {
+    lcd.setCursor(0, 1);
+    lcd.print("Dispositivo sin token");
+  } else if (UBIDOTS_TOKEN == "") {
+    lcd.setCursor(0, 2);
+    lcd.print("Dispositivo sin label");
+    delay(3000);
+  }
   DataLogger("Conectando a la red " + WIFISSID, 0);
   desconexionwifi();
   WiFi.begin(WIFISSID.c_str(), PASSWORD.c_str());
@@ -51,7 +58,7 @@ void Connect() {
       break;
     }
   }
-  DataLogger("¡Conexión a Ubidots exitosa!", 0);
+  DataLogger("¡Conexión exitosa a Ubidots!", 0);
   updateRTC();
   delay(200);
   lcd.setCursor(0, 3);

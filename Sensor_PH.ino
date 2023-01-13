@@ -1,16 +1,7 @@
-//float calibration = 15.75; //valor de b para calibración sensor pH //9
 int buf[10],temp11;
 
 void PHCheck(){
    PH= getPH();
-  /*if (PH >= (PHIDEAL - 1) && PH <= (PHIDEAL + 1) && !STPH) {
-    DataLogger("Apagamos todos los controles del PH", 0);
-    STPH = true;
-    STPHMAX = false;
-    STPHMIN = false;
-    digitalWrite(PHMINCONTROL, VLOW);
-    digitalWrite(PHMAXCONTROL, VLOW);
-  }*/
   if (alternadorLCD == N_PH) {
     lcd.setCursor(0, 0);
     lcd.print("PH:" + String(PH) + "           ");
@@ -29,7 +20,7 @@ void PHLocalSave(String date) {
 void PHUpToUbi(String DATE) {
   if (ubidots.connected()) {
     ubidots.add("ph", PH);
-    ubidots.publish(DEVICE_LABEL);
+    ubidots.publish(DEVICE_LABEL.c_str());
   } else {
     db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('ph', '" + DATE + "','" + PH + "', 'no')").c_str());
   }

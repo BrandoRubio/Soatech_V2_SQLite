@@ -13,6 +13,8 @@ void SetupServer() {
     json["company"] = COMPANY;
     json["time"] = interval_save_local;
     json["NREG"] = NUM_REGISTERS;
+    json["utoken"] = UBIDOTS_TOKEN;
+    json["uname"] = DEVICE_LABEL;
 
     serializeJson(json, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
@@ -93,30 +95,6 @@ void SetupServer() {
     request->send(response);
     results.clear();
   });
-
-  /*server.on("/getAllItems", HTTP_GET, [](AsyncWebServerRequest *request) {
-    AsyncResponseStream *response = request->beginResponseStream("application/json; charset=utf-8");
-    DynamicJsonDocument json(500);
-    if (DHT_ACTIVE) {
-      json["files"].add("temperatura");
-      json["files"].add("humedad");
-    }
-    if (DS18_ACTIVE) {
-      json["files"].add("s_t1");
-      json["files"].add("s_t2");
-      json["files"].add("s_t3");
-      json["files"].add("s_t4");
-    }
-    if (DHT_ACTIVE) {
-      json["files"].add("s_h1");
-      json["files"].add("s_h2");
-      json["files"].add("s_h3");
-      json["files"].add("s_h4");
-    }
-    serializeJson(json, *response);
-    response->addHeader("Access-Control-Allow-Origin", "*");
-    request->send(response);
-  });*/
 
   server.on("/createFileFrom", HTTP_GET, [](AsyncWebServerRequest *request) {
     AsyncResponseStream *response = request->beginResponseStream("application/json; charset=utf-8");
@@ -254,7 +232,7 @@ void SetupServer() {
     AsyncResponseStream *response = request->beginResponseStream("application/json; charset=utf-8");
     DynamicJsonDocument json(512);
     String ip;
-    String newName = NAME, newType = TYPE, newSSID = WIFISSID, newPassword = PASSWORD, newCompany = COMPANY, newTime = String(interval_save_local), newNR = NUM_REGISTERS;
+    String newName = NAME, newType = TYPE, newSSID = WIFISSID, newPassword = PASSWORD, newCompany = COMPANY, newTime = String(interval_save_local), newNR = NUM_REGISTERS, utk = UBIDOTS_TOKEN, unm = DEVICE_LABEL;
     int paramsNr = request->params();
     for (int i = 0; i < paramsNr; i++) {
       AsyncWebParameter *p = request->getParam(i);
@@ -281,8 +259,14 @@ void SetupServer() {
       if (p->name() == "ip") {
         ip = p->value();
       }
+      if (p->name() == "utk") {
+        utk = p->value();
+      }
+      if (p->name() == "unm") {
+        unm = p->value();
+      }
     }
-    String query = "UPDATE device SET name = '" + newName + "', type = '" + newType + "', network = '" + newSSID + "', password = '" + newPassword + "', save_time = " + newTime + ", registers = '" + newNR + "' where id = 1";
+    String query = "UPDATE device SET name = '" + newName + "', type = '" + newType + "', network = '" + newSSID + "', password = '" + newPassword + "', save_time = " + newTime + ", registers = '" + newNR + +", utoken = '" + utk + +", uname = '" + unm + "' where id = 1";
     int r = db_exec(query.c_str());
     if (r) {
       DataLogging("Fallo al actualizar el dispositivo {ip: " + ip + "}", 1);
