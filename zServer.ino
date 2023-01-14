@@ -156,6 +156,10 @@ void SetupServer() {
       GetValuesFromDB("temperatura");
       first_time_values = false;
       GetValuesFromDB("humedad");
+      if (DHTPIN7) {
+        GetValuesFromDB("tex");
+        GetValuesFromDB("hex");
+      }
       values["TEMPRANGES"] = String(TEMPMIN) + " - " + String(TEMPMAX);
       values["TEMPCOLOR"] = (TEMP >= TEMPMIN && TEMP <= TEMPMAX) ? "success" : "danger";
       values["HUMRANGES"] = String(HUMMIN) + " - " + String(HUMMAX);

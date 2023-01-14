@@ -6,6 +6,7 @@ DHT dht3(0, DHTTipo);
 DHT dht4(0, DHTTipo);
 DHT dht5(0, DHTTipo);
 DHT dht6(0, DHTTipo);
+DHT dht7(0, DHTTipo);
 
 void SetupDHT() {
   dht1._pin = DHTPIN1;
@@ -14,18 +15,21 @@ void SetupDHT() {
   dht4._pin = DHTPIN4;
   dht5._pin = DHTPIN5;
   dht6._pin = DHTPIN6;
+  dht7._pin = DHTPIN7;
   dht1.begin();
   dht2.begin();
   dht3.begin();
   dht4.begin();
   dht5.begin();
   dht6.begin();
+  dht7.begin();
   pinMode(TEMPMINCONTROL, OUTPUT);
   pinMode(TEMPMAXCONTROL, OUTPUT);
   pinMode(TEMPFAN, OUTPUT);
   digitalWrite(TEMPMINCONTROL, LOW);
   digitalWrite(TEMPMAXCONTROL, LOW);
   digitalWrite(TEMPFAN, LOW);
+  DHTPIN1, DHTPIN2, DHTPIN3, DHTPIN4, DHTPIN5, DHTPIN6 = 0;
 }
 
 void DHT11Check() {
@@ -41,6 +45,8 @@ void DHT11Check() {
   float t5 = dht5.readTemperature();
   float h6 = dht6.readHumidity();
   float t6 = dht6.readTemperature();
+  float h7 = dht7.readHumidity();
+  float t7 = dht7.readTemperature();
   float sumTemp = 0;
   float sumHum = 0;
   float counter = 0;
@@ -135,6 +141,15 @@ void DHT11Check() {
     si = si + t6;
     ci++;
   }
+  if (isnan(t7)) {
+    h7 = dht7.readHumidity();
+    t7 = dht7.readTemperature();
+    if (isnan(t7)) {
+      //Serial.println("e4");
+      t7 = 0;
+      h7 = 0;
+    }
+  }
   TEMP = sumTemp / counter;
   HUM = sumHum / counter;
   if (TEMP < (TEMPMIN + 1) && !STDHTMIN) {  //Cuando la temperatura baja a la mínima + 1 ACCIONA control
@@ -170,14 +185,25 @@ void DHT11Check() {
     lcd.setCursor(0, 1);
     lcd.print("Humedad:    " + String(HUM) + "   ");
     lcd.setCursor(0, 2);
-    lcd.print("                    ");
-    lcd.setCursor(0, 3);
+    if (DHTPIN7) {
+      lcd.print("Tem exterior:" + String(t7));
+      lcd.setCursor(0, 3);
+      lcd.print("Hum exterior:" + String(h7));
+    }
   }
 }
 
 void DHT11LocalSave(String date) {
+  float h7 = dht7.readHumidity();
+  float t7 = dht7.readTemperature();
   DataLogger("Guardando datos de temperatura y humedad relativa en Micro SD", 0);
   if (SaveSensorValue("temperatura", date, (isnan(TEMP) ? "NULL" : String(TEMP)))) {
+    NoSD();
+  }
+  if (SaveSensorValue("tex", date, (isnan(t7) ? "NULL" : String(t7)))) {
+    NoSD();
+  }
+  if (SaveSensorValue("hex", date, (isnan(h7) ? "NULL" : String(h7)))) {
     NoSD();
   }
   if (SaveSensorValue("humedad", date, (isnan(HUM) ? "NULL" : String(HUM)))) {
@@ -198,6 +224,8 @@ void DHT11UpToUbi(String DATE) {
   float t5 = dht5.readTemperature();
   float h6 = dht6.readHumidity();
   float t6 = dht6.readTemperature();
+  float h7 = dht7.readHumidity();
+  float t7 = dht7.readTemperature();
   int cs = 0;        //conteo superior
   float ss, ps = 0;  // sumatoria y promedio parte superior
   int ci = 0;        //conteo inferior
@@ -285,6 +313,9 @@ void DHT11UpToUbi(String DATE) {
   }
   ubidots.publish(DEVICE_LABEL.c_str());
   if (ubidots.connected()) {
+    DataLogger("Subiendo datos de temperatura y humedad exterior a la nube", 0);
+    ubidots.add("tex", t7);
+    ubidots.add("hex", h7);
     if (cs) {
       ps = ss / cs;
       ubidots.add("tps", ps);
@@ -295,6 +326,12 @@ void DHT11UpToUbi(String DATE) {
     }
     ubidots.publish(DEVICE_LABEL.c_str());
   } else {
+    if (t7) {
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('tex', '" + DATE + "','" + t7 + "', 'no')").c_str());
+    }
+    if (h7) {
+      db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('hex', '" + DATE + "','" + h7 + "', 'no')").c_str());
+    }
     if (cs) {
       db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('tps', '" + DATE + "','" + ps + "', 'no')").c_str());
     }
