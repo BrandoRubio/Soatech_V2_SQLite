@@ -46,13 +46,6 @@ static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azC
       DHTPIN5 = pines.substring(cp4 + 1, cp5).toInt();
       DHTPIN6 = pines.substring(cp5 + 1, cp6).toInt();
       DHTPIN7 = pines.substring(cp6 + 1).toInt();
-      Serial.println("DHT11 : 1 : " + String(DHTPIN1));
-      Serial.println("DHT11 : 2 : " + String(DHTPIN2));
-      Serial.println("DHT11 : 3 : " + String(DHTPIN3));
-      Serial.println("DHT11 : 4 : " + String(DHTPIN4));
-      Serial.println("DHT11 : 5 : " + String(DHTPIN5));
-      Serial.println("DHT11 : 6 : " + String(DHTPIN6));
-      Serial.println("DHT11 : 7 : " + String(DHTPIN7));
       String mins = argv[6];
       int ci = mins.indexOf(',');
       TEMPMIN = mins.substring(0, ci).toInt();

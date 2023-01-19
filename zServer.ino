@@ -159,6 +159,9 @@ void SetupServer() {
       if (DHTPIN7) {
         GetValuesFromDB("tex");
         GetValuesFromDB("hex");
+      }else{
+        values["tex"] = 0;
+        values["hex"] = 0;
       }
       values["TEMPRANGES"] = String(TEMPMIN) + " - " + String(TEMPMAX);
       values["TEMPCOLOR"] = (TEMP >= TEMPMIN && TEMP <= TEMPMAX) ? "success" : "danger";
