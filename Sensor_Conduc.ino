@@ -34,7 +34,23 @@ void setupConductivity() {
   pinMode(CONDPIN, INPUT);
 }
 void CondCheck(){
-  getCond();
+  getCond();/*
+  //Subir conductividad
+  if (!dROP(CONDMINCONTROL) && COND < (CONDMIN + 1)) {
+    DataLogger("Control para subir conductividad", 0);
+    digitalWrite(CONDMINCONTROL, HIGH);
+  } else if (dROP(CONDMINCONTROL) && COND >= (CONDIDEAL - 1)) {
+    DataLogger("Apagado control para subir conductividad en sustrato", 0);
+    digitalWrite(CONDMINCONTROL, VLOW);
+  }
+  //Bajar conductividad
+  if (!dROP(CONDMAXCONTROL) && COND > (CONDMAX - 1)) {  //Cuando la conductividad sube a la máxima ACCIONA control
+    DataLogger("Control para bajar conductividad", 0);
+    digitalWrite(CONDMAXCONTROL, HIGH);
+  } else if (dROP(CONDMAXCONTROL) && COND <= (CONDIDEAL + 1)) {
+    DataLogger("Apagado control para bajar conductividad", 0);
+    digitalWrite(CONDMAXCONTROL, VLOW);
+  }*/
   if (alternadorLCD == N_COND) {
     lcd.setCursor(0, 0);
     lcd.print("Conductividad:" + String(COND) + "    ");

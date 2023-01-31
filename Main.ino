@@ -27,17 +27,18 @@ void setup() {
     //dataLog("Inicializando sensor de Oxigeno", 0 );
     SetupOxy();
   }
-  if (COND_ACTIVE) {  //Si el sensor de temperatura está activo entonces lee el sensor
+  if (COND_ACTIVE) {  //Si el sensor de temperatura está activo entonces guarda su valor
       setupConductivity();
     }
-  if (CO2_ACTIVE) {  //Si el sensor de CO2 está activo entonces lee el sensor
+  if (CO2_ACTIVE) {  //Si el sensor de CO2 está activo entonces guarda su valor
     SetupCO2();
   }
-  if (LUM_ACTIVE) {  //Si el sensor de luminosidad está activo entonces lee el sensor
+  if (LUM_ACTIVE) {  //Si el sensor de luminosidad está activo entonces guarda su valor
     SetupLUM();
   }
-  /*
-  }
+  if (JSN_ACTIVE) {  //Si el sensor de luminosidad está activo entonces guarda su valor
+    SetupJSN();
+  }/*
   if (PH_ACTIVE) {
     SetupPH();
   }*/
@@ -80,6 +81,9 @@ void LocalCheck() {
     if (LUM_ACTIVE) {  //Si el sensor de Luminosidad está activo entonces lee el sensor
       LUMCheck();
     }
+    if (JSN_ACTIVE) {  //Si el sensor de Luminosidad está activo entonces lee el sensor
+      JSNCheck();
+    }
     if (alternadorLCD < activeSesors) {// incrementa en 1 cada 2 segundos, lo que hace ir alternando entre los elementos activos
       alternadorLCD++;
     } else {
@@ -100,26 +104,29 @@ void SaveLocal() {
     if (DHT_ACTIVE) {  //Si el sensor DHT11 está activo entonces guarda su valor
       DHT11LocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
-    if (YL_ACTIVE) {  //Si el sensor de temperatura en sustrato está activo entonces lee el sensor
+    if (YL_ACTIVE) {  //Si el sensor de temperatura en sustrato está activo entonces guarda su valor
       YLLocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
-    if (DS18_ACTIVE) {  //Si el sensor de Humedad en sustrato está activo entonces lee el sensor
+    if (DS18_ACTIVE) {  //Si el sensor de Humedad en sustrato está activo entonces guarda su valor
       DS18LocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
-    if (OXY_ACTIVE) {  //Si el sensor de oxigención está activo entonces lee el sensor
+    if (OXY_ACTIVE) {  //Si el sensor de oxigención está activo entonces guarda su valor
       OxyLocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
-    if (PH_ACTIVE) {  //Si el sensor de PH está activo entonces lee el sensor
+    if (PH_ACTIVE) {  //Si el sensor de PH está activo entonces guarda su valor
       PHLocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
-    if (COND_ACTIVE) {  //Si el sensor de conductividad está activo entonces lee el sensor
+    if (COND_ACTIVE) {  //Si el sensor de conductividad está activo entonces guarda su valor
       CondLocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
-    if (CO2_ACTIVE) {  //Si el sensor de cO2 está activo entonces lee el sensor
+    if (CO2_ACTIVE) {  //Si el sensor de cO2 está activo entonces guarda su valor
       CO2LocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
-    if (LUM_ACTIVE) {  //Si el sensor de luminosidad está activo entonces lee el sensor
+    if (LUM_ACTIVE) {  //Si el sensor de luminosidad está activo entonces guarda su valor
       LUMLocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
+    }
+    if (JSN_ACTIVE) {  //Si el sensor de luminosidad está activo entonces guarda su valor
+      JSNLocalSave(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
     timer_save_local = millis();
   }
@@ -133,25 +140,28 @@ void UpToUbidtos() {
     if (DHT_ACTIVE) {  //Si el sensor de temperatura está activo entonces guarda su valor
       DHT11UpToUbi(String(now.unixtime()));
     }
-    if (YL_ACTIVE) {  //Si el sensor de temperatura en sustrato está activo entonces lee el sensor
+    if (YL_ACTIVE) {  //Si el sensor de temperatura en sustrato está activo entonces guarda su valor
       YLUpToUbi(String(now.unixtime()));
     }
-    if (DS18_ACTIVE) {  //Si el sensor de Humedad en sustrato está activo entonces lee el sensor
+    if (DS18_ACTIVE) {  //Si el sensor de Humedad en sustrato está activo entonces guarda su valor
       DS18UpToUbi(String(now.unixtime()));
     }
-    if (OXY_ACTIVE) {  //Si el sensor de Oxigenacion está activo entonces lee el sensor
+    if (OXY_ACTIVE) {  //Si el sensor de Oxigenacion está activo entonces guarda su valor
       OxyUpToUbi(String(now.unixtime()));
     }
-    if (PH_ACTIVE) {  //Si el sensor de PH está activo entonces lee el sensor
+    if (PH_ACTIVE) {  //Si el sensor de PH está activo entonces guarda su valor
       PHUpToUbi(String(now.unixtime()));
     }
-    if (COND_ACTIVE) {  //Si el sensor de Conductividad está activo entonces lee el sensor
+    if (COND_ACTIVE) {  //Si el sensor de Conductividad está activo entonces guarda su valor
       CondUpToUbi(String(now.unixtime()));
     }
-    if (CO2_ACTIVE) {  //Si el sensor de CO2 está activo entonces lee el sensor
+    if (CO2_ACTIVE) {  //Si el sensor de CO2 está activo entonces guarda su valor
       CO2UpToUbi(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
-    if (LUM_ACTIVE) {  //Si el sensor de luminosidad está activo entonces lee el sensor
+    if (LUM_ACTIVE) {  //Si el sensor de luminosidad está activo entonces guarda su valor
+      LUMUpToUbi(now.timestamp(DateTime::TIMESTAMP_FULL));
+    }
+    if (JSN_ACTIVE) {  //Si el sensor jsn (para medición de nivel de agua) está activo entonces guarda su valor
       LUMUpToUbi(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
     timer_up_data = millis();

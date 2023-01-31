@@ -38,7 +38,22 @@ void DS18Check() {
     counter++;
   }
   S_TEMP = (sum / counter) ? sum / counter : 0;
-  //DataLogger("Calculando promedio de temperatura en sustrato", 0 );
+  //subir temperatura en suatrato
+  if (!dROP(S_TEMPMIN_C) && S_TEMP <= S_TEMPIDEAL) {
+    DataLogger("Control para subir la temperatura en sustrato", 0);
+    digitalWrite(S_TEMPMIN_C, VHIGH);
+  } else if (dROP(S_TEMPMIN_C) && S_TEMP >= (S_TEMPIDEAL - 1)) {
+    DataLogger("Apagado control para subir temperatura en sustrato", 0);
+    digitalWrite(S_TEMPMIN_C, VLOW);
+  }
+  //bajar temperatura en suatrato
+  if (!dROP(S_TEMPMAX_C) && S_TEMP <= S_TEMPIDEAL) {
+    DataLogger("Control para bajar la temperatura en sustrato", 0);
+    digitalWrite(S_TEMPMAX_C, VHIGH);
+  } else if (dROP(S_TEMPMAX_C) && S_TEMP <= (S_TEMPIDEAL + 1)) {
+    DataLogger("Apagado control para bajar temperatura en sustrato", 0);
+    digitalWrite(S_TEMPMAX_C, VLOW);
+  }
   if (alternadorLCD == NS_T) {
     lcd.setCursor(0, 0);
     lcd.print("T1:" + String(temp1) + " ");

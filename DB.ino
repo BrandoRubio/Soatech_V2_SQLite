@@ -169,6 +169,25 @@ static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azC
       S_HUMMIN_Ctrl = String(argv[3]).toInt();
       S_HUMMAX_Ctrl = String(argv[4]).toInt();
     }
+  } else if (String(argv[1]) == "JSN") {
+    if (String(argv[9]) == "true") {
+      activeSesors++;  // = (String(argv[9]) == "true") ? activeSesors + 1 : activeSesors;
+      JSN_ACTIVE = true;
+      N_JSN = activeSesors;
+      String pines = argv[2];
+      int cp = pines.indexOf(',');
+      JSNPIN1 = pines.substring(0, cp).toInt();
+      JSNPIN2 = pines.substring(cp + 1).toInt();
+      Serial.print("Pin echo: ");
+      Serial.println(JSNPIN1);
+      Serial.print("Pin trigger: ");
+      Serial.println(JSNPIN2);
+      JSNMINCONTROL = String(argv[3]).toInt();
+      //JSNMAXCONTROL = String(argv[4]).toInt();
+      JSNMIN = String(argv[6]).toInt();
+      JSNMAX = String(argv[7]).toInt();
+      JSNHEIGHT = String(argv[8]).toInt();
+    }
   }
   return 0;
 }

@@ -152,33 +152,48 @@ void DHT11Check() {
   }
   TEMP = sumTemp / counter;
   HUM = sumHum / counter;
-  if (TEMP < (TEMPMIN + 1) && !STDHTMIN) {  //Cuando la temperatura baja a la mínima + 1 ACCIONA control
-    DataLogger("Control para subir temperatura", 0);
-    digitalWrite(TEMPMINCONTROL, HIGH);
-    STDHTMIN = true;
-    STDHT = false;
-  }
-  if (TEMP > (TEMPMAX - 1) && !STDHTMAX) {  //Cuando la temperatura sube a la máxima - 1 ACCIONA control
-    DataLogger("Control para bajar temperatura", 0);
-    digitalWrite(TEMPMAXCONTROL, HIGH);
-    STDHTMAX = true;
-    STDHT = false;
-    //>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
-  }
-  if (TEMP >= (TEMPIDEAL - 1) && TEMP <= (TEMPIDEAL + 1) && !STDHT) {  //Cuando la temperatura se encuentra estable desactiva todo el control
-    DataLogger("Apagamos todos los controles de temperatura", 0);
-    digitalWrite(TEMPMINCONTROL, LOW);
-    digitalWrite(TEMPMAXCONTROL, LOW);
-    STDHT = true;
-    STDHTMAX = false;
-    STDHTMIN = false;
-    //>>>>>>> 5d2c068e0ecc0cace35c9efcc28ae04cbddcc677
-  }
   ps = ss / cs;
   pi = si / ci;
   if ((ps - pi) >= 3 || (ps - pi) <= -3) {
-    digitalWrite(TEMPFAN, HIGH);
+    if (!dROP(TEMPFAN)) {
+      digitalWrite(TEMPFAN, VHIGH);
+    }else{
+      digitalWrite(TEMPFAN, VLOW);
+    }
   }
+  //Subir temperatura
+  if (!dROP(TEMPMINCONTROL) && TEMP < (TEMPMIN + 1)) {  //Cuando la temperatura baja a la mínima ACCIONA control
+    DataLogger("Control para subir temperatura", 0);
+    digitalWrite(TEMPMINCONTROL, HIGH);
+  } else if (dROP(TEMPMINCONTROL) && TEMP >= (TEMPIDEAL - 1)) {
+    DataLogger("Apagado control para subir temperatura en sustrato", 0);
+    digitalWrite(TEMPMINCONTROL, VLOW);
+  }
+  //Bajar tempertura
+  if (!dROP(TEMPMAXCONTROL) && TEMP > (TEMPMAX - 1)) {  //Cuando la temperatura sube a la máxima ACCIONA control
+    DataLogger("Control para bajar temperatura", 0);
+    digitalWrite(TEMPMAXCONTROL, HIGH);
+  } else if (dROP(TEMPMAXCONTROL) && TEMP <= (TEMPIDEAL + 1)) {
+    DataLogger("Apagado control para bajar temperatura", 0);
+    digitalWrite(TEMPMAXCONTROL, VLOW);
+  }
+  //Subir humedad
+  if (!dROP(HUMMINCONTROL) && HUM < (HUMMIN + 1)) {  //Cuando la humedad baja a la mínima ACCIONA control
+    DataLogger("Control para subir humedad", 0);
+    digitalWrite(HUMMINCONTROL, HIGH);
+  } else if (dROP(HUMMINCONTROL) && HUM >= (HUMIDEAL - 1)) {
+    DataLogger("Apagado control para subir HUMeratura en sustrato", 0);
+    digitalWrite(HUMMINCONTROL, VLOW);
+  }
+  //Bajar humedad
+  if (!dROP(HUMMAXCONTROL) && HUM > (HUMMAX - 1)) {  //Cuando la humedad sube a la máxima ACCIONA control
+    DataLogger("Control para bajar humedad", 0);
+    digitalWrite(HUMMAXCONTROL, HIGH);
+  } else if (dROP(HUMMAXCONTROL) && HUM <= (HUMIDEAL + 1)) {
+    DataLogger("Apagado control para bajar HUMeratura", 0);
+    digitalWrite(HUMMAXCONTROL, VLOW);
+  }
+  
   if (alternadorLCD == N_DHT) {
     lcd.setCursor(0, 0);
     lcd.print("Temperatura:" + String(TEMP) + "   ");

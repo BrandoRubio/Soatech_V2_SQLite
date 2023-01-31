@@ -44,11 +44,18 @@ void OxyCheck() {
   ADC_Raw = analogRead(OXYPIN);
   ADC_Voltage = uint32_t(VREF) * ADC_Raw / ADC_RES;
   OXY = readDO(ADC_Voltage, Temperaturet) / 2000;
-  if (OXY < (OXYMIN + 1) && !STOXYMIN) {
+  /*if (OXY < (OXYMIN + 1) && !STOXYMIN) {
     DataLogger("Control para subir la oxygenacion", 0);
     digitalWrite(OXYMINCONTROL, VHIGH);
     STOXYMIN = true;
     STOXY = false;
+  }*/
+  if (!dROP(OXYMINCONTROL) && OXY <= OXYMIN) {
+    DataLogger("Control para subir la oxygenacion", 0);
+    digitalWrite(OXYMINCONTROL, VHIGH);
+  } else if (dROP(OXYMINCONTROL) && OXY >= (OXYIDEAL - 1)) {
+    DataLogger("Apagado control para subir la oxygenacion", 0);
+    digitalWrite(OXYMINCONTROL, VLOW);
   }
   if (alternadorLCD == N_OXY) {
     lcd.setCursor(0, 0);

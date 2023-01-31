@@ -10,6 +10,7 @@ MQUnifiedsensor MQ135(placa, Voltage_Resolution, ADC_Bit_Resolution, CO2PIN, typ
 void SetupCO2() {
   MQ135.setRegressionMethod(1);  //_PPM =  a*ratio^b
   MQ135.init();
+  
   //Serial.print("Calibrating please wait.");
   float calcR0 = 0;
   for (int i = 1; i <= 10; i++) {
@@ -36,6 +37,22 @@ void CO2Check() {
   MQ135.setA(110.47);
   MQ135.setB(-2.862);
   CO2 = MQ135.readSensor() * 1000;
+  //subir CO2
+  if (!dROP(CO2MINCONTROL) && CO2 <= CO2IDEAL) {
+    DataLogger("Control para subir el CO2", 0);
+    digitalWrite(CO2MINCONTROL, VHIGH);
+  } else if (dROP(CO2MINCONTROL) && CO2 >= (CO2IDEAL - 1)) {
+    DataLogger("Apagado control para subir el CO2", 0);
+    digitalWrite(CO2MINCONTROL, VLOW);
+  }
+  //bajar CO2
+  if (!dROP(CO2MAXCONTROL) && CO2 >= CO2IDEAL) {
+    DataLogger("Control para bajar el CO2", 0);
+    digitalWrite(CO2MAXCONTROL, VHIGH);
+  } else if (dROP(CO2MAXCONTROL) && CO2 <= (CO2IDEAL + 1)) {
+    DataLogger("Apagado control para bajar el CO2", 0);
+    digitalWrite(CO2MAXCONTROL, VLOW);
+  }
   if (alternadorLCD == N_CO2) {
     lcd.setCursor(0, 0);
     lcd.print("CO2:" + String(CO2) + "                ");

@@ -28,26 +28,26 @@ void YLCheck() {
     counter++;
   }
   S_HUM = (sum / counter) ? sum / counter : 0;
-  if (S_HUM > S_HUMMAX && !STYLMIN) {  //controlar humedad mínima
+  
+  //Subir humedad
+  if(!dROP(S_HUMMIN_Ctrl) && S_HUM <= S_HUMMIN){
     digitalWrite(S_HUMMIN_Ctrl, VHIGH);
-    DataLogger("Control para subir la humedad en sustrato", 0);
-    STYLMIN = true;
-    STYL = false;
-  }
-  if (S_HUM >= (S_HUMIDEAL - 1) && S_HUM <= (S_HUMIDEAL + 1) && !STYL) {  //Apagar controles
+    DataLogger("Control para subir humedad en sustrato", 0);
+  }else
+  if(dROP(S_HUMMIN_Ctrl) && S_HUM >= (S_HUMIDEAL - 1)){
     digitalWrite(S_HUMMIN_Ctrl, VLOW);
-    digitalWrite(S_HUMMAX_Ctrl, VLOW);
-    //DataLogger("Apagamos todos los controles de temperatura", 0);
-    STYLMAX = false;
-    STYLMIN = false;
-    STYL = true;
+    DataLogger("Apagado control para subir humedad en sustrato", 0);
   }
-  if (S_HUM < S_HUMMIN && !STYLMAX) {  //controlar humedad máxima
+  //Bajar humedad
+  /*
+  if(!dROP(S_HUMMAX_Ctrl) && S_HUM >= S_HUMMAX){
     digitalWrite(S_HUMMAX_Ctrl, VHIGH);
     DataLogger("Control para bajar humedad en sustrato", 0);
-    STYLMAX = true;
-    STYL = false;
-  }
+  }else
+  if(dROP(S_HUMMAX_Ctrl) && S_HUM <= (S_HUMIDEAL + 1)){
+    digitalWrite(S_HUMMAX_Ctrl, VLOW);
+    DataLogger("Apagado control para bajar humedad en sustrato", 0);
+  }*/
   if (alternadorLCD == NS_H) {
     lcd.setCursor(0, 0);
     lcd.print("H1:" + String(sh1) + " ");

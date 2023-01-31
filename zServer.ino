@@ -78,6 +78,12 @@ void SetupServer() {
       json["LUMRANGES"] = String(LUMMIN) + " - " + String(LUMMAX);
       json["LUMCOLOR"] = (lux > LUMMAX || lux < LUMMIN) ? "danger" : "success";
     }
+    if (JSN_ACTIVE) {
+      json["JSN"] = JSN;
+      json["JSNRANGES"] = String(JSNMIN) + "% - " + String(JSNMAX) + "%";
+      json["JSNHEIGHT"] = String(JSNHEIGHT);
+      json["JSNCOLOR"] = (JSN > JSNMAX || JSN < JSNMIN) ? "danger" : "success";
+    }
     serializeJson(json, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);
@@ -217,6 +223,13 @@ void SetupServer() {
       first_time_values = false;
       values["LUMRANGES"] = String(LUMMIN) + " - " + String(LUMMAX);
       values["LUMCOLOR"] = (lux > LUMMAX || lux < LUMMIN) ? "danger" : "success";
+    }
+    if (JSN_ACTIVE) {
+      GetValuesFromDB("JSN");
+      first_time_values = false;
+      values["JSNHEIGHT"] = String(JSNHEIGHT);
+      values["JSNRANGES"] = String(JSNMIN) + "% - " + String(JSNMAX) + "%";
+      values["JSNCOLOR"] = (JSN > JSNMAX || JSN < JSNMIN) ? "danger" : "success";
     }
     values["REGISTERS"] = NUM_REGISTERS;
     serializeJson(values, *response);
