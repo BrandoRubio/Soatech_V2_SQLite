@@ -32,22 +32,24 @@ int getMedianNum(int bArray[], int iFilterLen) {
 
 void setupConductivity() {
   pinMode(CONDPIN, INPUT);
+  //pinMode(CONDMINCONTROL, OUTPUT);
+  //digitalWrite(CONDMINCONTROL, VLOW);
 }
 void CondCheck(){
   getCond();/*
   //Subir conductividad
-  if (CONDMINCONTROL && !dROP(CONDMINCONTROL) && COND < (CONDMIN + 1)) {
+  if (CONDMINCONTROL && digitalRead(CONDMINCONTROL) == VLOW && COND < (CONDMIN + 1)) {
     DataLogger("Control para subir conductividad", 0);
     digitalWrite(CONDMINCONTROL, HIGH);
-  } else if (CONDMINCONTROL && dROP(CONDMINCONTROL) && COND >= (CONDIDEAL - 1)) {
+  } else if (CONDMINCONTROL && digitalRead(CONDMINCONTROL) == VHIGH && COND >= (CONDIDEAL - 1)) {
     DataLogger("Apagado control para subir conductividad en sustrato", 0);
     digitalWrite(CONDMINCONTROL, VLOW);
   }
   //Bajar conductividad
-  if (CONDMAXCONTROL && !dROP(CONDMAXCONTROL) && COND > (CONDMAX - 1)) {  //Cuando la conductividad sube a la máxima ACCIONA control
+  if (CONDMAXCONTROL && digitalRead(CONDMAXCONTROL) == VLOW && COND > (CONDMAX - 1)) {  //Cuando la conductividad sube a la máxima ACCIONA control
     DataLogger("Control para bajar conductividad", 0);
     digitalWrite(CONDMAXCONTROL, HIGH);
-  } else if (CONDMAXCONTROL && dROP(CONDMAXCONTROL) && COND <= (CONDIDEAL + 1)) {
+  } else if (CONDMAXCONTROL && digitalRead(CONDMAXCONTROL) == VHIGH && COND <= (CONDIDEAL + 1)) {
     DataLogger("Apagado control para bajar conductividad", 0);
     digitalWrite(CONDMAXCONTROL, VLOW);
   }*/

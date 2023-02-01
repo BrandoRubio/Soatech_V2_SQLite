@@ -7,6 +7,10 @@ DallasTemperature sensors(&ourWire);  //Se declara una variable u objeto para nu
 void SetupDS18() {
   ourWire.begin(DS18PIN);
   sensors.begin();  //Se inicia el sensor
+  pinMode(S_TEMPMIN_C, OUTPUT);
+  digitalWrite(S_TEMPMIN_C, VLOW);
+  pinMode(S_TEMPMAX_C, OUTPUT);
+  digitalWrite(S_TEMPMAX_C, VLOW);
 }
 void DS18Check() {
   sensors.requestTemperatures();  //Se envía el comando para leer la temperatura
@@ -39,18 +43,18 @@ void DS18Check() {
   }
   S_TEMP = (sum / counter) ? sum / counter : 0;
   //subir temperatura en suatrato
-  if (S_TEMPMIN_C && !dROP(S_TEMPMIN_C) && S_TEMP <= S_TEMPIDEAL) {
+  if (S_TEMPMIN_C && digitalRead(S_TEMPMIN_C) == VLOW && S_TEMP <= S_TEMPIDEAL) {
     DataLogger("Control para subir la temperatura en sustrato", 0);
     digitalWrite(S_TEMPMIN_C, VHIGH);
-  } else if (S_TEMPMIN_C && dROP(S_TEMPMIN_C) && S_TEMP >= (S_TEMPIDEAL - 1)) {
+  } else if (S_TEMPMIN_C && digitalRead(S_TEMPMIN_C) == VHIGH && S_TEMP >= (S_TEMPIDEAL - 1)) {
     DataLogger("Apagado control para subir temperatura en sustrato", 0);
     digitalWrite(S_TEMPMIN_C, VLOW);
   }
   //bajar temperatura en suatrato
-  if (S_TEMPMAX_C && !dROP(S_TEMPMAX_C) && S_TEMP <= S_TEMPIDEAL) {
+  if (S_TEMPMAX_C && digitalRead(S_TEMPMAX_C) == VLOW && S_TEMP <= S_TEMPIDEAL) {
     DataLogger("Control para bajar la temperatura en sustrato", 0);
     digitalWrite(S_TEMPMAX_C, VHIGH);
-  } else if (S_TEMPMAX_C && dROP(S_TEMPMAX_C) && S_TEMP <= (S_TEMPIDEAL + 1)) {
+  } else if (S_TEMPMAX_C && digitalRead(S_TEMPMAX_C) == VHIGH && S_TEMP <= (S_TEMPIDEAL + 1)) {
     DataLogger("Apagado control para bajar temperatura en sustrato", 0);
     digitalWrite(S_TEMPMAX_C, VLOW);
   }

@@ -26,9 +26,9 @@ void SetupDHT() {
   pinMode(TEMPMINCONTROL, OUTPUT);
   pinMode(TEMPMAXCONTROL, OUTPUT);
   pinMode(TEMPFAN, OUTPUT);
-  digitalWrite(TEMPMINCONTROL, LOW);
-  digitalWrite(TEMPMAXCONTROL, LOW);
-  digitalWrite(TEMPFAN, LOW);
+  digitalWrite(TEMPMINCONTROL, VLOW);
+  digitalWrite(TEMPMAXCONTROL, VLOW);
+  digitalWrite(TEMPFAN, VLOW);
   DHTPIN1, DHTPIN2, DHTPIN3, DHTPIN4, DHTPIN5, DHTPIN6 = 0;
 }
 
@@ -155,41 +155,41 @@ void DHT11Check() {
   ps = ss / cs;
   pi = si / ci;
   if ((ps - pi) >= 3 || (ps - pi) <= -3) {
-    if (!dROP(TEMPFAN)) {
+    if (!digitalRead(TEMPFAN)) {
       digitalWrite(TEMPFAN, VHIGH);
     }else{
       digitalWrite(TEMPFAN, VLOW);
     }
   }
   //Subir temperatura
-  if (TEMPMINCONTROL && !dROP(TEMPMINCONTROL) && TEMP < (TEMPMIN + 1)) {  //Cuando la temperatura baja a la mínima ACCIONA control
+  if (TEMPMINCONTROL && digitalRead(TEMPMINCONTROL) == VLOW && TEMP < (TEMPMIN + 1)) {  //Cuando la temperatura baja a la mínima ACCIONA control
     DataLogger("Control para subir temperatura", 0);
     digitalWrite(TEMPMINCONTROL, HIGH);
-  } else if (TEMPMINCONTROL && dROP(TEMPMINCONTROL) && TEMP >= (TEMPIDEAL - 1)) {
+  } else if (TEMPMINCONTROL && digitalRead(TEMPMINCONTROL) == VHIGH && TEMP >= (TEMPIDEAL - 1)) {
     DataLogger("Apagado control para subir temperatura en sustrato", 0);
     digitalWrite(TEMPMINCONTROL, VLOW);
   }
   //Bajar tempertura
-  if (TEMPMAXCONTROL && !dROP(TEMPMAXCONTROL) && TEMP > (TEMPMAX - 1)) {  //Cuando la temperatura sube a la máxima ACCIONA control
+  if (TEMPMAXCONTROL && digitalRead(TEMPMAXCONTROL) == VLOW && TEMP > (TEMPMAX - 1)) {  //Cuando la temperatura sube a la máxima ACCIONA control
     DataLogger("Control para bajar temperatura", 0);
     digitalWrite(TEMPMAXCONTROL, HIGH);
-  } else if (TEMPMAXCONTROL && dROP(TEMPMAXCONTROL) && TEMP <= (TEMPIDEAL + 1)) {
+  } else if (TEMPMAXCONTROL && digitalRead(TEMPMAXCONTROL) == VHIGH && TEMP <= (TEMPIDEAL + 1)) {
     DataLogger("Apagado control para bajar temperatura", 0);
     digitalWrite(TEMPMAXCONTROL, VLOW);
   }
   //Subir humedad
-  if (HUMMINCONTROL && !dROP(HUMMINCONTROL) && HUM < (HUMMIN + 1)) {  //Cuando la humedad baja a la mínima ACCIONA control
+  if (HUMMINCONTROL && digitalRead(HUMMINCONTROL) == VLOW && HUM < (HUMMIN + 1)) {  //Cuando la humedad baja a la mínima ACCIONA control
     DataLogger("Control para subir humedad", 0);
     digitalWrite(HUMMINCONTROL, HIGH);
-  } else if (HUMMINCONTROL && dROP(HUMMINCONTROL) && HUM >= (HUMIDEAL - 1)) {
+  } else if (HUMMINCONTROL && digitalRead(HUMMINCONTROL) == VHIGH && HUM >= (HUMIDEAL - 1)) {
     DataLogger("Apagado control para subir humedad en sustrato", 0);
     digitalWrite(HUMMINCONTROL, VLOW);
   }
   //Bajar humedad
-  if (HUMMAXCONTROL && !dROP(HUMMAXCONTROL) && HUM > (HUMMAX - 1)) {  //Cuando la humedad sube a la máxima ACCIONA control
+  if (HUMMAXCONTROL && digitalRead(HUMMAXCONTROL) == VLOW && HUM > (HUMMAX - 1)) {  //Cuando la humedad sube a la máxima ACCIONA control
     DataLogger("Control para bajar humedad", 0);
     digitalWrite(HUMMAXCONTROL, HIGH);
-  } else if (HUMMAXCONTROL && dROP(HUMMAXCONTROL) && HUM <= (HUMIDEAL + 1)) {
+  } else if (HUMMAXCONTROL && digitalRead(HUMMAXCONTROL) == VHIGH && HUM <= (HUMIDEAL + 1)) {
     DataLogger("Apagado control para bajar humedad", 0);
     digitalWrite(HUMMAXCONTROL, VLOW);
   }
@@ -318,7 +318,7 @@ void DHT11UpToUbi(String DATE) {
     }
   }
   if (ubidots.connected()) {
-    DataLogger("Subiendo datos de temperatura y humedad relativa a la nube", 0);
+    //DataLogger("Subiendo datos de temperatura y humedad relativa a la nube", 0);
     ubidots.add("Temperatura", TEMP);
     ubidots.add("Humedad", HUM);
   } else {
@@ -327,7 +327,7 @@ void DHT11UpToUbi(String DATE) {
   }
   ubidots.publish(DEVICE_LABEL.c_str());
   if (ubidots.connected()) {
-    DataLogger("Subiendo datos de temperatura y humedad exterior a la nube", 0);
+    //DataLogger("Subiendo datos de temperatura y humedad exterior a la nube", 0);
     ubidots.add("tex", t7);
     ubidots.add("hex", h7);
     if (cs) {

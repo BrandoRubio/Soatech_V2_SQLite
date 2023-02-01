@@ -2,6 +2,8 @@ void SetupJSN() {
   //Serial.begin(115200);
   pinMode(JSNPIN2, INPUT);
   pinMode(JSNPIN1, OUTPUT);
+  pinMode(JSNMINCONTROL, OUTPUT);
+  digitalWrite(JSNMINCONTROL, LOW);
 }
 
 void JSNCheck() {
@@ -23,14 +25,14 @@ void JSNCheck() {
   /*if(digitalReadOutputPin(JSNMINCONTROL)){
 
   }*/
-  if(!dROP(JSNMINCONTROL) && JSN < JSNMIN){//Si el nivel del agua sobrebaja el mínimo y está apagado, se enciende el control.
+  if (JSNMINCONTROL && digitalRead(JSNMINCONTROL) == VLOW && JSN < JSNMIN) {  //Si el nivel del agua sobrebaja el mínimo y está apagado, se enciende el control.
     DataLogger("Control para subir nivel de agua", 0);
-    digitalWrite(JSNMINCONTROL, VHIGH);
-  }else
-  if(dROP(JSNMINCONTROL) && JSN >= JSNMAX){//Si el nivel del agua supera el máximo y está encendido, se apaga el control.
+    digitalWrite(JSNMINCONTROL, HIGH);
+  } else if (JSNMINCONTROL && digitalRead(JSNMINCONTROL) == VHIGH && JSN >= JSNMAX) {  //Si el nivel del agua supera el máximo y está encendido, se apaga el control.
     DataLogger("Apagado control para subir nivel de agua", 0);
     digitalWrite(JSNMINCONTROL, VLOW);
   }
+
   if (alternadorLCD == N_JSN) {
     lcd.setCursor(0, 0);
     lcd.print("Porcentaje: " + String(JSN) + "%");

@@ -30,21 +30,21 @@ void YLCheck() {
   S_HUM = (sum / counter) ? sum / counter : 0;
   
   //Subir humedad
-  if(S_HUMMIN_Ctrl && !dROP(S_HUMMIN_Ctrl) && S_HUM <= S_HUMMIN){
+  if(S_HUMMIN_Ctrl && digitalRead(S_HUMMIN_Ctrl) == VLOW && S_HUM <= S_HUMMIN){
     digitalWrite(S_HUMMIN_Ctrl, VHIGH);
     DataLogger("Control para subir humedad en sustrato", 0);
   }else
-  if(S_HUMMIN_Ctrl && dROP(S_HUMMIN_Ctrl) && S_HUM >= (S_HUMIDEAL - 1)){
+  if(S_HUMMIN_Ctrl && digitalRead(S_HUMMIN_Ctrl) == VHIGH && S_HUM >= (S_HUMIDEAL - 1)){
     digitalWrite(S_HUMMIN_Ctrl, VLOW);
     DataLogger("Apagado control para subir humedad en sustrato", 0);
   }
   //Bajar humedad
   /*
-  if(!dROP(S_HUMMAX_Ctrl) && S_HUM >= S_HUMMAX){
+  if(S_HUMMAX_Ctrl && digitalRead(S_HUMMAX_Ctrl) == VLOW && S_HUM >= S_HUMMAX){
     digitalWrite(S_HUMMAX_Ctrl, VHIGH);
     DataLogger("Control para bajar humedad en sustrato", 0);
   }else
-  if(dROP(S_HUMMAX_Ctrl) && S_HUM <= (S_HUMIDEAL + 1)){
+  if(S_HUMMAX_Ctrl && digitalRead(S_HUMMAX_Ctrl) == VHIGH && S_HUM <= (S_HUMIDEAL + 1)){
     digitalWrite(S_HUMMAX_Ctrl, VLOW);
     DataLogger("Apagado control para bajar humedad en sustrato", 0);
   }*/

@@ -28,6 +28,8 @@ uint16_t ADC_Voltage;
 uint16_t DO;
 
 void SetupOxy() {
+  pinMode(OXYMINCONTROL, OUTPUT);
+  digitalWrite(OXYMINCONTROL, VLOW);
 }
 int16_t readDO(uint32_t voltage_mv, uint8_t temperature_c) {
 #if TWO_POINT_CALIBRATION == 0
@@ -50,10 +52,10 @@ void OxyCheck() {
     STOXYMIN = true;
     STOXY = false;
   }*/
-  if (OXYMINCONTROL && !dROP(OXYMINCONTROL) && OXY <= OXYMIN) {
+  if (OXYMINCONTROL && digitalRead(OXYMINCONTROL) == VLOW && OXY <= OXYMIN) {
     DataLogger("Control para subir la oxygenacion", 0);
     digitalWrite(OXYMINCONTROL, VHIGH);
-  } else if (OXYMINCONTROL && dROP(OXYMINCONTROL) && OXY >= (OXYIDEAL - 1)) {
+  } else if (OXYMINCONTROL && digitalRead(OXYMINCONTROL) == VHIGH && OXY >= (OXYIDEAL - 1)) {
     DataLogger("Apagado control para subir la oxygenacion", 0);
     digitalWrite(OXYMINCONTROL, VLOW);
   }

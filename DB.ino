@@ -178,10 +178,6 @@ static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azC
       int cp = pines.indexOf(',');
       JSNPIN1 = pines.substring(0, cp).toInt();
       JSNPIN2 = pines.substring(cp + 1).toInt();
-      Serial.print("Pin echo: ");
-      Serial.println(JSNPIN1);
-      Serial.print("Pin trigger: ");
-      Serial.println(JSNPIN2);
       JSNMINCONTROL = String(argv[3]).toInt();
       //JSNMAXCONTROL = String(argv[4]).toInt();
       JSNMIN = String(argv[6]).toInt();
@@ -197,11 +193,11 @@ int loadSensorsData(const char *sql) {
   }
   int rc = sqlite3_exec(db, sql, callbackLoadSensorsData, (void *)"", &zErrMsg);
   if (rc != SQLITE_OK) {
-    /*Serial.print(F("SQL error: "));
+    Serial.print(F("SQL error: "));
     Serial.print(sqlite3_extended_errcode(db));
     Serial.print(" ");
     Serial.println(zErrMsg);
-    sqlite3_free(zErrMsg);*/
+    sqlite3_free(zErrMsg);
   } else
     Serial.print("");
   return rc;
@@ -216,11 +212,11 @@ int SaveSensorValue(String n, String d, String v) {
   }
   int rc = sqlite3_exec(db, sql.c_str(), callbackSaveValue, (void *)"", &zErrMsg);
   if (rc != SQLITE_OK) {
-    /*Serial.print(F("SQL error: "));
+    Serial.print(F("SQL error: "));
     Serial.print(sqlite3_extended_errcode(db));
     Serial.print(" ");
     Serial.println(zErrMsg);
-    sqlite3_free(zErrMsg);*/
+    sqlite3_free(zErrMsg);
   } else
     Serial.print("");
   return rc;
@@ -241,11 +237,11 @@ int GetValuesFromDB(String s) {
   }
   int rc = sqlite3_exec(db, sql.c_str(), callbackValues, (void *)"", &zErrMsg);
   if (rc != SQLITE_OK) {
-    /*Serial.print(F("SQL error: "));
+    Serial.print(F("SQL error: "));
     Serial.print(sqlite3_extended_errcode(db));
     Serial.print(" ");
     Serial.println(zErrMsg);
-    sqlite3_free(zErrMsg);*/
+    sqlite3_free(zErrMsg);
   } else
     Serial.print("");
   return rc;
@@ -264,11 +260,11 @@ int GetValuesFromSensor(String s) {
   }
   int rc = sqlite3_exec(db, sql.c_str(), callbackNewFile, (void *)"", &zErrMsg);
   if (rc != SQLITE_OK) {
-    /*Serial.print(F("SQL error: "));
+    Serial.print(F("SQL error: "));
     Serial.print(sqlite3_extended_errcode(db));
     Serial.print(" ");
     Serial.println(zErrMsg);
-    sqlite3_free(zErrMsg);*/
+    sqlite3_free(zErrMsg);
   } else
     Serial.print("");
   return rc;

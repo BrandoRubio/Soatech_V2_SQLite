@@ -28,8 +28,8 @@ void setup() {
     SetupOxy();
   }
   if (COND_ACTIVE) {  //Si el sensor de temperatura está activo entonces guarda su valor
-      setupConductivity();
-    }
+    setupConductivity();
+  }
   if (CO2_ACTIVE) {  //Si el sensor de CO2 está activo entonces guarda su valor
     SetupCO2();
   }
@@ -38,10 +38,10 @@ void setup() {
   }
   if (JSN_ACTIVE) {  //Si el sensor de luminosidad está activo entonces guarda su valor
     SetupJSN();
-  }/*
+  }
   if (PH_ACTIVE) {
     SetupPH();
-  }*/
+  }
   delay(1000);
   SetupUbidots();
 }
@@ -84,7 +84,7 @@ void LocalCheck() {
     if (JSN_ACTIVE) {  //Si el sensor de Luminosidad está activo entonces lee el sensor
       JSNCheck();
     }
-    if (alternadorLCD < activeSesors) {// incrementa en 1 cada 2 segundos, lo que hace ir alternando entre los elementos activos
+    if (alternadorLCD < activeSesors) {  // incrementa en 1 cada 2 segundos, lo que hace ir alternando entre los elementos activos
       alternadorLCD++;
     } else {
       alternadorLCD = 1;

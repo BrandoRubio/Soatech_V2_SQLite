@@ -1,20 +1,26 @@
 int buf[10], temp11;
 
+void SetupPH(){  
+  pinMode(PHMINCONTROL, OUTPUT);
+  digitalWrite(PHMINCONTROL, VLOW);
+  pinMode(PHMAXCONTROL, OUTPUT);
+  digitalWrite(PHMAXCONTROL, VLOW);
+}
 void PHCheck() {
   PH = getPH();
   //control para subir PH
-  if (PHMINCONTROL && !dROP(PHMINCONTROL) && PH <= PHMIN) {
+  if (PHMINCONTROL && digitalRead(PHMINCONTROL) == VLOW && PH <= PHMIN) {
     DataLogger("Control para subir PH", 0);
     digitalWrite(PHMINCONTROL, VHIGH);
-  } else if (PHMINCONTROL && dROP(PHMINCONTROL) && PH >= (PHIDEAL - 1)) {
+  } else if (PHMINCONTROL && digitalRead(PHMINCONTROL) == VHIGH && PH >= (PHIDEAL - 1)) {
     DataLogger("Apaga control para subir PH", 0);
     digitalWrite(PHMINCONTROL, VLOW);
   }
   //control para bajar PH
-  if (PHMAXCONTROL && !dROP(PHMAXCONTROL) && PH >= PHMAX) {
+  if (PHMAXCONTROL && digitalRead(PHMAXCONTROL) == VLOW && PH >= PHMAX) {
     digitalWrite(PHMAXCONTROL, VHIGH);
     DataLogger("Control para bajar PH", 0);
-  } else if (PHMAXCONTROL && dROP(PHMAXCONTROL) && PH <= (PHIDEAL + 1)) {
+  } else if (PHMAXCONTROL && digitalRead(PHMAXCONTROL) == VHIGH && PH <= (PHIDEAL + 1)) {
     DataLogger("apaga control para bajar PH", 0);
     digitalWrite(PHMAXCONTROL, VLOW);
   }

@@ -27,6 +27,8 @@ void SetupCO2() {
   }
   /*****************************  MQ CAlibration **************************/
   MQ135.serialDebug(false);
+  pinMode(CO2MAXCONTROL, OUTPUT);
+  digitalWrite(CO2MAXCONTROL, VLOW);
 }
 
 void CO2Check() {
@@ -38,18 +40,18 @@ void CO2Check() {
   MQ135.setB(-2.862);
   CO2 = MQ135.readSensor() * 1000;
   //subir CO2
-  if (CO2MINCONTROL && !dROP(CO2MINCONTROL) && CO2 <= CO2IDEAL) {
+  if (CO2MINCONTROL && digitalRead(CO2MINCONTROL) == VLOW && CO2 <= CO2IDEAL) {
     DataLogger("Control para subir el CO2", 0);
     digitalWrite(CO2MINCONTROL, VHIGH);
-  } else if (CO2MINCONTROL && dROP(CO2MINCONTROL) && CO2 >= (CO2IDEAL - 1)) {
+  } else if (CO2MINCONTROL && digitalRead(CO2MINCONTROL) == VHIGH && CO2 >= (CO2IDEAL - 1)) {
     DataLogger("Apagado control para subir el CO2", 0);
     digitalWrite(CO2MINCONTROL, VLOW);
   }
   //bajar CO2
-  if (CO2MAXCONTROL && !dROP(CO2MAXCONTROL) && CO2 >= CO2IDEAL) {
+  if (CO2MAXCONTROL && digitalRead(CO2MAXCONTROL) == VLOW && CO2 >= CO2IDEAL) {
     DataLogger("Control para bajar el CO2", 0);
     digitalWrite(CO2MAXCONTROL, VHIGH);
-  } else if (CO2MAXCONTROL && dROP(CO2MAXCONTROL) && CO2 <= (CO2IDEAL + 1)) {
+  } else if (CO2MAXCONTROL && digitalRead(CO2MAXCONTROL) == VHIGH && CO2 <= (CO2IDEAL + 1)) {
     DataLogger("Apagado control para bajar el CO2", 0);
     digitalWrite(CO2MAXCONTROL, VLOW);
   }
