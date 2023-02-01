@@ -3,18 +3,18 @@ int buf[10], temp11;
 void PHCheck() {
   PH = getPH();
   //control para subir PH
-  if (!dROP(PHMINCONTROL) && PH <= PHMIN) {
+  if (PHMINCONTROL && !dROP(PHMINCONTROL) && PH <= PHMIN) {
     DataLogger("Control para subir PH", 0);
     digitalWrite(PHMINCONTROL, VHIGH);
-  } else if (dROP(PHMINCONTROL) && PH >= (PHIDEAL - 1)) {
+  } else if (PHMINCONTROL && dROP(PHMINCONTROL) && PH >= (PHIDEAL - 1)) {
     DataLogger("Apaga control para subir PH", 0);
     digitalWrite(PHMINCONTROL, VLOW);
   }
   //control para bajar PH
-  if (!dROP(PHMAXCONTROL) && PH >= PHMAX) {
+  if (PHMAXCONTROL && !dROP(PHMAXCONTROL) && PH >= PHMAX) {
     digitalWrite(PHMAXCONTROL, VHIGH);
     DataLogger("Control para bajar PH", 0);
-  } else if (dROP(PHMAXCONTROL) && PH <= (PHIDEAL + 1)) {
+  } else if (PHMAXCONTROL && dROP(PHMAXCONTROL) && PH <= (PHIDEAL + 1)) {
     DataLogger("apaga control para bajar PH", 0);
     digitalWrite(PHMAXCONTROL, VLOW);
   }

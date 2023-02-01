@@ -39,18 +39,18 @@ void DS18Check() {
   }
   S_TEMP = (sum / counter) ? sum / counter : 0;
   //subir temperatura en suatrato
-  if (!dROP(S_TEMPMIN_C) && S_TEMP <= S_TEMPIDEAL) {
+  if (S_TEMPMIN_C && !dROP(S_TEMPMIN_C) && S_TEMP <= S_TEMPIDEAL) {
     DataLogger("Control para subir la temperatura en sustrato", 0);
     digitalWrite(S_TEMPMIN_C, VHIGH);
-  } else if (dROP(S_TEMPMIN_C) && S_TEMP >= (S_TEMPIDEAL - 1)) {
+  } else if (S_TEMPMIN_C && dROP(S_TEMPMIN_C) && S_TEMP >= (S_TEMPIDEAL - 1)) {
     DataLogger("Apagado control para subir temperatura en sustrato", 0);
     digitalWrite(S_TEMPMIN_C, VLOW);
   }
   //bajar temperatura en suatrato
-  if (!dROP(S_TEMPMAX_C) && S_TEMP <= S_TEMPIDEAL) {
+  if (S_TEMPMAX_C && !dROP(S_TEMPMAX_C) && S_TEMP <= S_TEMPIDEAL) {
     DataLogger("Control para bajar la temperatura en sustrato", 0);
     digitalWrite(S_TEMPMAX_C, VHIGH);
-  } else if (dROP(S_TEMPMAX_C) && S_TEMP <= (S_TEMPIDEAL + 1)) {
+  } else if (S_TEMPMAX_C && dROP(S_TEMPMAX_C) && S_TEMP <= (S_TEMPIDEAL + 1)) {
     DataLogger("Apagado control para bajar temperatura en sustrato", 0);
     digitalWrite(S_TEMPMAX_C, VLOW);
   }

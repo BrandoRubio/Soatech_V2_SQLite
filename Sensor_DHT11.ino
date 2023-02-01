@@ -162,35 +162,35 @@ void DHT11Check() {
     }
   }
   //Subir temperatura
-  if (!dROP(TEMPMINCONTROL) && TEMP < (TEMPMIN + 1)) {  //Cuando la temperatura baja a la mínima ACCIONA control
+  if (TEMPMINCONTROL && !dROP(TEMPMINCONTROL) && TEMP < (TEMPMIN + 1)) {  //Cuando la temperatura baja a la mínima ACCIONA control
     DataLogger("Control para subir temperatura", 0);
     digitalWrite(TEMPMINCONTROL, HIGH);
-  } else if (dROP(TEMPMINCONTROL) && TEMP >= (TEMPIDEAL - 1)) {
+  } else if (TEMPMINCONTROL && dROP(TEMPMINCONTROL) && TEMP >= (TEMPIDEAL - 1)) {
     DataLogger("Apagado control para subir temperatura en sustrato", 0);
     digitalWrite(TEMPMINCONTROL, VLOW);
   }
   //Bajar tempertura
-  if (!dROP(TEMPMAXCONTROL) && TEMP > (TEMPMAX - 1)) {  //Cuando la temperatura sube a la máxima ACCIONA control
+  if (TEMPMAXCONTROL && !dROP(TEMPMAXCONTROL) && TEMP > (TEMPMAX - 1)) {  //Cuando la temperatura sube a la máxima ACCIONA control
     DataLogger("Control para bajar temperatura", 0);
     digitalWrite(TEMPMAXCONTROL, HIGH);
-  } else if (dROP(TEMPMAXCONTROL) && TEMP <= (TEMPIDEAL + 1)) {
+  } else if (TEMPMAXCONTROL && dROP(TEMPMAXCONTROL) && TEMP <= (TEMPIDEAL + 1)) {
     DataLogger("Apagado control para bajar temperatura", 0);
     digitalWrite(TEMPMAXCONTROL, VLOW);
   }
   //Subir humedad
-  if (!dROP(HUMMINCONTROL) && HUM < (HUMMIN + 1)) {  //Cuando la humedad baja a la mínima ACCIONA control
+  if (HUMMINCONTROL && !dROP(HUMMINCONTROL) && HUM < (HUMMIN + 1)) {  //Cuando la humedad baja a la mínima ACCIONA control
     DataLogger("Control para subir humedad", 0);
     digitalWrite(HUMMINCONTROL, HIGH);
-  } else if (dROP(HUMMINCONTROL) && HUM >= (HUMIDEAL - 1)) {
-    DataLogger("Apagado control para subir HUMeratura en sustrato", 0);
+  } else if (HUMMINCONTROL && dROP(HUMMINCONTROL) && HUM >= (HUMIDEAL - 1)) {
+    DataLogger("Apagado control para subir humedad en sustrato", 0);
     digitalWrite(HUMMINCONTROL, VLOW);
   }
   //Bajar humedad
-  if (!dROP(HUMMAXCONTROL) && HUM > (HUMMAX - 1)) {  //Cuando la humedad sube a la máxima ACCIONA control
+  if (HUMMAXCONTROL && !dROP(HUMMAXCONTROL) && HUM > (HUMMAX - 1)) {  //Cuando la humedad sube a la máxima ACCIONA control
     DataLogger("Control para bajar humedad", 0);
     digitalWrite(HUMMAXCONTROL, HIGH);
-  } else if (dROP(HUMMAXCONTROL) && HUM <= (HUMIDEAL + 1)) {
-    DataLogger("Apagado control para bajar HUMeratura", 0);
+  } else if (HUMMAXCONTROL && dROP(HUMMAXCONTROL) && HUM <= (HUMIDEAL + 1)) {
+    DataLogger("Apagado control para bajar humedad", 0);
     digitalWrite(HUMMAXCONTROL, VLOW);
   }
   
@@ -211,7 +211,6 @@ void DHT11Check() {
 void DHT11LocalSave(String date) {
   float h7 = dht7.readHumidity();
   float t7 = dht7.readTemperature();
-  DataLogger("Guardando datos de temperatura y humedad relativa en Micro SD", 0);
   if (SaveSensorValue("temperatura", date, (isnan(TEMP) ? "NULL" : String(TEMP)))) {
     NoSD();
   }

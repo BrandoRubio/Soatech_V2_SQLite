@@ -30,11 +30,11 @@ void YLCheck() {
   S_HUM = (sum / counter) ? sum / counter : 0;
   
   //Subir humedad
-  if(!dROP(S_HUMMIN_Ctrl) && S_HUM <= S_HUMMIN){
+  if(S_HUMMIN_Ctrl && !dROP(S_HUMMIN_Ctrl) && S_HUM <= S_HUMMIN){
     digitalWrite(S_HUMMIN_Ctrl, VHIGH);
     DataLogger("Control para subir humedad en sustrato", 0);
   }else
-  if(dROP(S_HUMMIN_Ctrl) && S_HUM >= (S_HUMIDEAL - 1)){
+  if(S_HUMMIN_Ctrl && dROP(S_HUMMIN_Ctrl) && S_HUM >= (S_HUMIDEAL - 1)){
     digitalWrite(S_HUMMIN_Ctrl, VLOW);
     DataLogger("Apagado control para subir humedad en sustrato", 0);
   }

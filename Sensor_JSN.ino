@@ -24,10 +24,12 @@ void JSNCheck() {
 
   }*/
   if(!dROP(JSNMINCONTROL) && JSN < JSNMIN){//Si el nivel del agua sobrebaja el mínimo y está apagado, se enciende el control.
-    digitalWrite(JSNMINCONTROL, HIGH);
+    DataLogger("Control para subir nivel de agua", 0);
+    digitalWrite(JSNMINCONTROL, VHIGH);
   }else
   if(dROP(JSNMINCONTROL) && JSN >= JSNMAX){//Si el nivel del agua supera el máximo y está encendido, se apaga el control.
-    digitalWrite(JSNMINCONTROL, LOW);
+    DataLogger("Apagado control para subir nivel de agua", 0);
+    digitalWrite(JSNMINCONTROL, VLOW);
   }
   if (alternadorLCD == N_JSN) {
     lcd.setCursor(0, 0);

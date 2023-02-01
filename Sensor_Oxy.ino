@@ -50,10 +50,10 @@ void OxyCheck() {
     STOXYMIN = true;
     STOXY = false;
   }*/
-  if (!dROP(OXYMINCONTROL) && OXY <= OXYMIN) {
+  if (OXYMINCONTROL && !dROP(OXYMINCONTROL) && OXY <= OXYMIN) {
     DataLogger("Control para subir la oxygenacion", 0);
     digitalWrite(OXYMINCONTROL, VHIGH);
-  } else if (dROP(OXYMINCONTROL) && OXY >= (OXYIDEAL - 1)) {
+  } else if (OXYMINCONTROL && dROP(OXYMINCONTROL) && OXY >= (OXYIDEAL - 1)) {
     DataLogger("Apagado control para subir la oxygenacion", 0);
     digitalWrite(OXYMINCONTROL, VLOW);
   }
