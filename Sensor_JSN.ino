@@ -3,7 +3,7 @@ void SetupJSN() {
   pinMode(JSNPIN2, INPUT);
   pinMode(JSNPIN1, OUTPUT);
   pinMode(JSNMINCONTROL, OUTPUT);
-  digitalWrite(JSNMINCONTROL, LOW);
+  digitalWrite(JSNMINCONTROL, VLOW);
 }
 
 void JSNCheck() {
@@ -27,7 +27,7 @@ void JSNCheck() {
   }*/
   if (JSNMINCONTROL && digitalRead(JSNMINCONTROL) == VLOW && JSN < JSNMIN) {  //Si el nivel del agua sobrebaja el mínimo y está apagado, se enciende el control.
     DataLogger("Control para subir nivel de agua", 0);
-    digitalWrite(JSNMINCONTROL, HIGH);
+    digitalWrite(JSNMINCONTROL, VHIGH);
   } else if (JSNMINCONTROL && digitalRead(JSNMINCONTROL) == VHIGH && JSN >= JSNMAX) {  //Si el nivel del agua supera el máximo y está encendido, se apaga el control.
     DataLogger("Apagado control para subir nivel de agua", 0);
     digitalWrite(JSNMINCONTROL, VLOW);

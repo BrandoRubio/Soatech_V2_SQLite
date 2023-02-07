@@ -201,9 +201,9 @@ void DHT11Check() {
     lcd.print("Humedad:    " + String(HUM) + "   ");
     if (DHTPIN7) {
       lcd.setCursor(0, 2);
-      lcd.print("Tem exterior:" + String(t7));
-      lcd.setCursor(0, 3);
-      lcd.print("Hum exterior:" + String(h7));
+      lcd.print("T_E:" + String(t7));
+      lcd.setCursor(10, 2);
+      lcd.print("H_E:" + String(h7));
     }
   }
 }
