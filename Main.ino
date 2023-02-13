@@ -162,7 +162,7 @@ void UpToUbidtos() {
       LUMUpToUbi(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
     if (JSN_ACTIVE) {  //Si el sensor jsn (para medición de nivel de agua) está activo entonces guarda su valor
-      LUMUpToUbi(now.timestamp(DateTime::TIMESTAMP_FULL));
+      JSNUpToUbi(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
     timer_up_data = millis();
     lcd.setCursor(17, 3);

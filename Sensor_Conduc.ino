@@ -40,7 +40,7 @@ void CondCheck(){
   //Subir conductividad
   if (CONDMINCONTROL && digitalRead(CONDMINCONTROL) == VLOW && COND < (CONDMIN + 1)) {
     DataLogger("Control para subir conductividad", 0);
-    digitalWrite(CONDMINCONTROL, HIGH);
+    digitalWrite(CONDMINCONTROL, VHIGH);
   } else if (CONDMINCONTROL && digitalRead(CONDMINCONTROL) == VHIGH && COND >= (CONDIDEAL - 1)) {
     DataLogger("Apagado control para subir conductividad en sustrato", 0);
     digitalWrite(CONDMINCONTROL, VLOW);
@@ -48,7 +48,7 @@ void CondCheck(){
   //Bajar conductividad
   if (CONDMAXCONTROL && digitalRead(CONDMAXCONTROL) == VLOW && COND > (CONDMAX - 1)) {  //Cuando la conductividad sube a la máxima ACCIONA control
     DataLogger("Control para bajar conductividad", 0);
-    digitalWrite(CONDMAXCONTROL, HIGH);
+    digitalWrite(CONDMAXCONTROL, VHIGH);
   } else if (CONDMAXCONTROL && digitalRead(CONDMAXCONTROL) == VHIGH && COND <= (CONDIDEAL + 1)) {
     DataLogger("Apagado control para bajar conductividad", 0);
     digitalWrite(CONDMAXCONTROL, VLOW);

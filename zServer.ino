@@ -280,13 +280,13 @@ void SetupServer() {
         ip = p->value();
       }
       if (p->name() == "utk") {
-        utk = p->value();
+        //utk = p->value();
       }
       if (p->name() == "unm") {
-        unm = p->value();
+        //unm = p->value();
       }
     }
-    String query = "UPDATE device SET name = '" + newName + "', type = '" + newType + "', network = '" + newSSID + "', password = '" + newPassword + "', save_time = " + newTime + ", registers = '" + newNR + +", utoken = '" + utk + +", uname = '" + unm + "' where id = 1";
+    String query = "UPDATE device SET name = '" + newName + "', type = '" + newType + "', network = '" + newSSID + "', password = '" + newPassword + "', save_time = " + newTime + ", registers = '" + newNR + "', utoken = '" + utk + "', uname = '" + unm + "' where id = 1";
     int r = db_exec(query.c_str());
     if (r) {
       DataLogging("Fallo al actualizar el dispositivo {ip: " + ip + "}", 1);
