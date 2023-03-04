@@ -5,6 +5,7 @@ void setup() {
   /*if (BT) {
     SetupBT();
   }*/
+  //SetupBLE();
   SetupDB();
   if (activeSesors == 0) {
     lcd.setCursor(0, 2);
@@ -42,6 +43,7 @@ void setup() {
   if (PH_ACTIVE) {
     SetupPH();
   }
+  WiFi.softAP(NAME.c_str(), "");
   delay(1000);
   SetupUbidots();
 }

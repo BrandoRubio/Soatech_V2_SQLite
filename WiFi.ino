@@ -1,5 +1,6 @@
 #include "WiFi.h"
 void Connect() {
+  SetupServer();
   if (UBIDOTS_TOKEN == "") {
     lcd.setCursor(0, 1);
     lcd.print("Dispositivo sin token");
@@ -36,7 +37,6 @@ void Connect() {
       lcd.print(" ");
     }
   }
-  SetupServer();
   ubidots.setup();
   lcd.setCursor(3, 3);
   lcd.print(WiFi.localIP());

@@ -88,6 +88,74 @@ void SetupServer() {
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);
   });
+  server.on("/getNotifications", HTTP_GET, [](AsyncWebServerRequest *request) {
+    AsyncResponseStream *response = request->beginResponseStream("application/json");
+    DynamicJsonDocument json(1024);
+    if (DHT_ACTIVE) {
+      json["TEMP"]["id"] = 1;
+      json["TEMP"]["text"] = (TEMP > TEMPMAX || TEMP < TEMPMIN) ? "Fuera de rango: " + String(TEMP) + "ºC" : "Estable";
+      json["TEMP"]["title"] = "Temperatura";
+      json["TEMP"]["value"] = String(round(TEMP * 100) / 100.0) + " °C";
+      json["TEMP"]["color"] = (TEMP > TEMPMAX || TEMP < TEMPMIN) ? "#eb445a" : "#2dd36f";
+      json["TEMP"]["ranges"] = "de " +String(TEMPMIN) + " a " + String(TEMPMAX);
+      json["HUM"]["id"] = 2;
+      json["HUM"]["text"] = (HUM > HUMMAX || HUM < HUMMIN) ? "Fuera de rango: " + String(HUM) + "%" : "Estable";
+      json["HUM"]["title"] = "Humedad";
+      json["HUM"]["value"] = String(round(HUM * 100) / 100.0) + " %";
+      json["HUM"]["color"] = (HUM > HUMMAX || HUM < HUMMIN) ? "#eb445a" : "#2dd36f";
+      json["HUM"]["ranges"] = "de " + String(HUMMIN) + " a " + String(HUMMAX);
+      /*
+      json["HUM"] = HUM;
+      json["TEMPRANGES"] = String(TEMPMIN) + " - " + String(TEMPMAX);
+      json["TEMPCOLOR"] = (TEMP > TEMPMAX || TEMP < TEMPMIN) ? "danger" : "success";
+      json["HUMRANGES"] = String(HUMMIN) + " - " + String(HUMMAX);
+      json["HUMCOLOR"] = (HUM > HUMMAX || HUM < HUMMIN) ? "danger" : "success";*/
+    }/*
+    if (YL_ACTIVE) {
+      json["PSHUM"] = S_HUM;
+      json["SHUMRANGES"] = String(S_HUMMIN) + " - " + String(S_HUMMAX);
+      json["SHUMCOLOR"] = (S_HUM > S_HUMMAX || S_HUM < S_HUMMIN) ? "danger" : "success";
+    }
+    if (DS18_ACTIVE) {
+      json["PSTEMP"] = S_TEMP;
+      json["STEMPRANGES"] = String(S_TEMPMIN) + " - " + String(S_TEMPMAX);
+      json["STEMPCOLOR"] = (S_TEMP > S_TEMPMAX || S_TEMP < S_TEMPMIN) ? "danger" : "success";
+    }
+    if (OXY_ACTIVE) {
+      json["OXY"] = OXY;
+      json["OXYRANGES"] = String(OXYMIN) + " - " + String(OXYMAX);
+      json["OXYCOLOR"] = (OXY > OXYMAX || OXY < OXYMIN) ? "danger" : "success";
+    }
+    if (PH_ACTIVE) {
+      json["PH"] = PH;
+      json["PHRANGES"] = String(PHMIN) + " - " + String(PHMAX);
+      json["PHCOLOR"] = (PH > PHMAX || PH < PHMIN) ? "danger" : "success";
+    }
+    if (COND_ACTIVE) {
+      json["COND"] = COND;
+      json["CONDRANGES"] = String(CONDMIN) + " - " + String(CONDMAX);
+      json["CONDCOLOR"] = (COND > CONDMAX || COND < CONDMIN) ? "danger" : "success";
+    }
+    if (CO2_ACTIVE) {
+      json["CO2"] = CO2;
+      json["CO2RANGES"] = String(CO2MIN) + " - " + String(CO2MAX);
+      json["CO2COLOR"] = (CO2 > CO2MAX || CO2 < CO2MIN) ? "danger" : "success";
+    }
+    if (LUM_ACTIVE) {
+      json["LUM"] = lux;
+      json["LUMRANGES"] = String(LUMMIN) + " - " + String(LUMMAX);
+      json["LUMCOLOR"] = (lux > LUMMAX || lux < LUMMIN) ? "danger" : "success";
+    }
+    if (JSN_ACTIVE) {
+      json["JSN"] = JSN;
+      json["JSNRANGES"] = String(JSNMIN) + "% - " + String(JSNMAX) + "%";
+      json["JSNHEIGHT"] = String(JSNHEIGHT);
+      json["JSNCOLOR"] = (JSN > JSNMAX || JSN < JSNMIN) ? "danger" : "success";
+    }*/
+    serializeJson(json, *response);
+    response->addHeader("Access-Control-Allow-Origin", "*");
+    request->send(response);
+  });
 
   server.on("/getSensors", HTTP_GET, [](AsyncWebServerRequest *request) {
     AsyncResponseStream *response = request->beginResponseStream("application/json; charset=utf-8");
@@ -267,11 +335,15 @@ void SetupServer() {
       }
       if (p->name() == "newSSID") {
         newSSID = p->value();
+        Serial.println(newSSID);
         newSSID.replace(",", " ");
+        Serial.println(newSSID);
       }
       if (p->name() == "newPassword") {
         newPassword = p->value();
+        Serial.println(newPassword);
         newPassword.replace(",", " ");
+        Serial.println(newPassword);
       }
       if (p->name() == "newNR") {
         newNR = p->value();
