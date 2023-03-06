@@ -37,22 +37,29 @@ void setup() {
   if (LUM_ACTIVE) {  //Si el sensor de luminosidad está activo entonces guarda su valor
     SetupLUM();
   }
-  if (JSN_ACTIVE) {  //Si el sensor de luminosidad está activo entonces guarda su valor
+  if (JSN_ACTIVE) {  //Si el sensor de nivel de agua está activo entonces guarda su valor
     SetupJSN();
   }
   if (PH_ACTIVE) {
     SetupPH();
   }
   WiFi.softAP(NAME.c_str(), "");
+  SetupServer();
+  if (Network) {
+    SetupUbidots();
+  }
   delay(1000);
-  SetupUbidots();
 }
 
 void loop() {
-  loopUbidots();
+  if (Network) {
+    loopUbidots();
+  }
   LocalCheck();
   SaveLocal();
-  UpToUbidtos();
+  if (Network) {
+    UpToUbidtos();
+  }
 }
 
 /**Función que invoca los procesos loop de cada sensor**/

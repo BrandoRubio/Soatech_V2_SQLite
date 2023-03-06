@@ -3,6 +3,8 @@ static int callbackLoadDeviceData(void *data, int argc, char **argv, char **azCo
   TYPE = argv[2];
   WIFISSID = argv[3];
   PASSWORD = argv[4];
+  Network = WIFISSID != "" ? true : false;
+  Serial.println(Network);
   COMPANY = argv[5];
   interval_save_local = String(argv[6]).toInt();
   NUM_REGISTERS = argv[7];

@@ -1,6 +1,5 @@
 #include "WiFi.h"
 void Connect() {
-  SetupServer();
   if (UBIDOTS_TOKEN == "") {
     lcd.setCursor(0, 1);
     lcd.print("Dispositivo sin token");

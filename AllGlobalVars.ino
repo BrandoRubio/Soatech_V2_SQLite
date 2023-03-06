@@ -64,6 +64,7 @@ String WIFISSID = "INFINITUM4304_2.4";
 String PASSWORD = "vxMr7ddEx3";
 String COMPANY = "Soatech Enterprise";
 String NUM_REGISTERS = "30";
+bool Network = true;
 int activeSesors = 0;
 ///////////---------variables para sensor de humedad-------///////
 const int humedadAire = 4096;

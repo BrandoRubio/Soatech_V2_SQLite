@@ -104,54 +104,71 @@ void SetupServer() {
       json["HUM"]["value"] = String(round(HUM * 100) / 100.0) + " %";
       json["HUM"]["color"] = (HUM > HUMMAX || HUM < HUMMIN) ? "#eb445a" : "#2dd36f";
       json["HUM"]["ranges"] = "de " + String(HUMMIN) + " a " + String(HUMMAX);
-      /*
-      json["HUM"] = HUM;
-      json["TEMPRANGES"] = String(TEMPMIN) + " - " + String(TEMPMAX);
-      json["TEMPCOLOR"] = (TEMP > TEMPMAX || TEMP < TEMPMIN) ? "danger" : "success";
-      json["HUMRANGES"] = String(HUMMIN) + " - " + String(HUMMAX);
-      json["HUMCOLOR"] = (HUM > HUMMAX || HUM < HUMMIN) ? "danger" : "success";*/
-    }/*
+    }
     if (YL_ACTIVE) {
-      json["PSHUM"] = S_HUM;
-      json["SHUMRANGES"] = String(S_HUMMIN) + " - " + String(S_HUMMAX);
-      json["SHUMCOLOR"] = (S_HUM > S_HUMMAX || S_HUM < S_HUMMIN) ? "danger" : "success";
+      json["YL"]["id"] = 3;
+      json["YL"]["text"] = (S_HUM > S_HUMMAX || S_HUM < S_HUMMIN) ? "Fuera de rango: " + String(S_HUM) + " %" : "Estable";
+      json["YL"]["title"] = "Humedad en sutrato";
+      json["YL"]["value"] = String(round(S_HUM * 100) / 100.0) + " %";
+      json["YL"]["color"] = (S_HUM > S_HUMMAX || S_HUM < S_HUMMIN) ? "#eb445a" : "#2dd36f";
+      json["YL"]["ranges"] = "de " +String(S_HUMMIN) + " a " + String(S_HUMMAX);
     }
     if (DS18_ACTIVE) {
-      json["PSTEMP"] = S_TEMP;
-      json["STEMPRANGES"] = String(S_TEMPMIN) + " - " + String(S_TEMPMAX);
-      json["STEMPCOLOR"] = (S_TEMP > S_TEMPMAX || S_TEMP < S_TEMPMIN) ? "danger" : "success";
+      json["DS18"]["id"] = 4;
+      json["DS18"]["text"] = (S_TEMP > S_TEMPMAX || S_TEMP < S_TEMPMIN) ? "Fuera de rango: " + String(S_TEMP) + "°C" : "Estable";
+      json["DS18"]["title"] = "Temperatura en sutrato";
+      json["DS18"]["value"] = String(round(S_TEMP * 100) / 100.0) + "°C";
+      json["DS18"]["color"] = (S_TEMP > S_TEMPMAX || S_TEMP < S_TEMPMIN) ? "#eb445a" : "#2dd36f";
+      json["DS18"]["ranges"] = "de " +String(S_TEMPMIN) + " a " + String(S_TEMPMAX);
     }
     if (OXY_ACTIVE) {
-      json["OXY"] = OXY;
-      json["OXYRANGES"] = String(OXYMIN) + " - " + String(OXYMAX);
-      json["OXYCOLOR"] = (OXY > OXYMAX || OXY < OXYMIN) ? "danger" : "success";
+      json["OXY"]["id"] = 4;
+      json["OXY"]["text"] = (OXY > OXYMAX || OXY < OXYMIN) ? "Fuera de rango: " + String(OXY) + "" : "Estable";
+      json["OXY"]["title"] = "Oxigenación";
+      json["OXY"]["value"] = String(round(OXY * 100) / 100.0) + "";
+      json["OXY"]["color"] = (OXY > OXYMAX || OXY < OXYMIN) ? "#eb445a" : "#2dd36f";
+      json["OXY"]["ranges"] = "de " +String(OXYMIN) + " a " + String(OXYMAX);
     }
     if (PH_ACTIVE) {
-      json["PH"] = PH;
-      json["PHRANGES"] = String(PHMIN) + " - " + String(PHMAX);
-      json["PHCOLOR"] = (PH > PHMAX || PH < PHMIN) ? "danger" : "success";
+      json["PH"]["id"] = 5;
+      json["PH"]["text"] = (PH > PHMAX || PH < PHMIN) ? "Fuera de rango: " + String(PH) + "" : "Estable";
+      json["PH"]["title"] = "pH";
+      json["PH"]["value"] = String(round(PH * 100) / 100.0) + "";
+      json["PH"]["color"] = (PH > PHMAX || PH < PHMIN) ? "#eb445a" : "#2dd36f";
+      json["PH"]["ranges"] = "de " +String(PHMIN) + " a " + String(PHMAX);
     }
     if (COND_ACTIVE) {
-      json["COND"] = COND;
-      json["CONDRANGES"] = String(CONDMIN) + " - " + String(CONDMAX);
-      json["CONDCOLOR"] = (COND > CONDMAX || COND < CONDMIN) ? "danger" : "success";
+      json["COND"]["id"] = 6;
+      json["COND"]["text"] = (COND > CONDMAX || COND < CONDMIN) ? "Fuera de rango: " + String(COND) + "" : "Estable";
+      json["COND"]["title"] = "Conductividad";
+      json["COND"]["value"] = String(round(COND * 100) / 100.0) + "";
+      json["COND"]["color"] = (COND > CONDMAX || COND < CONDMIN) ? "#eb445a" : "#2dd36f";
+      json["COND"]["ranges"] = "de " +String(CONDMIN) + " a " + String(CONDMAX);
     }
     if (CO2_ACTIVE) {
-      json["CO2"] = CO2;
-      json["CO2RANGES"] = String(CO2MIN) + " - " + String(CO2MAX);
-      json["CO2COLOR"] = (CO2 > CO2MAX || CO2 < CO2MIN) ? "danger" : "success";
+      json["CO2"]["id"] = 7;
+      json["CO2"]["text"] = (CO2 > CO2MAX || CO2 < CO2MIN) ? "Fuera de rango: " + String(CO2) + "" : "Estable";
+      json["CO2"]["title"] = "CO2";
+      json["CO2"]["value"] = String(round(CO2 * 100) / 100.0) + "";
+      json["CO2"]["color"] = (CO2 > CO2MAX || CO2 < CO2MIN) ? "#eb445a" : "#2dd36f";
+      json["CO2"]["ranges"] = "de " +String(CO2MIN) + " a " + String(CO2MAX);
     }
     if (LUM_ACTIVE) {
-      json["LUM"] = lux;
-      json["LUMRANGES"] = String(LUMMIN) + " - " + String(LUMMAX);
-      json["LUMCOLOR"] = (lux > LUMMAX || lux < LUMMIN) ? "danger" : "success";
+      json["LUM"]["id"] = 8;
+      json["LUM"]["text"] = (lux > LUMMAX || lux < LUMMIN) ? "Fuera de rango: " + String(lux) + "" : "Estable";
+      json["LUM"]["title"] = "Luminosidad";
+      json["LUM"]["value"] = String(round(lux * 100) / 100.0) + "";
+      json["LUM"]["color"] = (lux > LUMMAX || lux < LUMMIN) ? "#eb445a" : "#2dd36f";
+      json["LUM"]["ranges"] = "de " +String(LUMMIN) + " a " + String(LUMMAX);
     }
     if (JSN_ACTIVE) {
-      json["JSN"] = JSN;
-      json["JSNRANGES"] = String(JSNMIN) + "% - " + String(JSNMAX) + "%";
-      json["JSNHEIGHT"] = String(JSNHEIGHT);
-      json["JSNCOLOR"] = (JSN > JSNMAX || JSN < JSNMIN) ? "danger" : "success";
-    }*/
+      json["JSN"]["id"] = 9;
+      json["JSN"]["text"] = (JSN > JSNMAX || JSN < JSNMIN) ? "Fuera de rango: " + String(JSN) + "%" : "Estable";
+      json["JSN"]["title"] = "Nivel de agua";
+      json["JSN"]["value"] = String(round(JSN * 100) / 100.0) + "%";
+      json["JSN"]["color"] = (JSN > JSNMAX || JSN < JSNMIN) ? "#eb445a" : "#2dd36f";
+      json["JSN"]["ranges"] = "de " +String(JSNMIN) + " a " + String(JSNMAX);
+    }
     serializeJson(json, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);
