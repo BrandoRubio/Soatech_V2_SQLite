@@ -1,4 +1,6 @@
 int buf[10], temp11;
+float distancia[25];
+int longitud_valores1 = sizeof(distancia) / sizeof(int);
 
 void SetupPH(){  
   pinMode(PHMINCONTROL, OUTPUT);
@@ -7,7 +9,14 @@ void SetupPH(){
   digitalWrite(PHMAXCONTROL, VLOW);
 }
 void PHCheck() {
-  PH = getPH();
+   for(int z=0; z<longitud_valores1 ; z++){
+      float med = getPH();
+      distancia[z]=med;
+      delay(10);
+    }
+  evaluacion_ass(distancia,longitud_valores1);
+  int indice_moda = longitud_valores1/2;
+  PH = distancia[indice_moda];;
   //control para subir PH
   if (PHMINCONTROL && digitalRead(PHMINCONTROL) == VLOW && PH <= PHMIN) {
     DataLogger("Control para subir PH", 0);
@@ -63,8 +72,27 @@ float getPH() {
   }
   long int avgValue = 0;
   for (int i = 2; i < 8; i++)
-    avgValue += buf[i];
+    avgValue += buf[i];  
   float pHVol = ((((float)avgValue) * 5.0) / 4095.0) / 6;
-  float PH = (-2.9718 * pHVol) + 18.6;
+  float PH = (-14.779 * pHVol) + 36.093;
   return (PH);
+}
+void evaluacion_ass(float* values, int length)
+{
+   int i, j, flag = 1;
+   float temp;
+   for (i = 1; (i <= length) && flag; i++)
+   {
+      flag = 0;
+      for (j = 0; j < (length - 1); j++)
+      {
+         if (values[j + 1] < values[j])
+         {
+            temp = values[j];
+            values[j] = values[j + 1];
+            values[j + 1] = temp;
+            flag = 1;
+         }
+      }
+   }
 }

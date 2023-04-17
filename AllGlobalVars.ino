@@ -68,9 +68,9 @@ bool Network = true;
 int activeSesors = 0;
 ///////////---------variables para sensor de humedad-------///////
 const int humedadAire = 4096;
-const int humedadAgua = 2400;
+const int humedadAgua = 470;
 const int humedadAire1 = 4096;// segundo sensor marcado
-const int humedadAgua1 = 2480;
+const int humedadAgua1 = 20;
 const int humedadAire2 = 4096;
 const int humedadAgua2 = 2360;
 const int humedadAire3 = 4096;// segundo sensor marcado
