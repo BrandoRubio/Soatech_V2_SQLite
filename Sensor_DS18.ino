@@ -11,6 +11,7 @@ void SetupDS18() {
   digitalWrite(S_TEMPMIN_C, VLOW);
   pinMode(S_TEMPMAX_C, OUTPUT);
   digitalWrite(S_TEMPMAX_C, VLOW);
+  
 }
 void DS18Check() {
   sensors.requestTemperatures();  //Se envía el comando para leer la temperatura

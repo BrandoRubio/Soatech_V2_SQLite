@@ -1,5 +1,7 @@
 #include "DHT.h"
 #define DHTTipo DHT11
+#include <Preferences.h>
+Preferences preferences;
 DHT dht1(0, DHTTipo);
 DHT dht2(0, DHTTipo);
 DHT dht3(0, DHTTipo);
@@ -7,7 +9,10 @@ DHT dht4(0, DHTTipo);
 DHT dht5(0, DHTTipo);
 DHT dht6(0, DHTTipo);
 DHT dht7(0, DHTTipo);
-
+float todayMinimum = 50;
+String yesterdayHour = "";
+String todayDate = "";
+int lastunixtime = 0;
 void SetupDHT() {
   dht1._pin = DHTPIN1;
   dht2._pin = DHTPIN2;
@@ -30,6 +35,16 @@ void SetupDHT() {
   digitalWrite(TEMPMAXCONTROL, VLOW);
   digitalWrite(TEMPFAN, VLOW);
   DHTPIN1, DHTPIN2, DHTPIN3, DHTPIN4, DHTPIN5, DHTPIN6 = 0;
+  preferences.begin("soatech", false);
+
+  todayMinimum = preferences.getFloat("todayvalue", 50);
+  todayDate = preferences.getString("todaydate", "04-18-2023");
+  yesterdayHour = preferences.getString("todayhour", "19:27:23");
+  lastunixtime = preferences.getUInt("lastunixtime", 3600);
+  Serial.println("Mínima de hoy: " + String(todayMinimum));
+  Serial.println("Fecha de hoy: " + todayDate);
+  Serial.println("Hora de ayer: " + yesterdayHour);
+  Serial.println("Unixtime: " + String(lastunixtime));
 }
 
 void DHT11Check() {
@@ -157,7 +172,7 @@ void DHT11Check() {
   if ((ps - pi) >= 3 || (ps - pi) <= -3) {
     if (!digitalRead(TEMPFAN)) {
       digitalWrite(TEMPFAN, VHIGH);
-    }else{
+    } else {
       digitalWrite(TEMPFAN, VLOW);
     }
   }
@@ -193,7 +208,7 @@ void DHT11Check() {
     DataLogger("Apagado control para bajar humedad", 0);
     digitalWrite(HUMMAXCONTROL, VLOW);
   }
-  
+
   if (alternadorLCD == N_DHT) {
     lcd.setCursor(0, 0);
     lcd.print("Temperatura:" + String(TEMP) + "   ");
@@ -206,6 +221,7 @@ void DHT11Check() {
       lcd.print("H_E:" + String(h7));
     }
   }
+  CheckMinimunTemp();
 }
 
 void DHT11LocalSave(String date) {
@@ -353,4 +369,68 @@ void DHT11UpToUbi(String DATE) {
       db_exec(("INSERT INTO registers_no_con (ubi_var, date, value, status) VALUES ('tpi', '" + DATE + "','" + pi + "', 'no')").c_str());
     }
   }
+}
+
+void CheckMinimunTemp() {
+  DateTime now = rtc.now();          //BUFFER HORAS-MINUTOS-SEGUNDOS
+  char hr[] = "hh:mm:ss";            //Formato de hora
+  char dt[] = "MM-DD-YYYY";          //Formato de fecha
+  String hora = now.toString(hr);    //Hora con formato legible
+  String fecha = now.toString(dt);   //Fecha con formato legible
+  int nowunixtime = now.unixtime();  //Hora con formato legible
+  if (fecha != todayDate) {
+    preferences.putString("yesthour", preferences.getString("todayhour"));
+    todayMinimum = TEMP;
+    preferences.putFloat("todayvalue", TEMP);
+    preferences.putString("todaydate", fecha);
+    Serial.println("Fecha diferente a la de hoy - actual: " + fecha + " - anterior: " + todayDate);
+    DataLogger("Cambio de dia - fecha nueva: " + fecha, 0);
+    todayDate = fecha;
+    lastunixtime = nowunixtime;
+  }
+  if (TEMP < todayMinimum) {
+    if (isnan(TEMP)) {
+      Serial.println("Ignorado por " + String(TEMP));
+    } else {
+      preferences.putFloat("todayvalue", TEMP);
+      Serial.println("Cambio de minima - minima nueva: " + String(TEMP));
+      Serial.println("Cambio de minima - minima vieja: " + String(todayMinimum));
+      todayMinimum = TEMP;
+      DataLogger("Cambio de minima - minima nueva: " + String(TEMP), 0);
+      lastunixtime = nowunixtime;
+      preferences.putString("todayhour", hora);
+      preferences.putUInt("lastunixtime", nowunixtime);
+      Serial.println("Cambio de unix - unix nuevo: " + String(nowunixtime));
+      Serial.println("Cambio de hora - hora nueva: " + hora);
+      DataLogger("Unixtime nuevo: " + String(nowunixtime), 0);
+      DataLogger("Hora nueva: " + hora, 0);
+    }
+  }
+  float sub = float((float(nowunixtime) - float(lastunixtime + 86400)) / 3600);
+  if (sub <= 2.0) {
+    if (sub <= 2.0 && sub >= 1.75) {//código para encender equipo 1 y apagar el equipo 2
+
+    } else if (sub <= 1.75 && sub >= 1.5) {//código para encender equipo 2 y apagar el equipo 1
+
+    } else if (sub <= 1.5 && sub >= 1.25) {//código para encender equipo 1 y apagar el equipo 2
+
+    }  else if (sub <= 1.25 && sub >= 1.0) {//código para encender equipo 2 y apagar el equipo 1
+
+    } else if (sub <= 1.0 && sub >= 0.75) {//código para encender equipo 1 y apagar el equipo 2
+
+    } else if (sub <= 0.75 && sub >= 0.5) {//código para encender equipo 2 y apagar el equipo 1
+
+    } else if (sub <= 5 && sub >= 0.25) {//código para encender equipo 1 y apagar el equipo 2
+
+    } else {//código para encender equipo 2 y apagar el equipo 1
+    }
+    Serial.print(hora + " : ");
+    Serial.println((nowunixtime - lastunixtime) / 3600);
+  } /* else {
+    Serial.print(hora + " : ");
+    Serial.println(float((float(nowunixtime) - float(lastunixtime)) / 3600));
+  }*/
+  //Yesterday Values
+  //preferences.putFloat("yestvalue", TEMP);
+  //Today Values
 }

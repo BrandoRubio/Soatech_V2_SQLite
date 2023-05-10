@@ -16,7 +16,7 @@ void loopUbidots() {  //se repite el proceso de comprobar si está conectado o n
       /*if (WiFi.getMode() == WIFI_AP) {
         Serial.println("El punto de acceso está encendido");
       } else if (WiFi.getMode() == WIFI_OFF) {
-        Serial.println("El punto de acceso está apagado");
+        Serial.println("El punto de acceso está apagado");;
       }*/
     if (!ubidots.connected()) {
       desconexionwifi();

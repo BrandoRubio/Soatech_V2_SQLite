@@ -88,6 +88,7 @@ void SetupServer() {
     response->addHeader("Access-Control-Allow-Origin", "*");
     request->send(response);
   });
+  
   server.on("/getNotifications", HTTP_GET, [](AsyncWebServerRequest *request) {
     AsyncResponseStream *response = request->beginResponseStream("application/json");
     DynamicJsonDocument json(1024);
