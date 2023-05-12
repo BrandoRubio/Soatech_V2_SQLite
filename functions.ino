@@ -135,3 +135,21 @@ void ubiOK() {
   lcd.setCursor(19, 3);
   lcd.write(6);
 }
+int cr = 0;
+bool readSerial(char result[]){
+    while(Serial.available() > 0){
+        char inChar = Serial.read();
+        if(inChar == '\n'){
+             result[cr] = '\0';
+             Serial.flush();
+             cr=0;
+             return true;
+        }
+        if(inChar != '\r'){
+             result[cr] = inChar;
+             cr++;
+        }
+        delay(1);
+    }
+    return false;
+}
