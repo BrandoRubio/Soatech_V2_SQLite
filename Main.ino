@@ -143,8 +143,8 @@ void SaveLocal() {
 
 /**Función que verifica el tiempo y hace la subida de datos a ubidots en caso de que los sensores estén activos**/
 void UpToUbidtos() {
-  if (abs(millis() - timer_up_data) > 600000) {
-    DateTime now = rtc.now();
+  if (abs(millis() - timer_up_data) > 60000) {
+    /*DateTime now = rtc.now();
     arrowUp();
     if (DHT_ACTIVE) {  //Si el sensor de temperatura está activo entonces guarda su valor
       DHT11UpToUbi(String(now.unixtime()));
@@ -175,6 +175,7 @@ void UpToUbidtos() {
     }
     timer_up_data = millis();
     lcd.setCursor(17, 3);
-    lcd.print(" ");
+    lcd.print(" ");*/
+    checkForUpdates();
   }
 }

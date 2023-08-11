@@ -63,6 +63,7 @@ String TYPE = "soatech";
 String WIFISSID = "INFINITUM4304_2.4";
 String PASSWORD = "vxMr7ddEx3";
 String COMPANY = "Soatech Enterprise";
+String DEVICEID = "Dev_101";
 String NUM_REGISTERS = "30";
 bool Network = true;
 int activeSesors = 0;
