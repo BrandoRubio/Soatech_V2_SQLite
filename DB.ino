@@ -1,4 +1,5 @@
 static int callbackLoadDeviceData(void *data, int argc, char **argv, char **azColName) {
+  DEVICEID = String(argv[0]);
   NAME = argv[1];
   TYPE = argv[2];
   WIFISSID = argv[3];
@@ -61,12 +62,15 @@ static int callbackLoadSensorsData(void *data, int argc, char **argv, char **azC
       TEMPIDEAL = ideals.substring(0, ci).toInt();
       HUMIDEAL = ideals.substring(ci + 1).toInt();
       String minsc = argv[3];
-      ci = minsc.indexOf(',');
+      cp = minsc.indexOf(',');
       cp2 = minsc.indexOf(',', cp + 1);
-      cp3 = minsc.indexOf(',', cp2 + 1);
-      TEMPMINCONTROL = minsc.substring(0, ci).toInt();
-      HUMMINCONTROL = minsc.substring(ci + 1, cp2).toInt();
+      TEMPMINCONTROL = minsc.substring(0, cp).toInt();
+      HUMMINCONTROL = minsc.substring(cp + 1, cp2).toInt();
       TEMPFAN = minsc.substring(cp2 + 1).toInt();
+      Serial.println(minsc);
+      Serial.println(TEMPMINCONTROL);
+      Serial.println(HUMMINCONTROL);
+      Serial.println(TEMPFAN);
       String maxsc = argv[4];
       ci = maxsc.indexOf(',');
       TEMPMAXCONTROL = maxsc.substring(0, ci).toInt();

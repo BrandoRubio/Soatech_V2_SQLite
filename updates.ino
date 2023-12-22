@@ -1,8 +1,7 @@
 #include <HTTPClient.h>
 #include <Update.h>
 void checkForUpdates() {
-  Serial.println("Bucando actualizaciones");
-
+  DEVICEID = "Dev_110";
   HTTPClient http;
   http.begin("https://soatech-2a232-default-rtdb.firebaseio.com/devs/" + DEVICEID + "/update/.json");
   int httpCode = http.GET();
@@ -11,7 +10,6 @@ void checkForUpdates() {
     if (httpCode == HTTP_CODE_OK) {
       String payload = http.getString();
       if (payload == "true") {
-        //*****GET LINK
         http.begin("https://soatech-2a232-default-rtdb.firebaseio.com/devs/" + DEVICEID + "/link/.json");
         int linkCode = http.GET();
         if (linkCode > 0) {
@@ -19,10 +17,8 @@ void checkForUpdates() {
             String response = http.getString();
             int firstQuote = response.indexOf('"');
             int lastQuote = response.lastIndexOf('"');
-            // Extraer el contenido sin las comillas dobles
             String link = response.substring(firstQuote + 1, lastQuote);
             Serial.println(link);
-            //*****ACTUALIZACION
             http.begin(link);
             int updateCode = http.GET();
             if (updateCode == HTTP_CODE_OK) {
@@ -71,9 +67,11 @@ void checkForUpdates() {
             }
           }
           ////////////////////
+        } else {
+          Serial.printf("URL vacía");
         }
       } else {
-        Serial.printf("Error en la solicitud GET. Código de estado: %d\n", httpCode);
+        //Serial.printf("No hay actualización disponible", httpCode);
       }
     } else {
       Serial.println("Error al hacer la solicitud GET.");

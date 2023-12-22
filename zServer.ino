@@ -15,6 +15,7 @@ void SetupServer() {
     json["NREG"] = NUM_REGISTERS;
     json["utoken"] = UBIDOTS_TOKEN;
     json["uname"] = DEVICE_LABEL;
+    json["id"] = DEVICEID;
 
     serializeJson(json, *response);
     response->addHeader("Access-Control-Allow-Origin", "*");
@@ -338,12 +339,16 @@ void SetupServer() {
     AsyncResponseStream *response = request->beginResponseStream("application/json; charset=utf-8");
     DynamicJsonDocument json(512);
     String ip;
+    String id = DEVICEID;
     String newName = NAME, newType = TYPE, newSSID = WIFISSID, newPassword = PASSWORD, newCompany = COMPANY, newTime = String(interval_save_local), newNR = NUM_REGISTERS, utk = UBIDOTS_TOKEN, unm = DEVICE_LABEL;
     int paramsNr = request->params();
     for (int i = 0; i < paramsNr; i++) {
       AsyncWebParameter *p = request->getParam(i);
       if (p->name() == "newName") {
         newName = p->value();
+      }
+      if (p->name() == "id") {
+        id = p->value();
       }
       if (p->name() == "newType") {
         newType = p->value();
@@ -376,7 +381,7 @@ void SetupServer() {
         //unm = p->value();
       }
     }
-    String query = "UPDATE device SET name = '" + newName + "', type = '" + newType + "', network = '" + newSSID + "', password = '" + newPassword + "', save_time = " + newTime + ", registers = '" + newNR + "', utoken = '" + utk + "', uname = '" + unm + "' where id = 1";
+    String query = "UPDATE device SET id = '"+id+"' name = '" + newName + "', type = '" + newType + "', network = '" + newSSID + "', password = '" + newPassword + "', save_time = " + newTime + ", registers = '" + newNR + "', utoken = '" + utk + "', uname = '" + unm + "'";
     int r = db_exec(query.c_str());
     if (r) {
       DataLogging("Fallo al actualizar el dispositivo {ip: " + ip + "}", 1);

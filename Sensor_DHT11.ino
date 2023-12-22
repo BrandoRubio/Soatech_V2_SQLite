@@ -29,6 +29,7 @@ void SetupDHT() {
   dht6.begin();
   dht7.begin();
   pinMode(TEMPMINCONTROL, OUTPUT);
+  pinMode(HUMMINCONTROL, OUTPUT);
   pinMode(TEMPMAXCONTROL, OUTPUT);
   pinMode(TEMPFAN, OUTPUT);
   digitalWrite(TEMPMINCONTROL, VLOW);
@@ -179,7 +180,7 @@ void DHT11Check() {
   //Subir temperatura
   if (TEMPMINCONTROL && digitalRead(TEMPMINCONTROL) == VLOW && TEMP < (TEMPMIN + 1)) {  //Cuando la temperatura baja a la mínima ACCIONA control
     DataLogger("Control para subir temperatura", 0);
-    digitalWrite(TEMPMINCONTROL, HIGH);
+    digitalWrite(TEMPMINCONTROL, VHIGH);
   } else if (TEMPMINCONTROL && digitalRead(TEMPMINCONTROL) == VHIGH && TEMP >= (TEMPIDEAL - 1)) {
     DataLogger("Apagado control para subir temperatura en sustrato", 0);
     digitalWrite(TEMPMINCONTROL, VLOW);
@@ -187,7 +188,7 @@ void DHT11Check() {
   //Bajar tempertura
   if (TEMPMAXCONTROL && digitalRead(TEMPMAXCONTROL) == VLOW && TEMP > (TEMPMAX - 1)) {  //Cuando la temperatura sube a la máxima ACCIONA control
     DataLogger("Control para bajar temperatura", 0);
-    digitalWrite(TEMPMAXCONTROL, HIGH);
+    digitalWrite(TEMPMAXCONTROL, VHIGH);
   } else if (TEMPMAXCONTROL && digitalRead(TEMPMAXCONTROL) == VHIGH && TEMP <= (TEMPIDEAL + 1)) {
     DataLogger("Apagado control para bajar temperatura", 0);
     digitalWrite(TEMPMAXCONTROL, VLOW);
@@ -195,19 +196,22 @@ void DHT11Check() {
   //Subir humedad
   if (HUMMINCONTROL && digitalRead(HUMMINCONTROL) == VLOW && HUM < (HUMMIN + 1)) {  //Cuando la humedad baja a la mínima ACCIONA control
     DataLogger("Control para subir humedad", 0);
-    digitalWrite(HUMMINCONTROL, HIGH);
+    Serial.println("Subiendo humedad");
+    Serial.println(HUMMINCONTROL);
+    Serial.println(digitalRead(HUMMINCONTROL));
+    digitalWrite(HUMMINCONTROL, VHIGH);
   } else if (HUMMINCONTROL && digitalRead(HUMMINCONTROL) == VHIGH && HUM >= (HUMIDEAL - 1)) {
     DataLogger("Apagado control para subir humedad en sustrato", 0);
     digitalWrite(HUMMINCONTROL, VLOW);
   }
   //Bajar humedad
-  if (HUMMAXCONTROL && digitalRead(HUMMAXCONTROL) == VLOW && HUM > (HUMMAX - 1)) {  //Cuando la humedad sube a la máxima ACCIONA control
+  /*if (HUMMAXCONTROL && digitalRead(HUMMAXCONTROL) == VLOW && HUM > (HUMMAX - 1)) {  //Cuando la humedad sube a la máxima ACCIONA control
     DataLogger("Control para bajar humedad", 0);
     digitalWrite(HUMMAXCONTROL, HIGH);
   } else if (HUMMAXCONTROL && digitalRead(HUMMAXCONTROL) == VHIGH && HUM <= (HUMIDEAL + 1)) {
     DataLogger("Apagado control para bajar humedad", 0);
     digitalWrite(HUMMAXCONTROL, VLOW);
-  }
+  }*/
 
   if (alternadorLCD == N_DHT) {
     lcd.setCursor(0, 0);
@@ -221,7 +225,7 @@ void DHT11Check() {
       lcd.print("H_E:" + String(h7));
     }
   }
-  CheckMinimunTemp();
+  //CheckMinimunTemp();
 }
 
 void DHT11LocalSave(String date) {
@@ -397,36 +401,36 @@ void CheckMinimunTemp() {
       Serial.println("Cambio de minima - minima vieja: " + String(todayMinimum));
       todayMinimum = TEMP;
       DataLogger("Cambio de minima - minima nueva: " + String(TEMP), 0);
-      lastunixtime = nowunixtime;
+      //lastunixtime = nowunixtime;
       preferences.putString("todayhour", hora);
-      preferences.putUInt("lastunixtime", nowunixtime);
+      preferences.putUInt("todaylast", nowunixtime);
       Serial.println("Cambio de unix - unix nuevo: " + String(nowunixtime));
       Serial.println("Cambio de hora - hora nueva: " + hora);
       DataLogger("Unixtime nuevo: " + String(nowunixtime), 0);
       DataLogger("Hora nueva: " + hora, 0);
     }
-  }
+  }/*
   float sub = float((float(nowunixtime) - float(lastunixtime + 86400)) / 3600);
   if (sub <= 2.0) {
-    if (sub <= 2.0 && sub >= 1.75) {//código para encender equipo 1 y apagar el equipo 2
+    if (sub <= 2.0 && sub >= 1.75) {  //código para encender equipo 1 y apagar el equipo 2
 
-    } else if (sub <= 1.75 && sub >= 1.5) {//código para encender equipo 2 y apagar el equipo 1
+    } else if (sub <= 1.75 && sub >= 1.5) {  //código para encender equipo 2 y apagar el equipo 1
 
-    } else if (sub <= 1.5 && sub >= 1.25) {//código para encender equipo 1 y apagar el equipo 2
+    } else if (sub <= 1.5 && sub >= 1.25) {  //código para encender equipo 1 y apagar el equipo 2
 
-    }  else if (sub <= 1.25 && sub >= 1.0) {//código para encender equipo 2 y apagar el equipo 1
+    } else if (sub <= 1.25 && sub >= 1.0) {  //código para encender equipo 2 y apagar el equipo 1
 
-    } else if (sub <= 1.0 && sub >= 0.75) {//código para encender equipo 1 y apagar el equipo 2
+    } else if (sub <= 1.0 && sub >= 0.75) {  //código para encender equipo 1 y apagar el equipo 2
 
-    } else if (sub <= 0.75 && sub >= 0.5) {//código para encender equipo 2 y apagar el equipo 1
+    } else if (sub <= 0.75 && sub >= 0.5) {  //código para encender equipo 2 y apagar el equipo 1
 
-    } else if (sub <= 5 && sub >= 0.25) {//código para encender equipo 1 y apagar el equipo 2
+    } else if (sub <= 5 && sub >= 0.25) {  //código para encender equipo 1 y apagar el equipo 2
 
-    } else {//código para encender equipo 2 y apagar el equipo 1
+    } else {  //código para encender equipo 2 y apagar el equipo 1
     }
     Serial.print(hora + " : ");
     Serial.println((nowunixtime - lastunixtime) / 3600);
-  } /* else {
+  }*/ /* else {
     Serial.print(hora + " : ");
     Serial.println(float((float(nowunixtime) - float(lastunixtime)) / 3600));
   }*/

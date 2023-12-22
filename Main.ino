@@ -43,7 +43,7 @@ void setup() {
   if (PH_ACTIVE) {
     SetupPH();
   }
-  WiFi.softAP(NAME.c_str(), "");
+  //WiFi.softAP(NAME.c_str(), "");
   SetupServer();
   if (Network) {
     SetupUbidots();
@@ -58,7 +58,7 @@ void loop() {
   LocalCheck();
   SaveLocal();
   if (Network) {
-    UpToUbidtos();
+    //UpToUbidtos();
   }
 }
 
@@ -144,7 +144,7 @@ void SaveLocal() {
 /**Función que verifica el tiempo y hace la subida de datos a ubidots en caso de que los sensores estén activos**/
 void UpToUbidtos() {
   if (abs(millis() - timer_up_data) > 60000) {
-    /*DateTime now = rtc.now();
+    DateTime now = rtc.now();
     arrowUp();
     if (DHT_ACTIVE) {  //Si el sensor de temperatura está activo entonces guarda su valor
       DHT11UpToUbi(String(now.unixtime()));
@@ -173,9 +173,9 @@ void UpToUbidtos() {
     if (JSN_ACTIVE) {  //Si el sensor jsn (para medición de nivel de agua) está activo entonces guarda su valor
       JSNUpToUbi(now.timestamp(DateTime::TIMESTAMP_FULL));
     }
-    timer_up_data = millis();
     lcd.setCursor(17, 3);
-    lcd.print(" ");*/
+    lcd.print(" ");
+    timer_up_data = millis();
     checkForUpdates();
   }
 }
